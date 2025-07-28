@@ -14,3 +14,4 @@ Simulate every matchup, scout every WR/DB pairing, and see your path to victoryâ
 ---
 
 > **Be the Daddy of Your Fantasy League.**
+> "Simulate Smarter. Win Like a Daddy."
