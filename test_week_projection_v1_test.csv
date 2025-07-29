@@ -1,0 +1,2 @@
+week,wr_name,team,opp_team,scheme,base_pts,adj_pts,slot_weight,wide_weight,safety_weight,lb_weight,env_boost,game_script_boost,route_weather_mult,final_pts,game_script_explanation,adj_pts_p25,adj_pts_p50,adj_pts_p75
+1,Ja'Marr Chase,CIN,Cleveland Browns,man,2.35,,30.9,-29.9,0.04,0.01,1.0,,1.0,,"BaseBoost=nan, TeamMult=1.0, WRMult=1.1, QBMult=1.0, QB_Agg=1.0, PaceMult=1.0, DefMult=1.0, PressureMult=1.0, RoleMult=1.0, AirMult=1.0, CompetitionMult=1.0, InjuryMult=1.0 => FinalBoost=nan",,,

@@ -1,0 +1,119 @@
+
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="utf-8">
+        <title>WR Matchup Visualizer - Week 2</title>
+        
+    <style>
+    body { font-family: 'Segoe UI', 'Roboto', Arial, sans-serif; background: #171a1f; color: #f8f8f8; margin: 0; padding: 0; }
+    h1 { font-family: 'Montserrat', 'Segoe UI', sans-serif; font-size: 2.1em; text-align: center; font-weight: 800; letter-spacing: 1px; margin-top: 24px; margin-bottom: 6px; color: #39a7ff; text-shadow: 0 2px 8px #0003; }
+    table { border-radius: 16px; border: 0; overflow: hidden; width: 97%; margin: 32px auto 64px auto; box-shadow: 0 6px 32px #0004; background: #23262f; }
+    th { padding: 18px 8px 12px 8px; background: #1e2126; font-weight: 600; font-size: 1em; border: 0; color: #fff; }
+    td { padding: 11px 7px; border: 0; font-size: 1.01em; }
+    tr:hover td { background: #283045 !important; transition: background 0.16s; }
+    .tooltipper { position: relative; }
+    .tooltipper:hover:after {
+        content: attr(data-tooltip);
+        white-space: pre-line;
+        position: absolute;
+        left: 50%;
+        top: 135%;
+        min-width: 190px;
+        background: #242731;
+        color: #f8f8f8;
+        padding: 14px 15px;
+        border-radius: 11px;
+        font-size: 0.98em;
+        font-weight: 400;
+        box-shadow: 0 4px 20px #0006;
+        z-index: 99;
+        transform: translateX(-52%);
+        opacity: 0.97;
+        pointer-events: none;
+    }
+    .dt-buttons { margin-bottom: 15px; }
+    </style>
+    
+        
+    <!-- jQuery and DataTables -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/v/bs5/dt-2.0.5/b-3.0.2/b-html5-3.0.2/b-print-3.0.2/datatables.min.css"/>
+    <script src="https://cdn.datatables.net/v/bs5/dt-2.0.5/b-3.0.2/b-html5-3.0.2/b-print-3.0.2/datatables.min.js"></script>
+
+    <script>
+    $(document).ready(function() {
+        var table = $('#yaculator-table').DataTable({
+            dom: 'Bfrtip',
+            buttons: [
+                'copy', 'csv', 'excel', 'print'
+            ]
+        });
+
+        // Handle upload
+        $('#csv-upload').on('change', function(e) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                var csv = e.target.result;
+                var rows = csv.split('\n').map(r=>r.split(','));
+                var html = '';
+                for (var i=1; i<rows.length; ++i) {
+                    if (rows[i].length < 2) continue;
+                    html += '<tr>';
+                    for (var j=0; j<rows[0].length; ++j) {
+                        html += '<td>' + (rows[i][j] || '') + '</td>';
+                    }
+                    html += '</tr>';
+                }
+                $('#yaculator-table tbody').html(html);
+                table.clear().destroy();
+                $('#yaculator-table').DataTable({
+                    dom: 'Bfrtip',
+                    buttons: [ 'copy', 'csv', 'excel', 'print' ]
+                });
+            };
+            reader.readAsText(e.target.files[0]);
+        });
+
+        // Email button (creates a mailto link with CSV data)
+        $('#email-btn').on('click', function() {
+            var csv = table.buttons.exportData({modifier: {selected: null}}).body.map(row => row.join(",")).join("\n");
+            var mailto = "mailto:?subject=YACulator%20Week%20Table&body=" + encodeURIComponent(csv);
+            window.location.href = mailto;
+        });
+    });
+    </script>
+    
+    </head>
+    <body>
+        <h1>WR Matchup Visualizer &bull; Week 2</h1>
+        
+    <div style="display:flex;justify-content:center;gap:18px;margin-top:16px;">
+        <label style="background:#24d35d;color:#23262f;padding:7px 18px;font-weight:700;border-radius:7px;cursor:pointer;">
+            Upload CSV
+            <input type="file" id="csv-upload" style="display:none;">
+        </label>
+        <button id="email-btn" style="background:#0076B6;color:#fff;padding:7px 18px;font-weight:700;border-radius:7px;cursor:pointer;">Email Table</button>
+    </div>
+    
+        <table id="yaculator-table" class="display nowrap" style="width:98%;">
+            <thead>
+            <tr>
+                <th>Player</th>
+                <th>Proj Pts</th>
+                <th>Opponent</th>
+                <th>Scheme</th>
+                <th>Slot%</th>
+                <th>Wide%</th>
+                <th>Env</th>
+                <th>GameScript</th>
+            </tr>
+            </thead>
+            <tbody>
+            
+            </tbody>
+        </table>
+        <div style="text-align:center; color:#888; margin-bottom:25px;">&copy; 2025 YACulator | Inspired by PlayerProfiler</div>
+    </body>
+    </html>
+    

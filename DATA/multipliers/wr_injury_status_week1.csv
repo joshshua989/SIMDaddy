@@ -1,0 +1,124 @@
+Player,Team,Depth,Value,Explanation
+Terry McLaurin,Washington Commanders,WR1,1.0,Healthy alpha
+Jahan Dotson,Washington Commanders,WR2,1.0,Healthy starter
+Luke McCaffrey,Washington Commanders,WR3,1.0,Rookie, starter in 3WR sets
+Dyami Brown,Washington Commanders,WR4,1.0,Healthy depth
+Justin Jefferson,Minnesota Vikings,WR1,1.0,Top WR, fully healthy
+Jordan Addison,Minnesota Vikings,WR2,1.0,Locked-in starter, healthy
+Brandon Powell,Minnesota Vikings,WR3,1.0,Slot, healthy
+Jalen Nailor,Minnesota Vikings,WR4,1.0,Depth/special teams
+Ja'Marr Chase,Cincinnati Bengals,WR1,1.0,Elite WR, healthy
+Tee Higgins,Cincinnati Bengals,WR2,1.0,Franchise tag year, healthy
+Jermaine Burton,Cincinnati Bengals,WR3,1.0,Rookie, healthy
+Charlie Jones,Cincinnati Bengals,WR4,1.0,Slot/return, healthy
+CeeDee Lamb,Dallas Cowboys,WR1,1.0,Elite, no injury
+Brandin Cooks,Dallas Cowboys,WR2,1.0,Starter, healthy
+Jalen Tolbert,Dallas Cowboys,WR3,1.0,Healthy, slot/rotational
+KaVontae Turpin,Dallas Cowboys,WR4,1.0,Healthy depth
+Tyreek Hill,Miami Dolphins,WR1,1.0,No injury issues
+Jaylen Waddle,Miami Dolphins,WR2,1.0,Fully healthy
+Odell Beckham Jr.,Miami Dolphins,WR3,0.85,Limited, nagging minor injury
+Erik Ezukanma,Miami Dolphins,WR4,1.0,Healthy
+Amon-Ra St. Brown,Detroit Lions,WR1,1.0,"PPR machine, healthy"
+Jameson Williams,Detroit Lions,WR2,1.0,Healthy
+Josh Reynolds,Detroit Lions,WR3,1.0,Depth/slot, healthy
+Antoine Green,Detroit Lions,WR4,1.0,Young depth, healthy
+AJ Brown,Philadelphia Eagles,WR1,1.0,Healthy alpha
+DeVonta Smith,Philadelphia Eagles,WR2,1.0,Healthy
+Parris Campbell,Philadelphia Eagles,WR3,1.0,Slot/rotation
+John Ross,Philadelphia Eagles,WR4,1.0,Depth, healthy
+Garrett Wilson,New York Jets,WR1,1.0,Clear top target, healthy
+Mike Williams,New York Jets,WR2,0.85,Returning from ACL, limited but active
+Malachi Corley,New York Jets,WR3,1.0,Rookie slot, healthy
+Xavier Gipson,New York Jets,WR4,1.0,Depth, returner
+Puka Nacua,Los Angeles Rams,WR1,1.0,Healthy, top-10 WR
+Cooper Kupp,Los Angeles Rams,WR2,0.9,Probable, hamstring maintenance
+Demarcus Robinson,Los Angeles Rams,WR3,1.0,Depth, healthy
+Tutu Atwell,Los Angeles Rams,WR4,1.0,Rotational, healthy
+Marvin Harrison Jr.,Arizona Cardinals,WR1,1.0,No injuries, clear #1
+Michael Wilson,Arizona Cardinals,WR2,1.0,Healthy, outside WR
+Rondale Moore,Arizona Cardinals,WR3,1.0,Slot, healthy
+Greg Dortch,Arizona Cardinals,WR4,1.0,Depth, healthy
+Drake London,Atlanta Falcons,WR1,1.0,Healthy alpha
+Darnell Mooney,Atlanta Falcons,WR2,1.0,Healthy, free agent addition
+KhaDarel Hodge,Atlanta Falcons,WR3,1.0,Healthy
+Scotty Miller,Atlanta Falcons,WR4,1.0,Depth, healthy
+Curtis Samuel,Buffalo Bills,WR1,1.0,Slot leader, healthy
+Khalil Shakir,Buffalo Bills,WR2,1.0,Versatile, healthy
+Keon Coleman,Buffalo Bills,WR3,1.0,Rookie, healthy
+Justin Shorter,Buffalo Bills,WR4,1.0,Depth/size, healthy
+Stefon Diggs,Houston Texans,WR1,1.0,Healthy, new team
+Nico Collins,Houston Texans,WR2,1.0,Healthy
+Tank Dell,Houston Texans,WR3,0.9,Minor leg injury, should play
+Noah Brown,Houston Texans,WR4,1.0,Healthy
+Chris Olave,New Orleans Saints,WR1,1.0,Alpha, healthy
+Rashid Shaheed,New Orleans Saints,WR2,1.0,Big-play threat, healthy
+Cedrick Wilson Jr.,New Orleans Saints,WR3,1.0,Depth, healthy
+A.T. Perry,New Orleans Saints,WR4,1.0,Young depth, healthy
+Zay Flowers,Baltimore Ravens,WR1,1.0,Healthy
+Rashod Bateman,Baltimore Ravens,WR2,1.0,Healthy, post-injury
+Nelson Agholor,Baltimore Ravens,WR3,1.0,Slot/depth
+Devin Duvernay,Baltimore Ravens,WR4,1.0,Healthy
+Mike Evans,Tampa Bay Buccaneers,WR1,1.0,Healthy
+Chris Godwin,Tampa Bay Buccaneers,WR2,1.0,Healthy
+Trey Palmer,Tampa Bay Buccaneers,WR3,1.0,Depth, slot
+Rakim Jarrett,Tampa Bay Buccaneers,WR4,1.0,Healthy, depth
+George Pickens,Pittsburgh Steelers,WR1,1.0,Alpha, healthy
+Van Jefferson,Pittsburgh Steelers,WR2,1.0,Starter, healthy
+Calvin Austin III,Pittsburgh Steelers,WR3,1.0,Depth, healthy
+Roman Wilson,Pittsburgh Steelers,WR4,1.0,Rookie, healthy
+Diontae Johnson,Carolina Panthers,WR1,1.0,Healthy, new team
+Jonathan Mingo,Carolina Panthers,WR2,1.0,Healthy, year 2
+Adam Thielen,Carolina Panthers,WR3,1.0,Veteran, healthy
+Josh Palmer,Los Angeles Chargers,WR1,1.0,Default #1 after departures
+Quentin Johnston,Los Angeles Chargers,WR2,1.0,Needs to step up, healthy
+Ladd McConkey,Los Angeles Chargers,WR3,1.0,Rookie, slot
+Brenden Rice,Los Angeles Chargers,WR4,1.0,Healthy, depth
+Skyy Moore,Kansas City Chiefs,WR1,1.0,Preseason #1, healthy
+Rashee Rice,Kansas City Chiefs,WR2,0.7,Suspension likely, legal issues
+Xavier Worthy,Kansas City Chiefs,WR3,1.0,Rookie, healthy
+Justin Watson,Kansas City Chiefs,WR4,1.0,Healthy, depth
+Hunter Renfrow,Jacksonville Jaguars,WR1,1.0,Slot/leader, healthy
+Brian Thomas Jr.,Jacksonville Jaguars,WR2,1.0,Rookie, likely starter
+Zay Jones,Jacksonville Jaguars,WR3,1.0,Healthy
+Christian Watson,Green Bay Packers,WR1,0.8,Questionable, hamstring
+Romeo Doubs,Green Bay Packers,WR2,1.0,Healthy
+Jayden Reed,Green Bay Packers,WR3,1.0,Healthy
+Bo Melton,Green Bay Packers,WR4,1.0,Depth, healthy
+Tyler Lockett,Seattle Seahawks,WR1,1.0,Healthy, slot
+DK Metcalf,Seattle Seahawks,WR2,1.0,No injury
+Jaxon Smith-Njigba,Seattle Seahawks,WR3,1.0,2nd-year, healthy
+Laviska Shenault Jr.,Seattle Seahawks,WR4,1.0,Depth, healthy
+Davante Adams,Las Vegas Raiders,WR1,1.0,Alpha, healthy
+Jakobi Meyers,Las Vegas Raiders,WR2,1.0,Healthy
+Tre Tucker,Las Vegas Raiders,WR3,1.0,Slot/return, healthy
+Michael Pittman Jr.,Indianapolis Colts,WR1,1.0,Top option, healthy
+Josh Downs,Indianapolis Colts,WR2,1.0,Healthy, slot
+Adonai Mitchell,Indianapolis Colts,WR3,1.0,Rookie, healthy
+Ashton Dulin,Indianapolis Colts,WR4,1.0,Healthy
+Deebo Samuel,San Francisco 49ers,WR1,1.0,Healthy, YAC king
+Brandon Aiyuk,San Francisco 49ers,WR2,1.0,Healthy
+Jauan Jennings,San Francisco 49ers,WR3,1.0,Healthy, big slot
+Ricky Pearsall,San Francisco 49ers,WR4,1.0,Rookie, healthy
+Jerry Jeudy,Cleveland Browns,WR1,1.0,New team, healthy
+Amari Cooper,Cleveland Browns,WR2,1.0,Contract year, healthy
+Elijah Moore,Cleveland Browns,WR3,1.0,Healthy
+Cedric Tillman,Cleveland Browns,WR4,1.0,Healthy, year 2
+Keenan Allen,Chicago Bears,WR1,1.0,Veteran, healthy
+Rome Odunze,Chicago Bears,WR2,1.0,Top rookie, healthy
+Darnell Mooney,Chicago Bears,WR3,1.0,Healthy
+Tyler Scott,Chicago Bears,WR4,1.0,Speed, healthy
+Rashid Shaheed,New Orleans Saints,WR2,1.0,Big-play threat, healthy
+Tylan Wallace,Baltimore Ravens,WR5,1.0,Special teams, healthy
+Chris Moore,Tennessee Titans,WR1,1.0,Starter, healthy
+Tyler Boyd,Tennessee Titans,WR2,1.0,Vet, healthy
+Treylon Burks,Tennessee Titans,WR3,0.8,Injury risk, hamstring
+DeAndre Hopkins,Tennessee Titans,WR4,1.0,Rotation/mentor, healthy
+Jaylen Hyatt,New York Giants,WR1,1.0,Second-year, healthy
+Wan'Dale Robinson,New York Giants,WR2,1.0,Healthy
+Darius Slayton,New York Giants,WR3,1.0,Healthy, veteran
+Isaiah Hodgins,New York Giants,WR4,1.0,Depth, healthy
+Joshua Palmer,Los Angeles Chargers,WR1,1.0,Starter by default, healthy
+Jalen Guyton,Los Angeles Chargers,WR5,1.0,Depth, healthy
+Rashod Bateman,Baltimore Ravens,WR2,1.0,Healthy, post-injury
+Josh Downs,Indianapolis Colts,WR2,1.0,Slot, healthy

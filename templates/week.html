@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>WR Matchup Visualizer - Week {{ week }}</title>
+<style>
+body { font-family: 'Segoe UI', 'Roboto', Arial, sans-serif; background: #171a1f; color: #f8f8f8; margin: 0; padding: 0; }
+h1 { font-family: 'Montserrat', 'Segoe UI', sans-serif; font-size: 2.1em; text-align: center; font-weight: 800; letter-spacing: 1px; margin-top: 24px; margin-bottom: 6px; color: #39a7ff; text-shadow: 0 2px 8px #0003; }
+.button-row {
+    display: flex;
+    justify-content: center;
+    gap: 18px;
+    margin-top: 16px;
+    margin-bottom: 6px;
+}
+.upload-label, .dt-button, .email-btn {
+    font-size: 1em;
+    font-weight: 700;
+    border-radius: 7px;
+    cursor: pointer;
+    border: none;
+    padding: 7px 18px;
+    margin-right: 0;
+    transition: background 0.13s;
+}
+.upload-label {
+    background: #24d35d;
+    color: #23262f;
+}
+.email-btn {
+    background: #0076B6;
+    color: #fff;
+}
+.email-btn:hover { background: #005a90; }
+.dt-button {
+    background: #212C3D !important;
+    color: #fff !important;
+    border-radius: 7px !important;
+    margin-left: 7px !important;
+    margin-right: 0 !important;
+    border: none !important;
+    box-shadow: 0 2px 10px #0001;
+}
+.dt-button:hover, .dt-button.active {
+    background: #39a7ff !important;
+    color: #fff !important;
+}
+#csv-upload { display: none; }
+
+.dataTables_wrapper { padding: 0 32px 0 32px; box-sizing: border-box; }
+.dataTables_wrapper .dataTables_filter { text-align: center !important; margin-bottom: 10px; }
+.dataTables_filter input[type="search"] {
+    border-radius: 16px; background: #23262f; color: #f8f8f8; border: 1.5px solid #39a7ff;
+    padding: 11px 28px; font-size: 1.13em; font-family: inherit; box-shadow: 0 1px 8px #0002;
+    margin-bottom: 18px; min-width: 370px; width: 36vw; max-width: 480px;
+}
+table { border-radius: 16px; border: 0; overflow: hidden; width: 97%; margin: 32px auto 64px auto; box-shadow: 0 6px 32px #0004; background: #23262f; }
+th { padding: 18px 8px 12px 8px; background: #1e2126; font-weight: 600; font-size: 1em; border: 0; color: #fff; }
+td { padding: 11px 7px; border: 0; font-size: 1.01em; }
+tr:hover td { background: #283045 !important; transition: background 0.16s; }
+.tooltipper { position: relative; }
+.tooltipper:hover:after {
+    content: attr(data-tooltip);
+    white-space: pre-line;
+    position: absolute;
+    left: 50%;
+    top: 135%;
+    min-width: 190px;
+    background: #242731;
+    color: #f8f8f8;
+    padding: 14px 15px;
+    border-radius: 11px;
+    font-size: 0.98em;
+    font-weight: 400;
+    box-shadow: 0 4px 20px #0006;
+    z-index: 99;
+    transform: translateX(-52%);
+    opacity: 0.97;
+    pointer-events: none;
+}
+.dataTables_paginate .paginate_button {
+    color: #39a7ff !important;
+    background: #181c24 !important;
+    border-radius: 7px !important;
+    border: none !important;
+    margin: 0 3px;
+    font-weight: bold;
+}
+.dataTables_paginate .paginate_button.current {
+    background: #39a7ff !important;
+    color: #fff !important;
+}
+.dataTables_length { display: none !important; }
+.dataTables_info { padding-left: 16px; padding-bottom: 9px; }
+@media (max-width: 650px) {
+    .dataTables_wrapper { padding: 0 2vw 0 2vw; }
+    .dataTables_filter input[type="search"] { min-width: 140px; width: 88vw; }
+}
+</style>
+<!-- DataTables JS/CSS with Buttons -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.dataTables.min.css">
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
+<script>
+$(document).ready(function() {
+    var table = $('#yaculator-table').DataTable({
+        paging: true,
+        searching: true,
+        order: [[1, 'desc']],
+        pageLength: 25,
+        responsive: true,
+        dom: "<'dt-top-buttons'B>ftrip",
+        buttons: [
+            { extend: 'copy', text: 'Copy' },
+            { extend: 'csv', text: 'CSV' },
+            { extend: 'print', text: 'Print' }
+        ],
+        language: {
+            search: "_INPUT_",
+            searchPlaceholder: "Search WR, team, or matchup...",
+            zeroRecords: "No WRs match your filters.",
+            info: "Showing _START_–_END_ of _TOTAL_ WRs",
+            infoEmpty: "No WRs to display",
+            infoFiltered: "(filtered from _MAX_ total WRs)",
+            paginate: {
+                first: "«",
+                last: "»",
+                next: "›",
+                previous: "‹"
+            }
+        }
+    });
+
+    // Style the DataTables buttons to match custom buttons
+    $('.dt-button').addClass('upload-label').removeClass('dt-button');
+
+    // Upload CSV logic
+    $('#csv-upload').on('change', function(e) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            var csv = e.target.result;
+            var rows = csv.split('\\n').map(r=>r.split(','));
+            var html = '';
+            for (var i=1; i<rows.length; ++i) {
+                if (rows[i].length < 2) continue;
+                html += '<tr>';
+                for (var j=0; j<rows[0].length; ++j) {
+                    html += '<td>' + (rows[i][j] || '') + '</td>';
+                }
+                html += '</tr>';
+            }
+            $('#yaculator-table tbody').html(html);
+            table.clear().destroy();
+            var table2 = $('#yaculator-table').DataTable({
+                paging: true,
+                searching: true,
+                order: [[1, 'desc']],
+                pageLength: 25,
+                responsive: true,
+                dom: "<'dt-top-buttons'B>ftrp",
+                buttons: [
+                    { extend: 'copy', text: 'Copy' },
+                    { extend: 'csv', text: 'CSV' },
+                    { extend: 'print', text: 'Print' }
+                ],
+                language: {
+                    search: "_INPUT_",
+                    searchPlaceholder: "Search WR, team, or matchup...",
+                    zeroRecords: "No WRs match your filters.",
+                    info: "Showing _START_–_END_ of _TOTAL_ WRs",
+                    infoEmpty: "No WRs to display",
+                    infoFiltered: "(filtered from _MAX_ total WRs)",
+                    paginate: {
+                        first: "«",
+                        last: "»",
+                        next: "›",
+                        previous: "‹"
+                    }
+                }
+            });
+            $('.dt-button').addClass('upload-label').removeClass('dt-button');
+        };
+        reader.readAsText(e.target.files[0]);
+    });
+
+    // Email button (emails table data as CSV in body)
+    $('#email-btn').on('click', function() {
+        var csv = [];
+        $('#yaculator-table thead tr').each(function() {
+            var row = [];
+            $(this).find('th').each(function() {
+                row.push($(this).text().trim());
+            });
+            csv.push(row.join(','));
+        });
+        $('#yaculator-table tbody tr:visible').each(function() {
+            var row = [];
+            $(this).find('td').each(function() {
+                row.push($(this).text().trim());
+            });
+            csv.push(row.join(','));
+        });
+        var body = encodeURIComponent(csv.join("\\n"));
+        var mailto = "mailto:?subject=YACulator%20Week%20{{ week }}%20Table&body=" + body;
+        window.location.href = mailto;
+    });
+});
+</script>
+</head>
+<body>
+<h1>WR Matchup Visualizer &bull; Week {{ week }}</h1>
+<div class="button-row">
+    <label class="upload-label">
+        Upload CSV
+        <input type="file" id="csv-upload">
+    </label>
+    <button id="email-btn" class="email-btn">Email Table</button>
+</div>
+<table id="yaculator-table" class="display nowrap" style="width:98%;">
+    <thead>
+    <tr>
+        <th>Player</th>
+        <th>Proj Pts</th>
+        <th>Opponent</th>
+        <th>Scheme</th>
+        <th>Slot%</th>
+        <th>Wide%</th>
+        <th>Env</th>
+        <th>GameScript</th>
+        <th>Deep Penalty</th>
+        <th>Short Penalty</th>
+        <th>Market Prop</th>
+        <th>Final</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for row in rows %}
+    <tr>
+        <td style="background:{{ row.team_color }}; color:#fff; text-align:center;">
+            <img src="https://sleepercdn.com/content/nfl/players/{{ row.wr_name | replace("'", "") | replace(".", "") | replace(" ", "-") | lower }}.jpg" style="border-radius:50%; width:45px; height:45px; border:2px solid #fff; margin:4px 0 0 0; background:#eee;"><br>
+            <span style="font-weight:bold;font-size:1.05em;">{{ row.wr_name }}</span><br>
+            <span style="font-size:0.95em;">{{ row.team }}</span>
+        </td>
+        <td style="background:{{ row.bg_color }}; text-align:center;">
+            <span data-tooltip="Man Win%: {{ row.man_win_rate }}&#10;Zone Win%: {{ row.zone_win_rate }}&#10;Sep/Man: {{ row.man_sep }}&#10;Sep/Zone: {{ row.zone_sep }}" class="tooltipper" style="font-weight: bold; font-size: 1.2em; cursor: help;">{{ row.adj_pts }}</span>
+        </td>
+        <td style="text-align:center;">{{ row.opp_team }}</td>
+        <td style="text-align:center;">{{ row.scheme }}</td>
+        <td style="text-align:center;">{{ (row.slot_weight * 100) | round(1) }}</td>
+        <td style="text-align:center;">{{ (row.wide_weight * 100) | round(1) }}</td>
+        <td style="text-align:center;">{{ row.env_boost }}</td>
+        <td style="text-align:center;">{{ row.game_script_boost }}</td>
+        <td style="text-align:center;">{{ row.deep_penalty }}</td>
+        <td style="text-align:center;">{{ row.short_penalty }}</td>
+        <td style="text-align:center;">{{ row.market_prop }}</td>
+        <td style="text-align:center; font-weight:bold;">{{ row.final_pts }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+<div style="text-align:center; color:#888; margin-bottom:25px;">&copy; 2025 SIMDaddy | Inspired by PlayerProfiler</div>
+</body>
+</html>

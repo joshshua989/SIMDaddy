@@ -1,0 +1,4 @@
+wr_name,team,opp_team,scheme,base_pts,adj_pts,slot_weight,wide_weight,env_boost,game_script_boost,deep_penalty,short_penalty,market_prop,final_pts,man_win_rate,zone_win_rate,man_sep,zone_sep
+Ja'Marr Chase,CIN,CLE,man,14.5,18.4,0.32,0.68,1.00,1.07,0.93,0.97,84.5,19.7,23.1,40.0,1.6,2.9
+Amon-Ra St. Brown,DET,CHI,zone,13.0,15.9,0.55,0.45,1.03,0.98,0.98,0.99,82.5,16.0,21.5,42.8,1.4,2.7
+A.J. Brown,PHI,GB,zone,11.2,12.4,0.28,0.72,0.93,0.92,0.90,1.00,77.5,11.2,19.9,37.5,1.1,2.1

@@ -1,0 +1,8 @@
+{
+    "NFL_SCHEDULE_FILE": "/mnt/data/YACulator/NFL_SCHEDULE_2025.csv",
+    "ADV_WR_STATS_FILE": "/mnt/data/YACulator/ADVANCED_WR_STATS_2024.csv",
+    "CB_ALIGNMENT_FILE": "/mnt/data/YACulator/CB_ALIGNMENT.csv",
+    "DEF_COVERAGE_TAGS_FILE": "/mnt/data/YACulator/DEF_COVERAGE_TAGS.csv",
+    "EXPORT_FULL_SEASON_FILE": "/mnt/data/YACulator/WR_FULL_SEASON_PROJECTIONS.csv",
+    "EXPORT_ZIP_NAME": "/mnt/data/YACulator_YAC_Full_Project.zip"
+}

@@ -1,0 +1,56 @@
+body {
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+    background: #f4f4f4;
+    color: #333;
+}
+nav {
+    padding: 12px 30px;
+    background: #0076B6;
+    color: #fff;
+    font-size: 1.1em;
+    letter-spacing: 1px;
+}
+.container {
+    max-width: 1100px;
+    margin: 30px auto;
+    background: #fff;
+    border-radius: 14px;
+    padding: 35px 36px;
+    box-shadow: 0 6px 32px #0003;
+}
+.login-container {
+    max-width: 350px;
+    margin: 60px auto;
+    padding: 28px 26px;
+    background: #eee;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px #0001;
+    text-align: center;
+}
+input[type=text], input[type=password] {
+    width: 90%;
+    padding: 10px;
+    margin: 7px 0 15px 0;
+    border-radius: 7px;
+    border: 1px solid #aaa;
+}
+button {
+    background: #0076B6;
+    color: #fff;
+    border: none;
+    padding: 12px 30px;
+    font-size: 1.1em;
+    border-radius: 7px;
+    cursor: pointer;
+}
+button:hover {
+    background: #005f8c;
+}
+.flashes {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 18px;
+}
+.flashes li.danger { background: #f8d7da; color: #721c24; padding: 7px 13px; border-radius: 7px; }
+.flashes li.warning { background: #fff3cd; color: #856404; padding: 7px 13px; border-radius: 7px; }

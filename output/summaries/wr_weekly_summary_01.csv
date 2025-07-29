@@ -1,0 +1,2 @@
+week,wr_name,team,opp_team,slot_weight,wide_weight,safety_weight,lb_weight,base_pts,adj_pts,env_boost,game_script_boost,final_pts,Notes
+1,Ja'Marr Chase,CIN,Cleveland Browns,30.9,-29.9,0.04,0.01,2.35,,1.0,,,

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>SIMDaddy - WR Matchup Visualizer Index</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 40px 20px;
+            background-color: #121212;
+            font-family: 'Segoe UI', sans-serif;
+            color: #f0f0f0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 {
+            color: #00bfff;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            width: 100%;
+            max-width: 1200px;
+        }
+        .card {
+            background-color: #1e1e1e;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            text-align: center;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.6);
+        }
+        .card h2 {
+            color: #ffffff;
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+        .summary {
+            font-size: 0.95em;
+            color: #cccccc;
+            margin-bottom: 16px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 16px;
+            background-color: #00bfff;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: bold;
+        }
+        .btn:hover {
+            background-color: #008fcc;
+        }
+        @media (max-width: 600px) {
+            h1 { font-size: 1.8em; }
+            .card h2 { font-size: 1.3em; }
+        }
+    </style>
+</head>
+<body>
+    <h1>🏈 SIMDaddy</h1>
+    <div class="grid">
+        {% for week in range(1, 19) %}
+        <div class="card">
+            <h2>Week {{ week }}</h2>
+            <p class="summary">Top WR projections, matchup insights, and weather/game script context.</p>
+            <a href="{{ url_for('week_view', week=week) }}" class="btn">View Matchups</a>
+        </div>
+        {% endfor %}
+    </div>
+    <div style="margin-top:32px;"><a href="{{ url_for('logout') }}" style="color:#aaa;text-decoration:none;">Logout</a></div>
+</body>
+</html>

@@ -1,0 +1,122 @@
+Player,Team,Depth,Value,Explanation
+Terry McLaurin,Washington Commanders,WR1,0.32,Consistent alpha, 30%+ air yards each year
+Jahan Dotson,Washington Commanders,WR2,0.22,Secondary outside, deep shots
+Luke McCaffrey,Washington Commanders,WR3,0.13,Rookie, slot/intermediate
+Dyami Brown,Washington Commanders,WR4,0.05,Rotational, occasional deep
+Justin Jefferson,Minnesota Vikings,WR1,0.36,League leader, elite deep/intermediate
+Jordan Addison,Minnesota Vikings,WR2,0.21,Quick separator, intermediate
+Brandon Powell,Minnesota Vikings,WR3,0.08,Slot/short area
+Jalen Nailor,Minnesota Vikings,WR4,0.03,Deep reserve
+Ja'Marr Chase,Cincinnati Bengals,WR1,0.34,Target hog, frequent deep
+Tee Higgins,Cincinnati Bengals,WR2,0.25,Vertical #2, high aDOT
+Jermaine Burton,Cincinnati Bengals,WR3,0.12,Rookie, deep routes
+Charlie Jones,Cincinnati Bengals,WR4,0.05,Short/slot
+CeeDee Lamb,Dallas Cowboys,WR1,0.33,Alpha, high volume
+Brandin Cooks,Dallas Cowboys,WR2,0.16,Field stretcher
+Jalen Tolbert,Dallas Cowboys,WR3,0.08,Rotational
+KaVontae Turpin,Dallas Cowboys,WR4,0.03,Special teams, gadget
+Tyreek Hill,Miami Dolphins,WR1,0.37,Elite deep and YAC, nearly 40% share
+Jaylen Waddle,Miami Dolphins,WR2,0.23,Intermediate/deep
+Odell Beckham Jr.,Miami Dolphins,WR3,0.07,Limited, mostly short/intermediate
+Erik Ezukanma,Miami Dolphins,WR4,0.03,Minimal role
+Amon-Ra St. Brown,Detroit Lions,WR1,0.30,"Intermediate, slot, lots of volume"
+Jameson Williams,Detroit Lions,WR2,0.17,Deep threat, rising role
+Josh Reynolds,Detroit Lions,WR3,0.08,Slot/rotation
+Antoine Green,Detroit Lions,WR4,0.03,Limited
+AJ Brown,Philadelphia Eagles,WR1,0.35,Top-3 in air yards, deep threat
+DeVonta Smith,Philadelphia Eagles,WR2,0.25,Excellent separator, mid/deep
+Parris Campbell,Philadelphia Eagles,WR3,0.07,Short/slot
+John Ross,Philadelphia Eagles,WR4,0.03,Occasional deep
+Garrett Wilson,New York Jets,WR1,0.34,Clear alpha, high share
+Mike Williams,New York Jets,WR2,0.19,Deep routes, coming off ACL
+Malachi Corley,New York Jets,WR3,0.08,Slot, rookie
+Xavier Gipson,New York Jets,WR4,0.04,Depth, return
+Puka Nacua,Los Angeles Rams,WR1,0.31,Elite 2024 rookie breakout, huge volume
+Cooper Kupp,Los Angeles Rams,WR2,0.23,Mostly short/mid, some deep
+Demarcus Robinson,Los Angeles Rams,WR3,0.08,Rotational
+Tutu Atwell,Los Angeles Rams,WR4,0.03,Occasional deep
+Marvin Harrison Jr.,Arizona Cardinals,WR1,0.29,Rookie, projected alpha
+Michael Wilson,Arizona Cardinals,WR2,0.15,Intermediate/deep
+Rondale Moore,Arizona Cardinals,WR3,0.07,Slot gadget
+Greg Dortch,Arizona Cardinals,WR4,0.03,Rotational
+Drake London,Atlanta Falcons,WR1,0.31,Alpha, high aDOT
+Darnell Mooney,Atlanta Falcons,WR2,0.17,Deep threat
+KhaDarel Hodge,Atlanta Falcons,WR3,0.06,Rotation
+Scotty Miller,Atlanta Falcons,WR4,0.03,Depth, slot
+Curtis Samuel,Buffalo Bills,WR1,0.18,Mostly short/slot
+Khalil Shakir,Buffalo Bills,WR2,0.14,Short/depth
+Keon Coleman,Buffalo Bills,WR3,0.11,Rookie, rising deep threat
+Justin Shorter,Buffalo Bills,WR4,0.03,Limited
+Stefon Diggs,Houston Texans,WR1,0.31,Still the alpha, new team
+Nico Collins,Houston Texans,WR2,0.25,Big-play, contested catch
+Tank Dell,Houston Texans,WR3,0.14,Intermediate/slot
+Noah Brown,Houston Texans,WR4,0.06,Depth
+Chris Olave,New Orleans Saints,WR1,0.32,Primary deep/intermediate
+Rashid Shaheed,New Orleans Saints,WR2,0.16,Deep shots, big plays
+Cedrick Wilson Jr.,New Orleans Saints,WR3,0.07,Short/slot
+A.T. Perry,New Orleans Saints,WR4,0.03,Depth
+Zay Flowers,Baltimore Ravens,WR1,0.26,Quick separator, mid/deep
+Rashod Bateman,Baltimore Ravens,WR2,0.13,Short/slot
+Nelson Agholor,Baltimore Ravens,WR3,0.05,Depth
+Devin Duvernay,Baltimore Ravens,WR4,0.03,Return/rotation
+Mike Evans,Tampa Bay Buccaneers,WR1,0.30,Elite, deep target
+Chris Godwin,Tampa Bay Buccaneers,WR2,0.22,Slot/mid
+Trey Palmer,Tampa Bay Buccaneers,WR3,0.07,Depth, rookie
+Rakim Jarrett,Tampa Bay Buccaneers,WR4,0.03,Depth, low usage
+George Pickens,Pittsburgh Steelers,WR1,0.32,High aDOT, main target
+Van Jefferson,Pittsburgh Steelers,WR2,0.16,Intermediate
+Calvin Austin III,Pittsburgh Steelers,WR3,0.07,Slot/return
+Roman Wilson,Pittsburgh Steelers,WR4,0.04,Rookie
+Diontae Johnson,Carolina Panthers,WR1,0.25,Top option, intermediate
+Jonathan Mingo,Carolina Panthers,WR2,0.17,Short/mid
+Adam Thielen,Carolina Panthers,WR3,0.11,Veteran slot
+Josh Palmer,Los Angeles Chargers,WR1,0.19,Default #1, mid/deep
+Quentin Johnston,Los Angeles Chargers,WR2,0.14,Deep threat, needs to improve
+Ladd McConkey,Los Angeles Chargers,WR3,0.09,Rookie slot
+Brenden Rice,Los Angeles Chargers,WR4,0.03,Depth
+Skyy Moore,Kansas City Chiefs,WR1,0.17,Default starter, short/slot
+Rashee Rice,Kansas City Chiefs,WR2,0.13,Suspension, mid/deep
+Xavier Worthy,Kansas City Chiefs,WR3,0.11,Rookie, field stretcher
+Justin Watson,Kansas City Chiefs,WR4,0.05,Depth, deep
+Hunter Renfrow,Jacksonville Jaguars,WR1,0.14,Slot/leader
+Brian Thomas Jr.,Jacksonville Jaguars,WR2,0.17,Rookie, deep
+Zay Jones,Jacksonville Jaguars,WR3,0.10,Intermediate
+Christian Watson,Green Bay Packers,WR1,0.25,Injury-prone, deep threat
+Romeo Doubs,Green Bay Packers,WR2,0.19,Intermediate
+Jayden Reed,Green Bay Packers,WR3,0.13,Slot, some deep
+Bo Melton,Green Bay Packers,WR4,0.05,Depth
+Tyler Lockett,Seattle Seahawks,WR1,0.21,Slot/intermediate
+DK Metcalf,Seattle Seahawks,WR2,0.31,Elite deep
+Jaxon Smith-Njigba,Seattle Seahawks,WR3,0.15,2nd year, rising
+Laviska Shenault Jr.,Seattle Seahawks,WR4,0.04,Depth
+Davante Adams,Las Vegas Raiders,WR1,0.33,Alpha, air yards machine
+Jakobi Meyers,Las Vegas Raiders,WR2,0.19,Short/intermediate
+Tre Tucker,Las Vegas Raiders,WR3,0.06,Depth/return
+Michael Pittman Jr.,Indianapolis Colts,WR1,0.28,Alpha, volume
+Josh Downs,Indianapolis Colts,WR2,0.13,Slot, YAC
+Adonai Mitchell,Indianapolis Colts,WR3,0.08,Rookie, deep
+Ashton Dulin,Indianapolis Colts,WR4,0.03,Depth, ST
+Deebo Samuel,San Francisco 49ers,WR1,0.18,Low aDOT, YAC monster
+Brandon Aiyuk,San Francisco 49ers,WR2,0.26,Downfield, high share
+Jauan Jennings,San Francisco 49ers,WR3,0.09,Slot/big
+Ricky Pearsall,San Francisco 49ers,WR4,0.03,Rookie
+Jerry Jeudy,Cleveland Browns,WR1,0.18,New team, likely leader
+Amari Cooper,Cleveland Browns,WR2,0.23,Deep/intermediate, can lead
+Elijah Moore,Cleveland Browns,WR3,0.12,Slot/gadget
+Cedric Tillman,Cleveland Browns,WR4,0.04,Year 2, deep
+Keenan Allen,Chicago Bears,WR1,0.24,Veteran, target monster
+Rome Odunze,Chicago Bears,WR2,0.15,Top rookie, some deep
+Darnell Mooney,Chicago Bears,WR3,0.12,Speed slot
+Tyler Scott,Chicago Bears,WR4,0.05,Depth
+Chris Moore,Tennessee Titans,WR1,0.14,Starter, short
+Tyler Boyd,Tennessee Titans,WR2,0.13,Vet, short/slot
+Treylon Burks,Tennessee Titans,WR3,0.13,Deep, injury risk
+DeAndre Hopkins,Tennessee Titans,WR4,0.18,Outside, veteran
+Jaylen Hyatt,New York Giants,WR1,0.15,Second-year, deep threat
+Wan'Dale Robinson,New York Giants,WR2,0.12,Slot/gadget
+Darius Slayton,New York Giants,WR3,0.10,Field stretcher
+Isaiah Hodgins,New York Giants,WR4,0.04,Depth
+Joshua Palmer,Los Angeles Chargers,WR1,0.19,Default #1, mid/deep
+Jalen Guyton,Los Angeles Chargers,WR5,0.03,Occasional deep
+Rashod Bateman,Baltimore Ravens,WR2,0.13,Post-injury, mid/short
+Josh Downs,Indianapolis Colts,WR2,0.13,Slot, YAC
