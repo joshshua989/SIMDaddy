@@ -1,12 +1,12 @@
-
 # config.py
 
 from pathlib import Path
+import os
 
 # -------------------------------
 # Environment Control
 # -------------------------------
-ENVIRONMENT = "DEV"  # Options: DEV, PROD, TEST
+ENVIRONMENT = "DEV"
 CURRENT_WEEK = 1
 FILENAME_SUFFIX = "_v1_test"
 
@@ -16,9 +16,11 @@ FILENAME_SUFFIX = "_v1_test"
 DATA_DIR = Path("DATA")
 PLAYER_PROFILER_DIR = Path("player_profiler_data")
 NFL_SCHEDULES_DIR = Path("nfl_schedules")
+NFL_ROSTER_DIR = Path("rosters")
 
-ROSTER_2025_FILE = DATA_DIR / NFL_SCHEDULES_DIR / "ROSTER_2025.csv"
-ROSTER_2024_FILE = DATA_DIR / NFL_SCHEDULES_DIR / "roster_2024.csv"
+ROSTER_2025_FILE = DATA_DIR / NFL_ROSTER_DIR / "NFL_ROSTER_2025.csv"
+NFL_SCHEDULE_2025_FILE = DATA_DIR / NFL_SCHEDULES_DIR / "NFL_SCHEDULE_2025.csv"
+NFL_SCHEDULE_2024_FILE = DATA_DIR / NFL_SCHEDULES_DIR / "NFL_SCHEDULE_2024.csv"
 WR_STATS_2024_FILE = DATA_DIR / PLAYER_PROFILER_DIR / "WR_STATS_2024.csv"
 DB_ALIGNMENT_FILE = DATA_DIR / PLAYER_PROFILER_DIR / "DB_STATS_2022_2023_2024.csv"
 BLENDED_WR_FILE = DATA_DIR / PLAYER_PROFILER_DIR / "BLENDED_WR_STATS.csv"
@@ -40,12 +42,12 @@ USE_ADVANCED_GAME_SCRIPT_MODEL = True
 # -------------------------------
 # Alignment Logic
 # -------------------------------
-USE_SOFT_ALIGNMENT = True  # Enable probabilistic DB role assignment
+USE_SOFT_ALIGNMENT = True
 
 # -------------------------------
 # Coverage Scheme Logic
 # -------------------------------
-DEFAULT_MAN_ZONE_BLEND = True  # Blend man/zone usage if no hard split
+DEFAULT_MAN_ZONE_BLEND = True
 
 # -------------------------------
 # Projection Weights
@@ -67,9 +69,8 @@ BLEND_WEIGHTS = {
 }
 
 # -------------------------------
-# MULTIPLIER CSVs & MULTIPLIERS (used for projections when calculating boost and penalty variables)
+# MULTIPLIER CSVs
 # -------------------------------
-
 TEAM_SCRIPT_RESPONSE_CSV = "DATA/multipliers/team_script_response.csv"
 WR_SCRIPT_SENSITIVITY_CSV = "DATA/multipliers/wr_script_sensitivity.csv"
 PACE_MULTIPLIER_CSV = "DATA/multipliers/pace_multiplier.csv"
@@ -88,22 +89,42 @@ ROLE_MULTIPLIER = {
 # -------------------------------
 NOAA_POINTS_BASE_URL = "https://api.weather.gov/points"
 FORCE_DOME_NO_WEATHER_PENALTY = True
-CLIMATE_PHASE = "ElNino"  # Options: "ElNino", "LaNina", "Neutral"
+CLIMATE_PHASE = "ElNino"
 USE_FORECAST_WEATHER = True
 
 # -------------------------------
 # Projection Source Toggle
 # -------------------------------
-# Options: 'model', 'market', 'blend'
 PROJECTION_SOURCE_TOGGLE = "model"
 
 # -------------------------------
 # Logging + Quality Control
 # -------------------------------
 ENABLE_QUALITY_CONTROL = True
+ENABLE_GAME_SCRIPT_EXPLANATION = True
+ENABLE_ENVIRONMENT_EXPLANATION = False
 
-# -------------------------------
-# Explanation Logging
-# -------------------------------
-ENABLE_GAME_SCRIPT_EXPLANATION = True  # Output explanation string for each script boost
-ENABLE_ENVIRONMENT_EXPLANATION = False  # (Reminder: Add this logic for env boosts later!)
+# ==========================================================
+# 🔐 Flask Config Class for App/Auth
+# ==========================================================
+
+class Config:
+    SECRET_KEY = os.getenv("SECRET_KEY", "dev-secret-key")
+    SQLALCHEMY_DATABASE_URI = "sqlite:///simdaddy.db"
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+
+    # reCAPTCHA
+    RECAPTCHA_PUBLIC_KEY = os.getenv("RECAPTCHA_PUBLIC_KEY", "your-recaptcha-site-key")
+    RECAPTCHA_PRIVATE_KEY = os.getenv("RECAPTCHA_PRIVATE_KEY", "your-recaptcha-secret-key")
+
+    # OAuth (optional)
+    GOOGLE_OAUTH_CLIENT_ID = os.getenv("GOOGLE_OAUTH_CLIENT_ID", "your-google-client-id")
+    GOOGLE_OAUTH_CLIENT_SECRET = os.getenv("GOOGLE_OAUTH_CLIENT_SECRET", "your-google-client-secret")
+
+    # Twilio
+    TWILIO_ACCOUNT_SID = os.getenv("TWILIO_ACCOUNT_SID", "your-twilio-sid")
+    TWILIO_AUTH_TOKEN = os.getenv("TWILIO_AUTH_TOKEN", "your-twilio-token")
+    TWILIO_VERIFY_SERVICE_SID = os.getenv("TWILIO_VERIFY_SERVICE_SID", "your-verify-service-id")
+
+    # Toggle OAuth (optional)
+    ENABLE_SOCIAL_LOGINS = False

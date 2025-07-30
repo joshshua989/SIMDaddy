@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF‑8">
+  <title>SIMDaddy | Dominate Every Down</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/landing.css') }}">
+</head>
+<body>
+  <header class="hero">
+    <div class="hero-inner">
+      <h1>Dominate Every Down</h1>
+      <p>Projections. Props. WR matchups powered by context.</p>
+      <div class="buttons">
+        <a href="{{ url_for('auth.signup') }}" class="btn primary">Get Started Free</a>
+        <a href="{{ url_for('auth.login') }}" class="btn secondary">Log In</a>
+      </div>
+    </div>
+  </header>
+
+  <section class="features">
+    <div class="feature">
+      <h2>📫 Visual WR Matchups</h2>
+      <p>Heatmaps vs CB, coverage, win-rate data—week by week.</p>
+    </div>
+    <div class="feature">
+      <h2>🌧️ Script & Weather AI</h2>
+      <p>Your projections adjust for dome games, wind penalties, and predicted scoring.</p>
+    </div>
+    <div class="feature">
+      <h2>💰 Prop Bet Edge</h2>
+      <p>Compare SIM vs book lines to spot value you can act on.</p>
+    </div>
+  </section>
+
+  <section class="testimonial">
+    <blockquote>
+      “SIMDaddy is like having NFL analytics in your back pocket.”
+    </blockquote>
+    <div class="author">— A Featured Fantasy Analyst</div>
+  </section>
+
+  <footer>
+    <p>&copy; 2025 SIMDaddy • Built for Winners • <a href="/privacy">Privacy</a> • <a href="/terms">Terms</a></p>
+  </footer>
+</body>
+</html>

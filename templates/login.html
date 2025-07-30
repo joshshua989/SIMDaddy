@@ -1,12 +1,101 @@
 {% extends "base.html" %}
 {% block title %}Login{% endblock %}
+
 {% block content %}
-<div class="login-container">
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        background: linear-gradient(to bottom, #0a0a0a 0%, #111 100%),
+                    url('https://cdn.pixabay.com/photo/2016/11/22/19/11/football-1851166_1280.jpg') center/cover no-repeat;
+        background-blend-mode: overlay;
+        font-family: 'Segoe UI', sans-serif;
+        color: #e0e0e0;
+        min-height: 100vh;
+    }
+
+    .auth-container {
+        background-color: rgba(20, 20, 20, 0.85);
+        padding: 45px 30px;
+        border-radius: 14px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+        max-width: 420px;
+        margin: 120px auto;
+        backdrop-filter: blur(4px);
+    }
+
+    .auth-container h2 {
+        text-align: center;
+        color: #00bfff;
+        font-size: 1.8em;
+        margin-bottom: 28px;
+        letter-spacing: 0.5px;
+    }
+
+    label {
+        display: block;
+        margin: 16px 0 6px;
+        font-size: 0.95em;
+        color: #cccccc;
+    }
+
+    input {
+        width: 100%;
+        padding: 11px;
+        background-color: #222;
+        border: 1px solid #444;
+        border-radius: 6px;
+        color: #f0f0f0;
+        font-size: 0.95em;
+    }
+
+    .btn {
+        margin-top: 28px;
+        width: 100%;
+        padding: 12px;
+        background-color: #00bfff;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-weight: bold;
+        font-size: 1em;
+        letter-spacing: 0.5px;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+    }
+
+    .btn:hover {
+        background-color: #008fcc;
+    }
+
+    .alt-link {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 0.95em;
+    }
+
+    .alt-link a {
+        color: #00bfff;
+        text-decoration: none;
+    }
+
+    .alt-link a:hover {
+        text-decoration: underline;
+    }
+</style>
+
+<div class="auth-container">
     <h2>Login to SIMDaddy</h2>
-    <form method="post">
-        <label>Username:<br><input type="text" name="username" required></label><br>
-        <label>Password:<br><input type="password" name="password" required></label><br>
-        <button type="submit">Login</button>
+    <form method="POST" action="{{ url_for('auth.login') }}">
+        {{ form.hidden_tag() }}
+        <label>Email:</label>
+        {{ form.username(size=32) }}
+        <label>Password:</label>
+        {{ form.password(size=32) }}
+        <button type="submit" class="btn">Log In</button>
     </form>
+    <div class="alt-link">
+        <p>Don’t have an account? <a href="{{ url_for('auth.signup') }}">Sign up</a></p>
+    </div>
 </div>
 {% endblock %}

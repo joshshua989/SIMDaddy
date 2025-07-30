@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5 text-white">
+  <h1 class="mb-4">📋 NFL Transactions</h1>
+
+  <form method="get" class="mb-3">
+    <label for="month" class="form-label">Select Month:</label>
+    <select name="month" class="form-select w-auto d-inline" onchange="this.form.submit()">
+      {% for m in ['july', 'august', 'september'] %}
+        <option value="{{ m }}" {% if selected_month == m %}selected{% endif %}>{{ m|capitalize }}</option>
+      {% endfor %}
+    </select>
+  </form>
+
+  {% if transactions %}
+    {% for t in transactions %}
+      <div class="card bg-dark text-light mb-2">
+        <div class="card-body">
+          <h6 class="card-subtitle mb-2 text-muted">{{ t.date }}</h6>
+          <p class="card-text">{{ t.text }}</p>
+        </div>
+      </div>
+    {% endfor %}
+  {% else %}
+    <p class="text-warning">No transactions found.</p>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,176 @@
+{% extends "base.html" %}
+{% block title %}Sign Up{% endblock %}
+
+{% block content %}
+<style>
+    body {
+        background: url('https://images.unsplash.com/photo-1595996033963-d57a1a6b3d30?auto=format&fit=crop&w=1650&q=80') no-repeat center center fixed;
+        background-size: cover;
+        font-family: 'Segoe UI', sans-serif;
+        color: #f0f0f0;
+    }
+
+    .signup-container {
+        max-width: 400px;
+        margin: 60px auto;
+        background-color: rgba(18, 18, 18, 0.9);
+        padding: 30px 40px;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.7);
+    }
+
+    .signup-container h2 {
+        color: #00bfff;
+        text-align: center;
+        margin-bottom: 25px;
+        font-size: 1.8em;
+    }
+
+    label {
+        display: block;
+        margin-top: 12px;
+        font-size: 0.95em;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    input[type="tel"] {
+        width: 100%;
+        padding: 10px 12px;
+        margin-top: 6px;
+        margin-bottom: 10px;
+        background-color: white;
+        color: black;
+        border: none;
+        border-radius: 6px;
+        font-size: 0.95em;
+        box-sizing: border-box;
+        height: 42px;
+    }
+
+    .sms-group {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        margin-top: 6px;
+        margin-bottom: 12px;
+    }
+
+    .sms-group input[type="text"] {
+        flex: 1;
+        height: 42px;
+    }
+
+    .sms-group button {
+        flex-shrink: 0;
+        padding: 10px 14px;
+        font-size: 0.9em;
+        border-radius: 6px;
+        background-color: #00bfff;
+        color: white;
+        border: none;
+        cursor: pointer;
+    }
+
+    .sms-group button:hover {
+        background-color: #008fcc;
+    }
+
+    .g-recaptcha {
+        margin: 20px 0;
+    }
+
+    button[type="submit"] {
+        width: 100%;
+        background-color: #00bfff;
+        color: white;
+        padding: 12px;
+        border: none;
+        border-radius: 6px;
+        font-size: 1em;
+        font-weight: bold;
+        cursor: pointer;
+        margin-top: 10px;
+    }
+
+    button[type="submit"]:hover {
+        background-color: #008fcc;
+    }
+
+    .signup-container p {
+        text-align: center;
+        margin-top: 16px;
+        font-size: 0.9em;
+    }
+
+    .signup-container a {
+        color: #00bfff;
+        text-decoration: none;
+    }
+
+    .signup-container a:hover {
+        text-decoration: underline;
+    }
+</style>
+
+<div class="signup-container">
+    <h2>Create Your SIMDaddy Account</h2>
+
+    <form method="POST" action="{{ url_for('auth.signup') }}">
+        {{ form.hidden_tag() }}
+
+        <label>First Name:</label>
+        {{ form.first_name(class_="form-control") }}
+
+        <label>Last Name:</label>
+        {{ form.last_name(class_="form-control") }}
+
+        <label>Email:</label>
+        {{ form.email(class_="form-control") }}
+
+        <label>Phone Number:</label>
+        {{ form.phone(class_="form-control", id="phone") }}
+
+        <label>Password:</label>
+        {{ form.password(class_="form-control") }}
+
+        <label>Confirm Password:</label>
+        {{ form.confirm_password(class_="form-control") }}
+
+        <label>Verification Code (SMS):</label>
+        <div class="sms-group">
+            <input type="text" name="sms_code" placeholder="123456" required>
+            <button type="button" onclick="sendCode()">Send Code</button>
+        </div>
+
+        <label>{{ form.agree_terms() }} I agree to the <a href="/terms">Terms & Conditions</a></label>
+        <label>{{ form.agree_privacy() }} I agree to the <a href="/privacy">Privacy Policy</a></label>
+
+        <div class="g-recaptcha" data-sitekey="YOUR_RECAPTCHA_SITE_KEY"></div>
+
+        <button type="submit">Sign Up</button>
+    </form>
+
+    <p>Already have an account? <a href="{{ url_for('auth.login') }}">Log in here</a></p>
+</div>
+
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+<script>
+    function sendCode() {
+        const phone = document.getElementById('phone').value;
+        const csrfToken = document.querySelector('input[name="csrf_token"]').value;
+
+        fetch("/send_code", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: `phone=${encodeURIComponent(phone)}&csrf_token=${encodeURIComponent(csrfToken)}`
+        })
+        .then(res => res.json())
+        .then(data => alert(data.status === "ok" ? "✅ Code sent!" : "❌ Error sending code"))
+        .catch(err => alert("❌ Network or server error"));
+    }
+</script>
+{% endblock %}

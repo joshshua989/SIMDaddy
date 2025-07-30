@@ -1,0 +1,63 @@
+.injury-container {
+    max-width: 900px;
+    margin: auto;
+    padding: 40px 20px;
+    background-color: #181818;
+    color: #e0e0e0;
+}
+
+.injury-header {
+    font-size: 32px;
+    text-align: center;
+    margin-bottom: 30px;
+    color: #ffffff;
+}
+
+.injury-card {
+    background-color: #232323;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    border-bottom: 1px solid #444; /* <-- Divider line */
+}
+
+
+.injury-top {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.team-logo {
+    width: 36px;
+    height: 36px;
+    margin-right: 12px;
+}
+
+.player-meta h2 {
+    margin: 0;
+    font-size: 20px;
+    color: #f0f0f0;
+}
+
+.position {
+    font-size: 14px;
+    color: #aaa;
+    margin-left: 8px;
+}
+
+.badge {
+    background-color: #444;
+    color: #ddd;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    margin-left: 10px;
+}
+
+.injury-description,
+.injury-comment {
+    font-size: 15px;
+    margin: 5px 0;
+}

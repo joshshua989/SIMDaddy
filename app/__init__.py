@@ -1,8 +1,10 @@
-# app.py
+# app/__init__.py
 
 from flask import Flask
 from config import Config
-from app import db, login_manager, csrf, limiter
+from extensions import db, login_manager, csrf, limiter
+from auth.routes import auth_bp
+from views.routes import views_bp
 
 def create_app():
     app = Flask(__name__)
@@ -15,13 +17,9 @@ def create_app():
 
     login_manager.login_view = 'auth.login'
 
-    # Register Blueprints
-    from auth.routes import auth_bp
-    from views.routes import views_bp
     app.register_blueprint(auth_bp)
     app.register_blueprint(views_bp)
 
-    # Register user loader (after importing User correctly)
     from models.user import User
     @login_manager.user_loader
     def load_user(user_id):
@@ -31,7 +29,3 @@ def create_app():
         db.create_all()
 
     return app
-
-if __name__ == "__main__":
-    app = create_app()
-    app.run(debug=True)

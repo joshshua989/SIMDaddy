@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Injury Report{% endblock %}
+
+{% block content %}
+<div class="injury-container">
+    <h2 class="injury-header">Injury Reports</h2>
+
+    {% for item in injuries %}
+    <div class="injury-card">
+        <div class="injury-top">
+            {% if item.logo_url %}
+                <img src="{{ item.logo_url }}" alt="Team Logo" class="team-logo">
+            {% endif %}
+            <div class="player-meta">
+                <h2>
+                    {{ item.player_name }}
+                    {% if item.position %}
+                        <span class="position">{{ item.position }}</span>
+                    {% endif %}
+                    {% if item.status %}
+                        <span class="badge">{{ item.status }}</span>
+                    {% endif %}
+                </h2>
+            </div>
+        </div>
+
+        {% if item.date %}
+            <div class="injury-description"><strong>Reported:</strong> {{ item.date }}</div>
+        {% endif %}
+        {% if item.headline %}
+            <div class="injury-description"><strong>{{ item.headline }}</strong></div>
+        {% endif %}
+        {% if item.description %}
+            <div class="injury-comment">{{ item.description }}</div>
+        {% endif %}
+        {% if item.fantasy_impact %}
+            <div class="injury-comment"><em>{{ item.fantasy_impact }}</em></div>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
