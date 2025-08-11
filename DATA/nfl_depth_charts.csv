@@ -1,0 +1,498 @@
+team,position,depth,name,age,college,ecr,adp,rank_2024
+ARI,QB,QB1,Kyler Murray,27,Oklahoma,8,9,11
+ARI,QB,QB2,Jacoby Brissett,32,North Carolina State,69,,45
+ARI,QB,QB3,Clayton Tune,26,Houston,81,,88
+ARI,RB,RB1,James Conner,30,Pittsburgh,19,20,8
+ARI,RB,RB2,Trey Benson,22,Florida State,46,45,63
+ARI,RB,RB3,Emari Demercado,26,TCU,120,,64
+ARI,RB,RB4,Michael Carter,26,North Carolina,123,,99
+ARI,WR,WR1,Marvin Harrison Jr.,22,Ohio State,19,18,31
+ARI,WR,WR2,Michael Wilson,25,Stanford,76,80,62
+ARI,WR,WR3,Greg Dortch,27,Wake Forest,143,,103
+ARI,WR,WR4,Zay Jones,30,East Carolina,156,,172
+ARI,TE,TE1,Trey McBride,25,Colorado State,3,2,3
+ARI,TE,TE2,Elijah Higgins,24,Stanford,62,,43
+ARI,TE,TE3,Tip Reiman,23,Illinois,96,,89
+ATL,QB,QB1,Michael Penix Jr.,25,Washington,24,23,48
+ATL,QB,QB2,Kirk Cousins,36,Michigan State,39,38,20
+ATL,RB,RB1,Bijan Robinson,23,Texas,2,1,4
+ATL,RB,RB2,Tyler Allgeier,25,BYU,45,54,38
+ATL,RB,RB3,Jase McClellan,22,Alabama,133,,118
+ATL,WR,WR1,Drake London,23,USC,10,9,11
+ATL,WR,WR2,Darnell Mooney,27,Tulane,46,52,25
+ATL,WR,WR3,Ray-Ray McCloud III,28,Clemson,122,98,68
+ATL,WR,WR4,Nick Nash,24,San Jose State,152,,-
+ATL,WR,WR5,KhaDarel Hodge,30,Prairie View A&M,178,,123
+ATL,WR,WR6,Casey Washington,24,Illinois,193,,194
+ATL,TE,TE1,Kyle Pitts,24,Florida,16,16,12
+ATL,TE,TE2,Charlie Woerner,27,Georgia,89,,84
+BAL,QB,QB1,Lamar Jackson,28,Louisville,2,2,1
+BAL,QB,QB2,Cooper Rush,31,Central Michigan,57,,33
+BAL,RB,RB1,Derrick Henry,31,Alabama,4,6,2
+BAL,RB,RB2,Justice Hill,27,Oklahoma State,70,59,41
+BAL,RB,RB3,Keaton Mitchell,23,East Carolina,73,93,112
+BAL,RB,RB4,Rasheen Ali,24,Marshall,142,,120
+BAL,WR,WR1,Zay Flowers,24,Boston College,20,27,22
+BAL,WR,WR2,Rashod Bateman,25,Minnesota,56,63,32
+BAL,WR,WR3,DeAndre Hopkins,32,Clemson,67,69,45
+BAL,WR,WR4,Devontez Walker,23,North Carolina,164,,150
+BAL,WR,WR5,LaJohntay Wester,23,Colorado,191,,-
+BAL,TE,TE1,Mark Andrews,29,Oklahoma,5,8,5
+BAL,TE,TE2,Isaiah Likely,25,Coastal Carolina,18,19,16
+BAL,TE,TE3,Charlie Kolar,26,Iowa State,82,,54
+BUF,QB,QB1,Josh Allen,29,Wyoming,1,1,2
+BUF,QB,QB2,Mitchell Trubisky,30,North Carolina,66,,59
+BUF,RB,RB1,James Cook,25,Georgia,12,14,7
+BUF,RB,RB2,Ray Davis,25,Kentucky,43,51,37
+BUF,RB,RB3,Ty Johnson,27,Maryland,85,89,47
+BUF,WR,WR1,Khalil Shakir,25,Boise State,42,40,38
+BUF,WR,WR2,Keon Coleman,22,Florida State,48,53,60
+BUF,WR,WR3,Joshua Palmer,25,Tennessee,73,72,72
+BUF,WR,WR4,Elijah Moore,25,Ole Miss,100,103,82
+BUF,WR,WR5,Curtis Samuel,28,Ohio State,127,,113
+BUF,WR,WR6,Kaden Prather,22,Maryland,166,,-
+BUF,TE,TE1,Dalton Kincaid,25,Utah,14,14,26
+BUF,TE,TE2,Dawson Knox,28,Ole Miss,45,,38
+BUF,TE,TE3,Jackson Hawes,24,Georgia Tech,80,,-
+CAR,QB,QB1,Bryce Young,23,Alabama,22,24,24
+CAR,QB,QB2,Andy Dalton,37,TCU,54,,41
+CAR,RB,RB1,Chuba Hubbard,25,Oklahoma State,17,19,13
+CAR,RB,RB2,Rico Dowdle,26,South Carolina,44,50,24
+CAR,RB,RB3,Trevor Etienne,20,Georgia,77,74,-
+CAR,RB,RB4,Jonathon Brooks,21,Texas,110,,113
+CAR,WR,WR1,Tetairoa McMillan,22,Arizona,31,26,-
+CAR,WR,WR2,Adam Thielen,34,Minnesota State,65,65,50
+CAR,WR,WR3,Jalen Coker,23,Holy Cross,70,95,85
+CAR,WR,WR4,Xavier Legette,24,South Carolina,71,66,67
+CAR,WR,WR5,Hunter Renfrow,29,Clemson,157,,-
+CAR,WR,WR6,Jimmy Horn Jr.,22,Colorado,161,81,-
+CAR,WR,WR7,Kobe Hudson,,UCF,183,,-
+CAR,TE,TE1,Ja'Tavion Sanders,22,Texas,28,39,39
+CAR,TE,TE2,Tommy Tremble,24,Notre Dame,51,,50
+CAR,TE,TE3,Mitchell Evans,22,Notre Dame,53,,-
+CHI,QB,QB1,Caleb Williams,23,USC,13,11,15
+CHI,QB,QB2,Tyson Bagent,24,Shepherd (WV),62,,87
+CHI,QB,QB3,Case Keenum,37,Houston,79,,-
+CHI,RB,RB1,D'Andre Swift,26,Georgia,27,27,19
+CHI,RB,RB2,Roschon Johnson,24,Texas,57,65,53
+CHI,RB,RB3,Kyle Monangai,22,Rutgers,72,70,-
+CHI,WR,WR1,DJ Moore,28,Maryland,22,20,30
+CHI,WR,WR2,Rome Odunze,22,Washington,37,37,47
+CHI,WR,WR3,Luther Burden III,21,Missouri,55,50,-
+CHI,WR,WR4,Olamide Zaccheaus,27,Virginia,138,,77
+CHI,TE,TE1,Colston Loveland,21,Michigan,13,12,-
+CHI,TE,TE2,Cole Kmet,26,Notre Dame,24,27,18
+CHI,TE,TE3,Durham Smythe,29,Notre Dame,101,,82
+CIN,QB,QB1,Joe Burrow,28,LSU,5,4,3
+CIN,QB,QB2,Jake Browning,29,Washington,56,,86
+CIN,RB,RB1,Chase Brown,25,Illinois,13,12,12
+CIN,RB,RB2,Tahj Brooks,23,Texas Tech,84,77,-
+CIN,RB,RB3,Zack Moss,27,Utah,86,76,54
+CIN,RB,RB4,Samaje Perine,29,Oklahoma,109,,58
+CIN,WR,WR1,Ja'Marr Chase,25,LSU,1,1,1
+CIN,WR,WR2,Tee Higgins,26,Clemson,12,14,17
+CIN,WR,WR3,Andrei Iosivas,25,Princeton,77,101,57
+CIN,WR,WR4,Jermaine Burton,23,Alabama,113,,143
+CIN,WR,WR5,Charlie Jones,26,Purdue,192,,167
+CIN,TE,TE1,Mike Gesicki,29,Penn State,23,23,19
+CIN,TE,TE2,Drew Sample,29,Washington,73,,61
+CIN,TE,TE3,Erick All Jr.,24,Iowa,74,,59
+CIN,TE,TE4,Tanner Hudson,30,Southern Arkansas,83,,56
+CIN,TE,TE5,Tanner McLachlan,26,Arizona,86,,143
+CLE,QB,QB1,Shedeur Sanders,23,Colorado,31,33,-
+CLE,QB,QB2,Joe Flacco,40,Delaware,34,37,36
+CLE,QB,QB3,Dillon Gabriel,24,Oregon,44,,-
+CLE,QB,QB4,Kenny Pickett,26,Pittsburgh,47,41,46
+CLE,QB,QB5,Deshaun Watson,29,Clemson,48,,39
+CLE,RB,RB1,Quinshon Judkins,21,Ohio State,25,24,-
+CLE,RB,RB2,Jerome Ford,25,Cincinnati,53,55,35
+CLE,RB,RB3,Dylan Sampson,20,Tennessee,58,49,-
+CLE,RB,RB4,Pierre Strong Jr.,26,South Dakota State,127,,85
+CLE,WR,WR1,Jerry Jeudy,26,Alabama,36,30,16
+CLE,WR,WR2,Cedric Tillman,25,Tennessee,63,64,87
+CLE,WR,WR3,Diontae Johnson,28,Toledo,99,96,83
+CLE,WR,WR4,Jamari Thrash,24,Louisville,159,,185
+CLE,WR,WR5,David Bell,24,Purdue,187,,182
+CLE,TE,TE1,David Njoku,28,Miami (FL),10,11,11
+CLE,TE,TE2,Harold Fannin Jr.,20,Bowling Green,30,41,-
+DAL,QB,QB1,Dak Prescott,31,Mississippi State,16,13,30
+DAL,QB,QB2,Joe Milton III,25,Tennessee,45,,72
+DAL,RB,RB1,Javonte Williams,25,North Carolina,41,37,34
+DAL,RB,RB2,Jaydon Blue,21,Texas,55,44,-
+DAL,RB,RB3,Miles Sanders,28,Penn State,78,80,72
+DAL,RB,RB4,Phil Mafah,22,Clemson,99,95,-
+DAL,RB,RB5,Deuce Vaughn,23,Kansas State,129,,108
+DAL,WR,WR1,CeeDee Lamb,26,Oklahoma,3,3,6
+DAL,WR,WR2,George Pickens,24,Georgia,33,39,39
+DAL,WR,WR3,Jalen Tolbert,26,South Alabama,83,78,44
+DAL,WR,WR4,KaVontae Turpin,28,TCU,123,,73
+DAL,WR,WR5,Jonathan Mingo,24,Ole Miss,139,,138
+DAL,WR,WR6,Jalen Brooks,25,South Carolina,182,,121
+DAL,TE,TE1,Jake Ferguson,26,Wisconsin,17,15,31
+DAL,TE,TE2,Luke Schoonmaker,26,Michigan,48,,45
+DEN,QB,QB1,Bo Nix,25,Oregon,9,8,9
+DEN,QB,QB2,Jarrett Stidham,28,Auburn,64,,84
+DEN,RB,RB1,RJ Harvey,24,UCF,29,23,-
+DEN,RB,RB2,Audric Estime,21,Notre Dame,54,72,67
+DEN,RB,RB3,Jaleel McLaughlin,24,Youngstown State,59,74,50
+DEN,RB,RB4,Tyler Badie,25,Missouri,121,,105
+DEN,RB,RB5,Blake Watson,25,Memphis,131,,123
+DEN,WR,WR1,Courtland Sutton,29,SMU,23,21,18
+DEN,WR,WR2,Marvin Mims Jr.,23,Oklahoma,58,58,66
+DEN,WR,WR3,Devaughn Vele,27,Utah,90,105,84
+DEN,WR,WR4,Pat Bryant,22,Illinois,102,79,-
+DEN,WR,WR5,Troy Franklin,22,Oregon,118,110,99
+DEN,TE,TE1,Evan Engram,30,Ole Miss,11,9,33
+DEN,TE,TE2,Adam Trautman,28,Dayton,67,,42
+DEN,TE,TE3,Lucas Krull,26,Pittsburgh,76,,60
+DEN,TE,TE4,Caleb Lohner,,Utah,92,,-
+DEN,TE,TE5,Nate Adkins,25,South Carolina,93,,47
+DET,QB,QB1,Jared Goff,30,California,10,10,6
+DET,QB,QB2,Hendon Hooker,27,Tennessee,58,,62
+DET,RB,RB1,Jahmyr Gibbs,23,Alabama,3,3,3
+DET,RB,RB2,David Montgomery,27,Iowa State,21,22,15
+DET,RB,RB3,Craig Reynolds,28,Kutztown,125,,95
+DET,WR,WR1,Amon-Ra St. Brown,25,USC,7,4,3
+DET,WR,WR2,Jameson Williams,24,Alabama,24,29,10
+DET,WR,WR3,Tim Patrick,31,Utah,98,,80
+DET,WR,WR4,Isaac TeSlaa,23,Arkansas,110,107,-
+DET,WR,WR5,Kalif Raymond,30,Holy Cross,168,,98
+DET,WR,WR6,Dominic Lovett,22,Georgia,190,,-
+DET,TE,TE1,Sam LaPorta,24,Iowa,4,4,7
+DET,TE,TE2,Brock Wright,26,Notre Dame,88,,51
+GB,QB,QB1,Jordan Love,26,Utah State,15,16,16
+GB,QB,QB2,Malik Willis,26,Liberty,51,,44
+GB,RB,RB1,Josh Jacobs,27,Alabama,7,8,5
+GB,RB,RB2,MarShawn Lloyd,24,USC,56,64,125
+GB,RB,RB3,Chris Brooks,25,BYU,94,,77
+GB,RB,RB4,Emanuel Wilson,26,Fort Valley State,98,92,49
+GB,WR,WR1,Jayden Reed,25,Michigan State,39,43,20
+GB,WR,WR2,Matthew Golden,21,Texas,48,47,-
+GB,WR,WR3,Romeo Doubs,25,Nevada,59,73,52
+GB,WR,WR4,Dontayvion Wicks,23,Virginia,72,83,74
+GB,WR,WR5,Christian Watson,26,North Dakota State,107,86,63
+GB,WR,WR6,Savion Williams,23,TCU,117,94,-
+GB,WR,WR7,Julian Fleming,24,Penn State,149,,-
+GB,WR,WR8,Mecole Hardman Jr.,27,Georgia,170,,124
+GB,WR,WR9,Bo Melton,26,Rutgers,177,,134
+GB,TE,TE1,Tucker Kraft,24,South Dakota State,9,13,6
+GB,TE,TE2,Luke Musgrave,24,Oregon State,43,42,94
+HOU,QB,QB1,C.J. Stroud,23,Ohio State,17,17,18
+HOU,QB,QB2,Davis Mills,26,Stanford,65,,60
+HOU,RB,RB1,Joe Mixon,28,Oklahoma,15,16,11
+HOU,RB,RB2,Dameon Pierce,25,Florida,83,91,90
+HOU,RB,RB3,Woody Marks,24,USC,92,69,-
+HOU,RB,RB4,Dare Ogunbowale,31,Wisconsin,140,,66
+HOU,WR,WR1,Nico Collins,26,Michigan,5,7,23
+HOU,WR,WR2,Christian Kirk,28,Texas A&M,54,57,93
+HOU,WR,WR3,Jayden Higgins,22,Iowa State,68,54,-
+HOU,WR,WR4,Jaylin Noel,22,Iowa State,78,74,-
+HOU,WR,WR5,John Metchie III,24,Alabama,112,,112
+HOU,WR,WR6,Tank Dell,25,Houston,115,,48
+HOU,WR,WR7,Justin Watson,29,Pennsylvania,176,,96
+HOU,WR,WR8,Xavier Hutchinson,24,Iowa State,181,,142
+HOU,TE,TE1,Dalton Schultz,28,Stanford,25,29,23
+HOU,TE,TE2,Luke Lachey,23,Iowa,54,,-
+HOU,TE,TE3,Cade Stover,24,Ohio State,58,,53
+HOU,TE,TE4,Brevin Jordan,24,Miami (FL),63,,104
+IND,QB,QB1,Anthony Richardson Sr.,23,Florida,25,28,23
+IND,QB,QB2,Daniel Jones,28,Duke,35,35,29
+IND,QB,QB3,Riley Leonard,22,Notre Dame,72,,-
+IND,RB,RB1,Jonathan Taylor,26,Wisconsin,6,9,10
+IND,RB,RB2,DJ Giddens,21,Kansas State,64,63,-
+IND,RB,RB3,Khalil Herbert,27,Virginia Tech,75,94,98
+IND,RB,RB4,Tyler Goodson,24,Iowa,119,,68
+IND,WR,WR1,Josh Downs,23,North Carolina,49,48,41
+IND,WR,WR2,Michael Pittman Jr.,27,USC,53,49,46
+IND,WR,WR3,Alec Pierce,25,Cincinnati,66,75,35
+IND,WR,WR4,Adonai Mitchell,22,Texas,73,97,110
+IND,WR,WR5,Ashton Dulin,28,Malone (OH),194,,129
+IND,TE,TE1,Tyler Warren,23,Penn State,15,10,-
+IND,TE,TE2,Jelani Woods,26,Virginia,65,,-
+IND,TE,TE3,Mo Alie-Cox,31,VCU,72,,52
+IND,TE,TE4,Will Mallory,25,Miami (FL),77,,91
+IND,TE,TE5,Drew Ogletree,26,Youngstown State,85,,62
+JAX,QB,QB1,Trevor Lawrence,25,Clemson,19,19,27
+JAX,QB,QB2,Nick Mullens,30,Southern Miss,61,,63
+JAX,RB,RB1,Tank Bigsby,22,Auburn,35,42,31
+JAX,RB,RB2,Travis Etienne Jr.,26,Clemson,36,35,40
+JAX,RB,RB3,Bhayshul Tuten,23,Virginia Tech,51,43,-
+JAX,RB,RB4,Ja'Quinden Jackson,23,Arkansas,106,,-
+JAX,RB,RB5,LeQuint Allen Jr.,20,Syracuse,108,97,-
+JAX,RB,RB6,Keilan Robinson,25,Texas,141,,138
+JAX,WR,WR1,Brian Thomas Jr.,22,LSU,6,8,4
+JAX,WR,WR2,Travis Hunter,22,Colorado,29,33,-
+JAX,WR,WR3,Parker Washington,23,Penn State,103,112,81
+JAX,WR,WR4,Dyami Brown,25,North Carolina,104,77,105
+JAX,TE,TE1,Brenton Strange,24,Penn State,32,24,29
+JAX,TE,TE2,Hunter Long,26,Boston College,68,,81
+JAX,TE,TE3,Johnny Mundt,30,Oregon,75,,48
+KC,QB,QB1,Patrick Mahomes II,29,Texas Tech,7,6,10
+KC,QB,QB2,Gardner Minshew II,29,Washington State,59,,34
+KC,QB,QB3,Bailey Zappe,26,Western Kentucky,80,,71
+KC,RB,RB1,Isiah Pacheco,26,Rutgers,28,30,61
+KC,RB,RB2,Kareem Hunt,29,Toledo,60,58,30
+KC,RB,RB3,Elijah Mitchell,27,Louisiana,66,66,-
+KC,RB,RB4,Brashard Smith,22,SMU,91,68,-
+KC,RB,RB5,Carson Steele,22,UCLA,139,,94
+KC,WR,WR1,Rashee Rice,25,SMU,21,22,95
+KC,WR,WR2,Xavier Worthy,22,Texas,25,23,27
+KC,WR,WR3,Marquise Brown,27,Oklahoma,62,56,147
+KC,WR,WR4,Jalen Royals,22,Utah State,82,76,-
+KC,WR,WR5,JuJu Smith-Schuster,28,USC,142,,106
+KC,WR,WR6,Skyy Moore,24,Western Michigan,189,,236
+KC,TE,TE1,Travis Kelce,35,Cincinnati,10,6,9
+KC,TE,TE2,Noah Gray,26,Duke,33,31,17
+KC,TE,TE3,Jake Briningstool,22,Clemson,71,,-
+KC,TE,TE4,Jared Wiley,24,TCU,97,,105
+LV,QB,QB1,Geno Smith,34,West Virginia,26,25,14
+LV,QB,QB2,Aidan O'Connell,26,Purdue,41,39,38
+LV,RB,RB1,Ashton Jeanty,21,Boise State,5,4,-
+LV,RB,RB2,Raheem Mostert,33,Purdue,76,86,59
+LV,RB,RB3,Sincere McCormick,24,UTSA,79,,86
+LV,RB,RB4,Zamir White,25,Georgia,101,,81
+LV,RB,RB5,Dylan Laube,25,New Hampshire,130,,158
+LV,WR,WR1,Jakobi Meyers,28,North Carolina State,43,45,36
+LV,WR,WR2,Jack Bech,22,TCU,64,60,-
+LV,WR,WR3,Tre Tucker,24,Cincinnati,106,104,58
+LV,WR,WR4,Dont'e Thornton Jr.,22,Tennessee,130,114,-
+LV,TE,TE1,Brock Bowers,22,Georgia,1,1,2
+LV,TE,TE2,Michael Mayer,23,Notre Dame,46,,64
+LAC,QB,QB1,Justin Herbert,27,Oregon,11,12,13
+LAC,QB,QB2,Taylor Heinicke,32,Old Dominion,74,,61
+LAC,QB,QB3,Trey Lance,25,North Dakota State,75,,64
+LAC,RB,RB1,Omarion Hampton,22,North Carolina,20,17,-
+LAC,RB,RB2,Najee Harris,27,Alabama,32,31,20
+LAC,RB,RB3,Kimani Vidal,23,Troy,81,,74
+LAC,RB,RB4,Raheim Sanders,22,South Carolina,96,,-
+LAC,RB,RB5,Hassan Haskins,25,Michigan,136,,87
+LAC,WR,WR1,Ladd McConkey,23,Georgia,11,11,14
+LAC,WR,WR2,Quentin Johnston,23,TCU,60,70,42
+LAC,WR,WR3,Tre Harris,23,Ole Miss,61,55,-
+LAC,WR,WR4,Mike Williams,30,Clemson,96,88,108
+LAC,WR,WR5,KeAndre Lambert-Smith,23,Auburn,137,,-
+LAC,WR,WR6,Derius Davis,24,TCU,186,,115
+LAC,TE,TE1,Will Dissly,28,Washington,36,,28
+LAC,TE,TE2,Oronde Gadsden II,21,Syracuse,40,28,-
+LAC,TE,TE3,Tyler Conklin,29,Central Michigan,42,33,22
+LAR,QB,QB1,Matthew Stafford,37,Georgia,20,21,19
+LAR,QB,QB2,Jimmy Garoppolo,33,Eastern Illinois,63,,75
+LAR,QB,QB3,Stetson Bennett,27,Georgia,81,,-
+LAR,RB,RB1,Kyren Williams,24,Notre Dame,11,11,6
+LAR,RB,RB2,Blake Corum,24,Michigan,49,57,78
+LAR,RB,RB3,Jarquez Hunter,22,Auburn,89,62,-
+LAR,RB,RB4,Cody Schrader,25,Missouri,138,,157
+LAR,WR,WR1,Puka Nacua,23,BYU,4,6,29
+LAR,WR,WR2,Davante Adams,32,Fresno State,17,17,19
+LAR,WR,WR3,Jordan Whittington,24,Texas,114,106,125
+LAR,WR,WR4,Tutu Atwell,25,Louisville,121,94,86
+LAR,TE,TE1,Terrance Ferguson,22,Oregon,38,35,-
+LAR,TE,TE2,Tyler Higbee,32,Western Kentucky,41,37,75
+LAR,TE,TE3,Colby Parkinson,26,Stanford,60,,41
+LAR,TE,TE4,Davis Allen,24,Clemson,79,,87
+MIA,QB,QB1,Tua Tagovailoa,27,Alabama,21,20,21
+MIA,QB,QB2,Quinn Ewers,22,Texas,42,,-
+MIA,QB,QB3,Zach Wilson,25,BYU,52,,-
+MIA,RB,RB1,De'Von Achane,23,Texas A&M,8,7,9
+MIA,RB,RB2,Jaylen Wright,22,Tennessee,47,52,79
+MIA,RB,RB3,Ollie Gordon II,21,Oklahoma State,63,60,-
+MIA,RB,RB4,Alexander Mattison,26,Boise State,87,82,33
+MIA,WR,WR1,Tyreek Hill,31,West Alabama,15,13,21
+MIA,WR,WR2,Jaylen Waddle,26,Alabama,34,38,51
+MIA,WR,WR3,Nick Westbrook-Ikhine,28,Indiana,91,107,43
+MIA,WR,WR4,Malik Washington,24,Virginia,95,115,120
+MIA,WR,WR5,Theo Wease Jr.,23,Missouri,120,,-
+MIA,TE,TE1,Jonnu Smith,29,Florida International,7,7,4
+MIA,TE,TE2,Julian Hill,24,Campbell,84,,69
+MIN,QB,QB1,J.J. McCarthy,22,Michigan,23,22,-
+MIN,QB,QB2,Sam Howell,24,North Carolina,71,,68
+MIN,RB,RB1,Aaron Jones Sr.,30,UTEP,22,25,16
+MIN,RB,RB2,Jordan Mason,26,Georgia Tech,37,39,32
+MIN,RB,RB3,Ty Chandler,27,North Carolina,93,,83
+MIN,WR,WR1,Justin Jefferson,25,LSU,2,2,2
+MIN,WR,WR2,Jordan Addison,23,USC,28,31,13
+MIN,WR,WR3,Jalen Nailor,26,Michigan State,105,,70
+MIN,WR,WR4,Tai Felton,22,Maryland,111,100,-
+MIN,WR,WR5,Rondale Moore,24,Purdue,185,,-
+MIN,TE,TE1,T.J. Hockenson,27,Iowa,6,5,30
+MIN,TE,TE2,Josh Oliver,28,San Jose State,59,,34
+MIN,TE,TE3,Gavin Bartholomew,22,Pittsburgh,90,,-
+NE,QB,QB1,Drake Maye,22,North Carolina,18,18,22
+NE,QB,QB2,Joshua Dobbs,30,Tennessee,55,,57
+NE,RB,RB1,TreVeyon Henderson,22,Ohio State,23,21,-
+NE,RB,RB2,Rhamondre Stevenson,27,Oklahoma,34,38,25
+NE,RB,RB3,Antonio Gibson,26,Memphis,68,76,45
+NE,WR,WR1,Stefon Diggs,31,Maryland,45,44,65
+NE,WR,WR2,Kyle Williams,22,Washington State,69,68,-
+NE,WR,WR3,DeMario Douglas,24,Liberty,79,82,61
+NE,WR,WR4,Kayshon Boutte,23,LSU,89,108,76
+NE,WR,WR5,Mack Hollins,31,North Carolina,124,,75
+NE,WR,WR6,Ja'Lynn Polk,23,Washington,129,117,126
+NE,WR,WR7,Javon Baker,23,UCF,135,,243
+NE,WR,WR8,Kendrick Bourne,29,Eastern Washington,147,,102
+NE,TE,TE1,Hunter Henry,30,Arkansas,20,21,15
+NE,TE,TE2,Austin Hooper,30,Stanford,49,,25
+NE,TE,TE3,Jaheim Bell,23,Florida State,81,,113
+NO,QB,QB1,Tyler Shough,25,Louisville,36,32,-
+NO,QB,QB2,Spencer Rattler,24,South Carolina,49,40,42
+NO,QB,QB3,Jake Haener,26,Fresno State,60,,53
+NO,RB,RB1,Alvin Kamara,29,Tennessee,18,15,14
+NO,RB,RB2,Kendre Miller,22,TCU,61,83,80
+NO,RB,RB3,Devin Neal,21,Kansas,62,61,-
+NO,RB,RB4,Chris Tyree,23,Virginia,115,,-
+NO,RB,RB5,Clyde Edwards-Helaire,26,LSU,116,,121
+NO,RB,RB6,Marcus Yarns,23,Delaware,117,,-
+NO,WR,WR1,Chris Olave,24,Ohio State,35,32,92
+NO,WR,WR2,Rashid Shaheed,26,Weber State,51,59,79
+NO,WR,WR3,Brandin Cooks,31,Oregon State,88,99,94
+NO,WR,WR4,Bub Means,24,Pittsburgh,169,,128
+NO,WR,WR5,Mason Tipton,24,Yale,175,,146
+NO,WR,WR6,Cedrick Wilson Jr.,29,Boise State,179,,114
+NO,TE,TE1,Juwan Johnson,28,Oregon,31,30,21
+NO,TE,TE2,Taysom Hill,34,BYU,34,32,14
+NO,TE,TE3,Foster Moreau,28,LSU,47,,20
+NO,TE,TE4,Moliki Matavao,22,UCLA,94,,-
+NO,TE,TE5,Dallin Holker,25,Colorado State,99,,100
+NYG,QB,QB1,Russell Wilson,36,Wisconsin,29,29,25
+NYG,QB,QB2,Jaxson Dart,22,Ole Miss,30,31,-
+NYG,QB,QB3,Jameis Winston,31,Florida State,40,,28
+NYG,QB,QB4,Tommy DeVito,26,Illinois,82,,54
+NYG,RB,RB1,Tyrone Tracy Jr.,25,Purdue,31,29,27
+NYG,RB,RB2,Cam Skattebo,23,Arizona State,39,34,-
+NYG,RB,RB3,Devin Singletary,27,Florida Atlantic,71,85,46
+NYG,RB,RB4,Eric Gray,25,Oklahoma,132,,106
+NYG,WR,WR1,Malik Nabers,21,LSU,8,5,8
+NYG,WR,WR2,Wan'Dale Robinson,24,Kentucky,81,67,53
+NYG,WR,WR3,Darius Slayton,28,Auburn,83,87,69
+NYG,WR,WR4,Antwane Wells Jr.,24,Ole Miss,119,,-
+NYG,WR,WR5,Jalin Hyatt,23,Tennessee,141,118,161
+NYG,TE,TE1,Theo Johnson,24,Penn State,37,35,35
+NYG,TE,TE2,Greg Dulcich,25,UCLA,57,,92
+NYG,TE,TE3,Daniel Bellinger,24,San Diego State,70,,65
+NYJ,QB,QB1,Justin Fields,26,Ohio State,14,15,32
+NYJ,QB,QB2,Tyrod Taylor,35,Virginia Tech,53,,50
+NYJ,RB,RB1,Breece Hall,23,Iowa State,14,13,18
+NYJ,RB,RB2,Braelon Allen,21,Wisconsin,52,53,51
+NYJ,RB,RB3,Isaiah Davis,23,South Dakota State,90,96,70
+NYJ,RB,RB4,Donovan Edwards,22,Michigan,102,,-
+NYJ,WR,WR1,Garrett Wilson,24,Ohio State,18,16,15
+NYJ,WR,WR2,Allen Lazard,29,Iowa State,134,,64
+NYJ,WR,WR3,Malachi Corley,23,Western Kentucky,136,,186
+NYJ,WR,WR4,Josh Reynolds,30,Texas A&M,140,,119
+NYJ,WR,WR5,Arian Smith,23,Georgia,155,,-
+NYJ,WR,WR6,Tyler Johnson,26,Minnesota,167,,116
+NYJ,WR,WR7,Xavier Gipson,24,Stephen F. Austin,171,,152
+NYJ,TE,TE1,Mason Taylor,21,LSU,27,25,-
+NYJ,TE,TE2,Stone Smartt,26,Old Dominion,56,,55
+NYJ,TE,TE3,Jeremy Ruckert,24,Ohio State,61,,70
+PHI,QB,QB1,Jalen Hurts,26,Oklahoma,4,5,7
+PHI,QB,QB2,Dorian Thompson-Robinson,25,UCLA,73,,49
+PHI,QB,QB3,Tanner McKee,25,Stanford,76,,55
+PHI,QB,QB4,Kyle McCord,22,Syracuse,78,,-
+PHI,RB,RB1,Saquon Barkley,28,Penn State,1,2,1
+PHI,RB,RB2,Will Shipley,22,Clemson,80,79,111
+PHI,RB,RB3,A.J. Dillon,27,Boston College,112,81,-
+PHI,WR,WR1,A.J. Brown,27,Ole Miss,9,10,12
+PHI,WR,WR2,DeVonta Smith,26,Alabama,27,24,24
+PHI,WR,WR3,Jahan Dotson,25,Penn State,146,,136
+PHI,WR,WR4,Johnny Wilson,24,Florida State,165,,155
+PHI,WR,WR5,Ainias Smith,23,Texas A&M,180,,200
+PHI,TE,TE1,Dallas Goedert,30,South Dakota State,12,17,27
+PHI,TE,TE2,Grant Calcaterra,26,SMU,52,43,40
+PHI,TE,TE3,Kylen Granson,27,SMU,64,,57
+PHI,TE,TE4,Harrison Bryant,27,Florida Atlantic,69,,74
+PIT,QB,QB1,Mason Rudolph,29,Oklahoma State,38,34,35
+PIT,QB,QB2,Will Howard,23,Ohio State,43,42,-
+PIT,QB,QB3,Skylar Thompson,27,Kansas State,84,,58
+PIT,RB,RB1,Kaleb Johnson,21,Iowa,30,26,-
+PIT,RB,RB2,Jaylen Warren,26,Oklahoma State,33,33,42
+PIT,RB,RB3,Kenneth Gainwell,26,Memphis,67,84,62
+PIT,RB,RB4,Trey Sermon,26,Ohio State,105,90,65
+PIT,RB,RB5,Cordarrelle Patterson,34,Tennessee,128,,76
+PIT,WR,WR1,DK Metcalf,27,Ole Miss,26,25,34
+PIT,WR,WR2,Calvin Austin III,26,Memphis,97,102,55
+PIT,WR,WR3,Roman Wilson,23,Michigan,101,92,216
+PIT,WR,WR4,Robert Woods,33,USC,154,,131
+PIT,TE,TE1,Pat Freiermuth,26,Penn State,21,18,10
+PIT,TE,TE2,Darnell Washington,23,Georgia,55,,49
+PIT,TE,TE3,Connor Heyward,26,Michigan State,100,,67
+SF,QB,QB1,Brock Purdy,25,Iowa State,12,14,12
+SF,QB,QB2,Mac Jones,26,Alabama,50,,37
+SF,RB,RB1,Christian McCaffrey,28,Stanford,10,5,69
+SF,RB,RB2,Isaac Guerendo,24,Louisville,48,46,44
+SF,RB,RB3,Jordan James,21,Oregon,88,67,-
+SF,RB,RB4,Israel Abanikanda,22,Pittsburgh,118,,-
+SF,RB,RB5,Corey Kiner,23,Cincinnati,126,,-
+SF,WR,WR1,Brandon Aiyuk,27,Arizona State,40,46,101
+SF,WR,WR2,Jauan Jennings,27,Tennessee,41,34,26
+SF,WR,WR3,Ricky Pearsall,24,Florida,44,42,89
+SF,WR,WR4,Demarcus Robinson,30,Florida,116,111,54
+SF,WR,WR5,Jacob Cowing,24,Arizona,133,,178
+SF,WR,WR6,Jordan Watkins,23,Ole Miss,144,,-
+SF,TE,TE1,George Kittle,31,Iowa,2,3,1
+SEA,QB,QB1,Sam Darnold,27,USC,27,26,8
+SEA,QB,QB2,Jalen Milroe,22,Alabama,32,36,-
+SEA,QB,QB3,Drew Lock,28,Missouri,70,,40
+SEA,RB,RB1,Kenneth Walker III,24,Michigan State,16,18,29
+SEA,RB,RB2,Zach Charbonnet,24,UCLA,38,36,28
+SEA,RB,RB3,Damien Martinez,21,Miami (FL),74,87,-
+SEA,RB,RB4,Kenny McIntosh,25,Georgia,124,,93
+SEA,WR,WR1,Jaxon Smith-Njigba,23,Ohio State,16,12,9
+SEA,WR,WR2,Cooper Kupp,31,Eastern Washington,50,41,37
+SEA,WR,WR3,Tory Horton,22,Colorado State,108,84,-
+SEA,WR,WR4,Marquez Valdes-Scantling,30,South Florida,125,116,78
+SEA,WR,WR5,Ricky White III,23,UNLV,148,,-
+SEA,WR,WR6,Jake Bobo,26,UCLA,163,,145
+SEA,TE,TE1,Elijah Arroyo,22,Miami (FL),29,38,-
+SEA,TE,TE2,Noah Fant,27,Iowa,35,40,32
+SEA,TE,TE3,AJ Barner,23,Michigan,50,,36
+SEA,TE,TE4,Robbie Ouzts,22,Alabama,98,,-
+TB,QB,QB1,Baker Mayfield,30,Oklahoma,6,7,5
+TB,QB,QB2,Kyle Trask,27,Florida,67,,85
+TB,RB,RB1,Bucky Irving,22,Oregon,9,10,17
+TB,RB,RB2,Rachaad White,26,Arizona State,42,41,23
+TB,RB,RB3,Sean Tucker,23,Syracuse,82,78,56
+TB,WR,WR1,Mike Evans,31,Texas A&M,13,19,7
+TB,WR,WR2,Chris Godwin,29,Penn State,32,28,49
+TB,WR,WR3,Jalen McMillan,23,Washington,52,61,56
+TB,WR,WR4,Emeka Egbuka,22,Ohio State,57,51,-
+TB,WR,WR5,Tez Johnson,23,Oregon,92,,-
+TB,WR,WR6,Sterling Shepard,32,Oklahoma,172,,90
+TB,WR,WR7,Trey Palmer,24,Nebraska,184,,122
+TB,WR,WR8,Rakim Jarrett,24,Maryland,188,,140
+TB,TE,TE1,Cade Otton,26,Washington,22,22,13
+TB,TE,TE2,Payne Durham,24,Purdue,87,,58
+TB,TE,TE3,Devin Culp,25,Washington,95,,83
+TEN,QB,QB1,Cameron Ward,23,Miami (FL),28,27,-
+TEN,QB,QB2,Will Levis,25,Kentucky,37,,31
+TEN,RB,RB1,Tony Pollard,28,Memphis,24,28,21
+TEN,RB,RB2,Tyjae Spears,23,Tulane,40,40,43
+TEN,RB,RB3,Kalel Mullings,22,Michigan,107,,-
+TEN,RB,RB4,Julius Chestnut,24,Sacred Heart,135,,102
+TEN,WR,WR1,Calvin Ridley,30,Alabama,30,36,28
+TEN,WR,WR2,Elic Ayomanor,21,Stanford,80,85,-
+TEN,WR,WR3,Xavier Restrepo,23,Miami (FL),87,89,-
+TEN,WR,WR4,Tyler Lockett,32,Kansas State,93,90,71
+TEN,WR,WR5,Chimere Dike,23,Florida,131,,-
+TEN,WR,WR6,Van Jefferson,28,Florida,145,,100
+TEN,WR,WR7,Treylon Burks,25,Arkansas,151,,175
+TEN,TE,TE1,Chig Okonkwo,25,Maryland,26,26,24
+TEN,TE,TE2,Gunnar Helm,22,Texas,44,37,-
+TEN,TE,TE3,Josh Whyle,25,Cincinnati,78,,46
+WAS,QB,QB1,Jayden Daniels,24,LSU,3,3,4
+WAS,QB,QB2,Marcus Mariota,31,Oregon,46,,51
+WAS,RB,RB1,Brian Robinson Jr.,26,Alabama,28,32,26
+WAS,RB,RB2,Austin Ekeler,30,Western Colorado,50,47,36
+WAS,RB,RB3,Chris Rodriguez Jr.,25,Kentucky,97,,71
+WAS,RB,RB4,Jacory Croskey-Merritt,24,Arizona,103,73,-
+WAS,RB,RB5,Jeremy McNichols,29,Boise State,113,,57
+WAS,WR,WR1,Terry McLaurin,29,Ohio State,14,14,5
+WAS,WR,WR2,Deebo Samuel Sr.,29,South Carolina,38,35,40
+WAS,WR,WR3,Luke McCaffrey,24,Rice,109,,130
+WAS,WR,WR4,Noah Brown,29,Ohio State,126,,88
+WAS,WR,WR5,Jaylin Lane,23,Virginia Tech,132,,-
+WAS,WR,WR6,Michael Gallup,29,Colorado State,153,,-
+WAS,WR,WR7,Ja'Corey Brooks,23,Louisville,158,,-
+WAS,TE,TE1,Zach Ertz,34,Stanford,19,20,8
+WAS,TE,TE2,Ben Sinnott,22,Kansas State,39,,72
+WAS,TE,TE3,John Bates,27,Boise State,66,,79

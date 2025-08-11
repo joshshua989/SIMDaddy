@@ -1,0 +1,27 @@
+{% extends "dv/layout.html" %}
+{% block content %}
+  <div class="flex">
+    <h2 class="dv-title">Player Transactions</h2>
+    <div class="chip">Data dir: {{ dv_data_dir }}</div>
+  </div>
+  {% if columns and table %}
+    <table class="dv">
+      <thead>
+        <tr>
+          {% for col in columns %}<th>{{ col }}</th>{'% endfor %'}
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in table %}
+          <tr>
+            {% for col in columns %}
+              <td>{{ row[col] }}</td>
+            {'% endfor %'}
+          </tr>
+        {'% endfor %'}
+      </tbody>
+    </table>
+  {% else %}
+    <p class="dv-subtle">No data to display yet.</p>
+  {% endif %}
+{% endblock %}

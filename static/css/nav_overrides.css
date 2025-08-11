@@ -1,0 +1,23 @@
+/* Mobile/desktop header polish & predictable right padding */
+.site-header {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+}
+.brand { justify-self: center; }
+.header-right {
+  justify-self: end;
+  padding-right: 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.header-right .welcome img.avatar {
+  width: 28px; height: 28px; border-radius: 50%;
+}
+@media (max-width: 640px) {
+  .brand { font-size: 1rem; }
+  .header-right .welcome span { display: none; }
+}

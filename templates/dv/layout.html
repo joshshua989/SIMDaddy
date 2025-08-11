@@ -1,0 +1,26 @@
+{# If your app uses base.html, change this to `{% extends "base.html" %}` and wrap blocks accordingly. #}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SIMDaddy — DV</title>
+  <link rel="stylesheet" href="{{ url_for('dv.static', filename='dv.css') }}">
+</head>
+<body class="dv-container">
+  <header class="flex">
+    <h1 class="dv-title">SIMDaddy • DraftVader Pages</h1>
+    <nav class="flex">
+      <a class="dv-link" href="{{ url_for('dv.schedules') }}">Schedules</a>
+      <a class="dv-link" href="{{ url_for('dv.rookies') }}">Rookies</a>
+      <a class="dv-link" href="{{ url_for('dv.projections') }}">Projections</a>
+      <a class="dv-link" href="{{ url_for('dv.transactions') }}">Transactions</a>
+      <a class="dv-link" href="{{ url_for('dv.age_curve') }}">Age Curve</a>
+      <a class="dv-link" href="{{ url_for('dv.spike_week') }}">Spike Week</a>
+    </nav>
+  </header>
+  <main style="margin-top: 12px;">
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>

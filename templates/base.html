@@ -5,6 +5,7 @@
   <title>SIMDaddy - {% block title %}{% endblock %}</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/nav_overrides.css') }}">
   {% block head %}{% endblock %}
 
   <!-- Inline MOBILE drawer + mobile stats/welcome styles (layout-only) -->
@@ -204,12 +205,20 @@
         </div>
         <button class="sd-drawer__close" aria-label="Close navigation">×</button>
       </div>
-      <div class="sd-drawer__nav">
+     <div class="sd-drawer__nav">
         <a href="{{ url_for('views.home') }}" class="sd-drawer__link {% if ep == 'views.home' %}active{% endif %}">Dashboard</a>
         <a href="{{ url_for('views.account') }}" class="sd-drawer__link {% if ep == 'views.account' %}active{% endif %}">My Account</a>
         <a href="{{ url_for('views.injuries') }}" class="sd-drawer__link {% if ep == 'views.injuries' %}active{% endif %}">Injuries</a>
         <a href="{{ url_for('views.transactions') }}" class="sd-drawer__link {% if ep == 'views.transactions' %}active{% endif %}">Transactions</a>
         <a href="{{ url_for('views.weather_insights') }}" class="sd-drawer__link {% if ep == 'views.weather_insights' %}active{% endif %}">Weather</a>
+
+        <div class="sd-drawer__section">DraftVader</div>
+        <a href="{{ url_for('dv.projections') }}" class="sd-drawer__link {% if ep == 'dv.projections' %}active{% endif %}">DV: Projections</a>
+        <a href="{{ url_for('dv.age_curve') }}" class="sd-drawer__link {% if ep == 'dv.age_curve' %}active{% endif %}">DV: Age Curve</a>
+        <a href="{{ url_for('dv.schedules') }}" class="sd-drawer__link {% if ep == 'dv.schedules' %}active{% endif %}">DV: SoS</a>
+        <a href="{{ url_for('dv.rookies') }}" class="sd-drawer__link {% if ep == 'dv.rookies' %}active{% endif %}">DV: Rookies</a>
+        <a href="{{ url_for('dv.spike_week') }}" class="sd-drawer__link {% if ep == 'dv.spike_week' %}active{% endif %}">DV: Spike Week</a>
+
         <a href="{{ url_for('auth.logout') }}" class="sd-drawer__link">Logout</a>
       </div>
     </nav>
@@ -271,6 +280,14 @@
           <a href="{{ url_for('views.injuries') }}" class="btn-nav {% if ep == 'views.injuries' %}active{% endif %}">Injuries</a>
           <a href="{{ url_for('views.weather_insights') }}" class="btn-nav {% if ep == 'views.weather_insights' %}active{% endif %}">Weather</a>
           <a href="{{ url_for('views.transactions') }}" class="btn-nav {% if ep == 'views.transactions' %}active{% endif %}">Transactions</a>
+
+          <span class="sep">·</span>
+
+          <a href="{{ url_for('dv.projections') }}" class="btn-nav {% if ep == 'dv.projections' %}active{% endif %}">DV: Projections</a>
+          <a href="{{ url_for('dv.age_curve') }}" class="btn-nav {% if ep == 'dv.age_curve' %}active{% endif %}">DV: Age Curve</a>
+          <a href="{{ url_for('dv.schedules') }}" class="btn-nav {% if ep == 'dv.schedules' %}active{% endif %}">DV: SoS</a>
+          <a href="{{ url_for('dv.rookies') }}" class="btn-nav {% if ep == 'dv.rookies' %}active{% endif %}">DV: Rookies</a>
+          <a href="{{ url_for('dv.spike_week') }}" class="btn-nav {% if ep == 'dv.spike_week' %}active{% endif %}">DV: Spike Week</a>
         </div>
       </div>
     </div>
