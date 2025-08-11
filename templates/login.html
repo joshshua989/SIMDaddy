@@ -1,101 +1,161 @@
 {% extends "base.html" %}
-{% block title %}Login{% endblock %}
+{% set page_class = 'auth login' %}
+{% block title %}Log In{% endblock %}
 
 {% block content %}
 <style>
-    body {
-        margin: 0;
-        padding: 0;
-        background: linear-gradient(to bottom, #0a0a0a 0%, #111 100%),
-                    url('https://cdn.pixabay.com/photo/2016/11/22/19/11/football-1851166_1280.jpg') center/cover no-repeat;
-        background-blend-mode: overlay;
-        font-family: 'Segoe UI', sans-serif;
-        color: #e0e0e0;
-        min-height: 100vh;
-    }
+  /* Full-bleed like landing; no base card wrapper */
+  .auth.login .container{
+    max-width:none;
+    margin:0;
+    background:transparent;
+    box-shadow:none;
+    padding:0;
 
-    .auth-container {
-        background-color: rgba(20, 20, 20, 0.85);
-        padding: 45px 30px;
-        border-radius: 14px;
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
-        max-width: 420px;
-        margin: 120px auto;
-        backdrop-filter: blur(4px);
-    }
+    /* Sticky footer layout without squeezing the form */
+    display:grid;
+    grid-template-rows: 1fr auto;
+    min-height:100dvh;
+    align-items:start;          /* don't stretch children vertically */
+  }
 
-    .auth-container h2 {
-        text-align: center;
-        color: #00bfff;
-        font-size: 1.8em;
-        margin-bottom: 28px;
-        letter-spacing: 0.5px;
-    }
+  /* SAME hero image as landing; strong selector beats globals */
+  body.theme-dark.auth.login{
+    background:
+      linear-gradient(180deg, rgba(0,0,0,.25) 0%, rgba(0,0,0,.55) 100%),
+      url('{{ url_for("static", filename="images/image-1.jpg") }}?v=1')
+      center center / cover no-repeat fixed !important;
+    font-family:'Segoe UI', sans-serif;
+    color:#f0f0f0;
+  }
 
-    label {
-        display: block;
-        margin: 16px 0 6px;
-        font-size: 0.95em;
-        color: #cccccc;
-    }
+  /* Login card — keep original spacing */
+  .signup-container{
+    max-width:400px;           /* initial target */
+    margin:60px auto;
+    background-color:rgba(18,18,18,.9);
+    padding:30px 40px;
+    border-radius:12px;
+    box-shadow:0 4px 12px rgba(0,0,0,.7);
+    justify-self:center;
+    align-self:start;
+  }
+  .signup-container h2{
+    color:#00bfff;
+    text-align:center;
+    margin-bottom:25px;
+    font-size:1.8em;
+    font-weight:800;
+  }
 
-    input {
-        width: 100%;
-        padding: 11px;
-        background-color: #222;
-        border: 1px solid #444;
-        border-radius: 6px;
-        color: #f0f0f0;
-        font-size: 0.95em;
-    }
+  label{ display:block; margin-top:12px; font-size:.95em; }
 
-    .btn {
-        margin-top: 28px;
-        width: 100%;
-        padding: 12px;
-        background-color: #00bfff;
-        color: white;
-        border: none;
-        border-radius: 6px;
-        font-weight: bold;
-        font-size: 1em;
-        letter-spacing: 0.5px;
-        cursor: pointer;
-        transition: background-color 0.2s ease;
-    }
+  /* Inputs match signup (forced white) */
+  input[type="text"],
+  input[type="email"],
+  input[type="password"]{
+    width:100%;
+    padding:10px 12px;
+    margin-top:6px;
+    margin-bottom:10px;
+    background-color:#fff !important;
+    color:#000 !important;
+    border:1px solid #ccc;
+    border-radius:6px;
+    font-size:.95em;
+    box-sizing:border-box;
+    height:42px;
+  }
 
-    .btn:hover {
-        background-color: #008fcc;
-    }
+  button[type="submit"]{
+    width:100%;
+    background-color:#00bfff;
+    color:#fff;
+    padding:12px;
+    border:none;
+    border-radius:6px;
+    font-size:1em;
+    font-weight:800;
+    cursor:pointer;
+    margin-top:10px;
+  }
+  button[type="submit"]:hover{ background-color:#008fcc; }
 
-    .alt-link {
-        text-align: center;
-        margin-top: 20px;
-        font-size: 0.95em;
-    }
+  .signup-container p{ text-align:center; margin-top:16px; font-size:.9em; }
+  .signup-container a{ color:#00bfff; text-decoration:none; }
+  .signup-container a:hover{ text-decoration:underline; }
 
-    .alt-link a {
-        color: #00bfff;
-        text-decoration: none;
-    }
+  /* Footer style + push to bottom via grid row 2 */
+  footer{
+    background:#0b0b0f;
+    border-top:1px solid rgba(255,255,255,.08);
+    color:#e0e0e0;
+    text-align:center;
+    padding:20px;
+    font-size:.85em;
+  }
+  footer a{ color:#00bfff; text-decoration:none; }
+  footer a:hover{ text-decoration:underline; }
 
-    .alt-link a:hover {
-        text-decoration: underline;
+  /* FORCE solid nav/footer on login (wins over any transparency rules) */
+  html body.theme-dark.auth.login .site-nav{
+    background:#0b0b0f !important;
+    border-bottom:1px solid rgba(255,255,255,.08) !important;
+    backdrop-filter:none !important;
+  }
+  html body.theme-dark.auth.login footer{
+    background:#0b0b0f !important;
+    border-top:1px solid rgba(255,255,255,.08) !important;
+  }
+
+  /* === HARD WIDTH OVERRIDE FOR THE CARD (prevents shrinking) === */
+  html body.theme-dark.auth.login #login-card{
+    width: clamp(440px, 46vw, 400px) !important;  /* pick your range */
+    max-width: none !important;                   /* neutralize any earlier max-width */
+  }
+  @media (max-width: 560px){
+    html body.theme-dark.auth.login #login-card{
+      width: calc(100vw - 40px) !important;      /* small screens: keep nice margins */
     }
+  }
+  /* Match landing footer text color */
+  html body.theme-dark.auth.login footer{
+    color:#888 !important;
+  }
+
 </style>
 
-<div class="auth-container">
-    <h2>Login to SIMDaddy</h2>
-    <form method="POST" action="{{ url_for('auth.login') }}">
-        {{ form.hidden_tag() }}
-        <label>Email:</label>
-        {{ form.username(size=32) }}
-        <label>Password:</label>
-        {{ form.password(size=32) }}
-        <button type="submit" class="btn">Log In</button>
-    </form>
-    <div class="alt-link">
-        <p>Don’t have an account? <a href="{{ url_for('auth.signup') }}">Sign up</a></p>
-    </div>
+<div id="login-card" class="signup-container">
+  <h2>Log In to SIMDaddy</h2>
+
+  <form method="POST" action="{{ url_for('auth.login') }}">
+    {{ form.hidden_tag() }}
+
+    {# Use email if present; otherwise fall back to username #}
+    {% set login_field = (form.email if (form is defined and form.email is defined)
+                         else (form.username if (form is defined and form.username is defined) else None)) %}
+
+    <label>Email or Username:</label>
+    {% if login_field %}
+      {{ login_field(class_="form-control", placeholder="you@example.com") }}
+    {% else %}
+      <input type="text" name="username" placeholder="you@example.com" required>
+    {% endif %}
+
+    <label>Password:</label>
+    {% if form is defined and form.password is defined %}
+      {{ form.password(class_="form-control", placeholder="••••••••") }}
+    {% else %}
+      <input type="password" name="password" placeholder="••••••••" required>
+    {% endif %}
+
+    <button type="submit">Log In</button>
+  </form>
+
+  <p>Don’t have an account? <a href="{{ url_for('auth.signup') }}">Sign up here</a></p>
 </div>
+
+<footer>
+  <p>&copy; 2025 SIMDaddy • Built for Winners • <a href="/privacy">Privacy</a> • <a href="/terms">Terms</a></p>
+</footer>
 {% endblock %}

@@ -1,5 +1,4 @@
 # config.py
-
 from pathlib import Path
 import os
 
@@ -107,10 +106,13 @@ ENABLE_ENVIRONMENT_EXPLANATION = False
 # ==========================================================
 # 🔐 Flask Config Class for App/Auth
 # ==========================================================
+BASE_DIR = Path(__file__).resolve().parent  # absolute path to repo/app folder
 
 class Config:
     SECRET_KEY = os.getenv("SECRET_KEY", "dev-secret-key")
-    SQLALCHEMY_DATABASE_URI = "sqlite:///simdaddy.db"
+
+    # ✅ Absolute path so app + migrations always use the same DB file
+    SQLALCHEMY_DATABASE_URI = f"sqlite:///{(BASE_DIR / 'simdaddy.db').as_posix()}"
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     # reCAPTCHA
@@ -128,3 +130,44 @@ class Config:
 
     # Toggle OAuth (optional)
     ENABLE_SOCIAL_LOGINS = False
+
+
+# Uploads
+UPLOAD_FOLDER = os.path.join(BASE_DIR, "static", "avatars")
+ALLOWED_IMAGE_EXTENSIONS = {"png","jpg","jpeg","webp"}
+MAX_CONTENT_LENGTH = 2 * 1024 * 1024  # 2MB
+
+
+# ---- SIMDaddy product pricing (coins & USD) ----
+PRODUCTS = {
+    "WEEK_2025": {
+        "kind": "week",
+        "key": "2025",             # year scope for any single week
+        "coin_price": 400,
+        "usd_price": 4.99,
+        "title": "Unlock any 2025 week",
+    },
+    "SEASON_2025": {
+        "kind": "season",
+        "key": "2025-SEASON",
+        "coin_price": 3600,
+        "usd_price": 49.99,
+        "title": "Unlock 2025 season",
+    },
+    "MERCH_CAP": {
+        "kind": "merch",
+        "key": "cap-black",
+        "coin_price": 1200,
+        "usd_price": None,
+        "title": "SIMDaddy Cap (Black)",
+    },
+}
+
+def get_product(code: str):
+    return PRODUCTS.get(code)
+
+def get_week_product(year: int):
+    return get_product(f"WEEK_{year}")
+
+def get_season_product(year: int):
+    return get_product(f"SEASON_{year}")

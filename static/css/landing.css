@@ -1,6 +1,32 @@
-body { margin: 0; font-family: 'Segoe UI', sans-serif; color: #f0f0f0; background: #121212; }
+/* Landing page layout should be full-bleed */
+body.landing {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  color: #f0f0f0;
+  /* NEW: dark page background so space below hero isn't white */
+  background: #0b0b0f;
+}
+
+/* Make the landing container full width (since base wraps content) */
+body.landing .container {
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+/* landing.css */
+body.landing .site-nav { /* transparent on landing */
+  background: rgba(11,11,15,0.35);
+  border-bottom: 1px solid rgba(255,255,255,0.12);
+  backdrop-filter: blur(8px);
+}
+
+/* Hero */
 .hero {
-  background: url('/static/images/stadium-sideline.jpg') no-repeat center center;
+  background: url('/static/images/image-4.jpg') no-repeat center center;
   background-size: cover;
   min-height: 90vh;
   display: flex;
@@ -8,21 +34,45 @@ body { margin: 0; font-family: 'Segoe UI', sans-serif; color: #f0f0f0; backgroun
   justify-content: center;
   position: relative;
 }
+
 .hero::after {
-  content: '';
-  position: absolute;
-  inset: 0;
+  /* already translucent; tweak if you want darker/lighter */
   background: rgba(0,0,0,0.6);
+  pointer-events: none;
 }
-.hero-inner { position: relative; text-align: center; padding: 0 20px; }
+
+.hero-inner {
+  position: relative;
+  text-align: center;
+  padding: 0 20px;
+  z-index: 2; /* above overlay */
+}
+
 .hero h1 { font-size: 3em; color: #00bfff; margin-bottom: 0.5em; }
-.hero p { font-size: 1.2em; color: #ddd; margin-bottom: 1em; }
-.buttons a { margin: 0 10px; padding: 12px 28px; border-radius: 6px; font-size: 1em; font-weight: bold; text-decoration: none; display: inline-block; }
-.btn.primary { background: #00bfff; color: #000; }
+.hero p  { font-size: 1.2em; color: #ddd; margin-bottom: 1em; }
+
+/* Buttons */
+.buttons { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+
+.buttons a {
+  margin: 0 10px;
+  padding: 12px 28px;
+  border-radius: 6px;
+  font-size: 1em;
+  font-weight: bold;
+  text-decoration: none;
+  display: inline-block;
+  position: relative;
+  z-index: 3;       /* above overlay */
+  pointer-events: auto;
+}
+
+.btn.primary   { background: #00bfff; color: #000; }
 .btn.primary:hover { background: #008fcc; }
 .btn.secondary { background: transparent; color: #00bfff; border: 2px solid #00bfff; }
 .btn.secondary:hover { background: #00bfff; color: #000; }
 
+/* Feature blocks */
 .features {
   display: flex;
   flex-wrap: wrap;
@@ -39,6 +89,7 @@ body { margin: 0; font-family: 'Segoe UI', sans-serif; color: #f0f0f0; backgroun
 }
 .feature h2 { font-size: 1.4em; color: #00bfff; margin-bottom: 0.5em; }
 
+/* Testimonial */
 .testimonial {
   background: #181818;
   padding: 60px 20px;
@@ -55,6 +106,7 @@ body { margin: 0; font-family: 'Segoe UI', sans-serif; color: #f0f0f0; backgroun
   color: #999;
 }
 
+/* Footer */
 footer {
   background: #111;
   color: #888;
@@ -64,3 +116,25 @@ footer {
 }
 footer a { color: #00bfff; text-decoration: none; }
 footer a:hover { text-decoration: underline; }
+
+/* === Add black outline to hero paragraphs (not the H1) === */
+.hero .lead,
+.hero .sub {
+  -webkit-text-stroke: 0.35px rgba(0,0,0,0.9); /* subtle stroke on WebKit */
+  text-shadow:
+    -1px -1px 0 #000,
+     1px -1px 0 #000,
+    -1px  1px 0 #000,
+     1px  1px 0 #000,
+     0    2px 4px rgba(0,0,0,0.4); /* soft halo */
+}
+
+/* Slightly lighter outline on very small screens */
+@media (max-width: 480px) {
+  .hero .lead, .hero .sub {
+    -webkit-text-stroke-width: 0.25px;
+    text-shadow:
+      -1px -1px 0 #000, 1px -1px 0 #000,
+      -1px  1px 0 #000, 1px  1px 0 #000;
+  }
+}

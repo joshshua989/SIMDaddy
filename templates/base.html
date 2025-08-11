@@ -1,28 +1,303 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>SIMDaddy - {% block title %}{% endblock %}</title>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
-    {% block head %}{% endblock %}
+  <meta charset="UTF-8">
+  <title>SIMDaddy - {% block title %}{% endblock %}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  {% block head %}{% endblock %}
+
+  <!-- Inline MOBILE drawer + mobile stats/welcome styles (layout-only) -->
+  <style>
+    /* Hamburger (drawer trigger) */
+    .sd-mobile-toggle{
+      position: fixed;
+      top: 12px; left: 12px;
+      z-index: 1100;
+      background: #161616;
+      border: 1px solid #2a2a2a;
+      border-radius: 10px;
+      padding: 8px 10px;
+      display: none;                 /* shown via media query below */
+      flex-direction: column;        /* stacked bars */
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      width: 64px;
+      height: 52px;                  /* slightly taller */
+    }
+    .sd-mobile-toggle .sd-burger{
+      display: block;
+      width: 22px;                   /* wider */
+      height: 3px;                   /* thicker so it won’t disappear */
+      margin: 4px 0;
+      border-radius: 2px;
+      background: #eaeaea;
+    }
+
+    /* Drawer overlay/panel */
+    .sd-drawer__overlay{
+      position: fixed; inset: 0; z-index: 1090;
+      background: rgba(0,0,0,0.45);
+      display: none;
+    }
+    .sd-drawer__overlay.show{ display:block; }
+
+    .sd-drawer{
+      position: fixed; left: 0; top: 0; bottom: 0;
+      width: 80vw; max-width: 320px;
+      background: #121212;
+      border-right: 1px solid #2a2a2a;
+      transform: translateX(-100%);
+      transition: transform 200ms ease;
+      z-index: 1110;
+      display: flex; flex-direction: column;
+    }
+    .sd-drawer.open{ transform: translateX(0); }
+
+    .sd-drawer__header{
+      display:flex; align-items:center; gap:12px;
+      padding:14px; border-bottom:1px solid #2a2a2a;
+    }
+    .sd-avatar{
+      width:40px; height:40px; border-radius:50%;
+      object-fit:cover; background:#1c1c1c; border:1px solid #2a2a2a;
+    }
+    .sd-user__name{ color:#fff; font-weight:600; font-size:15px; line-height:1.2; }
+    .sd-user__label{ color:#9aa0a6; font-size:12px; }
+    .sd-drawer__close{
+      margin-left:auto; background:transparent; border:0;
+      color:#e0e0e0; font-size:22px; line-height:1; padding:4px 8px; border-radius:8px;
+    }
+    .sd-drawer__nav{ display:flex; flex-direction:column; padding:8px 0; }
+    .sd-drawer__link{
+      display:block; padding:12px 16px; color:#fff; text-decoration:none;
+      border-left:3px solid transparent; border-bottom:1px solid rgba(255,255,255,0.06);
+    }
+    .sd-drawer__link:hover{ background: rgba(255,255,255,0.04); }
+    .sd-drawer__link.active{ background:#0f0f0f; color:#00bfff; border-left-color:#007fb7; }
+
+    /* MOBILE ONLY (≤768px) */
+    @media (max-width: 768px){
+      /* Show lime burger on all pages when logged in; hide desktop nav */
+      body.is-auth .sd-mobile-toggle{
+        display: inline-flex;
+        background:#2c6f2c; border:1px solid #2c6f2c;
+      }
+      .sd-mobile-toggle .sd-burger{ background:#fff; }
+
+      body.is-auth .site-nav{ display:none; }
+
+      /* Drawer DOM allowed; overlay toggled by JS */
+      #sdDrawer{ display:block; }
+      #sdDrawerOverlay{
+        display:none !important; pointer-events:none; opacity:0; transition:opacity 150ms ease;
+      }
+      #sdDrawerOverlay.show{
+        display:block !important; pointer-events:auto; opacity:1;
+      }
+
+      /* Clear the fixed header elements (burger + stats) */
+      body.is-auth{ padding-top: 84px; }
+
+      /* RIGHT-pinned mobile stats, vertically centered with burger */
+      .mobile-greet{
+        position: fixed;
+        top: 12px;  /* same as burger top */
+        right: calc(env(safe-area-inset-right, 0px) + 16px); /* comfy edge padding */
+        left: auto;
+        height: 52px;             /* match burger height for perfect vertical alignment */
+        display: flex;
+        align-items: center;       /* vertical center */
+        justify-content: flex-end; /* right align content */
+        z-index: 1080;             /* below overlay(1090) and burger(1100) */
+        pointer-events: none;      /* don't block taps */
+        transform: none;
+        text-align: right;
+      }
+      .mobile-greet .nav-stats{
+        display:inline-flex; align-items:center;
+        font-size:0.85rem; line-height:1; font-weight:600; color:#eaeaea;
+      }
+      .mobile-greet .nav-stats .stat{ display:inline-flex; align-items:center; gap:4px; }
+      .mobile-greet .nav-stats .sep{ margin:0 4px; }
+
+      /* Mobile “Welcome back” line that appears on HOME only */
+      .mobile-welcome{
+        display:block;
+        margin: 6px 16px 0 16px;
+        color:#eaeaea;
+        font-weight:600;
+      }
+    }
+
+    /* DESKTOP ONLY */
+    @media (min-width: 769px){
+      .sd-drawer, .sd-drawer__overlay{ display:none; }
+      .mobile-greet{ display:none !important; } /* no mobile stats on desktop */
+      .mobile-welcome{ display:none; }         /* desktop uses quickbar/greeting */
+    }
+
+    @media (max-width: 768px){
+    .mobile-greet{
+      left: auto !important;
+      right: calc(env(safe-area-inset-right, 0px) + 4px) !important; /* ~4px from edge */
+      justify-content: flex-end !important;
+      text-align: right !important;
+      width: auto;
+      transform: none !important;
+    }
+    .mobile-greet .nav-stats{
+      display: inline-flex;
+      align-items: center;
+      justify-content: flex-end;
+    }
+  }
+  </style>
 </head>
-<body>
-    <nav>
-        <span style="font-size: 1.5em; font-weight: bold; color: #0076B6;">SIMDaddy</span>
-        {% if username %} &nbsp;|&nbsp; Logged in as: <b>{{ username }}</b> &nbsp;|&nbsp; <a href="{{ url_for('logout') }}">Logout</a>{% endif %}
-    </nav>
-    <div class="container">
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                <ul class="flashes">
-                {% for category, message in messages %}
-                    <li class="{{ category }}">{{ message }}</li>
-                {% endfor %}
-                </ul>
-            {% endif %}
-        {% endwith %}
-        {% block content %}{% endblock %}
+
+{% set ep = request.endpoint or '' %}
+{% set auth_only = ep in ['views.landing','auth.login','auth.signup'] %}
+{% set is_dash = (ep == 'views.home') %}
+{% set show_quickbar = (current_user.is_authenticated and not auth_only and ep != 'views.account') %}
+
+<body class="theme-dark {{ page_class|default('') }} {% if show_quickbar %}has-quickbar{% endif %}{% if current_user.is_authenticated %} is-auth{% endif %}{% if is_dash %} is-dash{% endif %}">
+
+  {# Shared values (avatar + stats) #}
+  {% if current_user.is_authenticated %}
+    {% set default_avatar_path = url_for('static', filename='images/avatar_default.svg') %}
+    {% set fallback_avatar_data = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='96' height='96' viewBox='0 0 96 96'><defs><linearGradient id='bg' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='%231b1f27'/><stop offset='1' stop-color='%23101521'/></linearGradient></defs><circle cx='48' cy='48' r='46' fill='url(%23bg)'/><circle cx='48' cy='36' r='15' fill='%23e9eef5'/><path d='M16 78c6-13 20-22 32-22s26 9 32 22' fill='%23e9eef5'/></svg>" %}
+    {% set avatar = (current_user.profile_pic_url or current_user.avatar_url or default_avatar_path) %}
+    {% set first_name = (current_user.first_name or current_user.username or current_user.email or 'User') %}
+    {% set rep = (current_user.reputation_points or current_user.reputation or 0) %}
+    {% set coins = (current_user.coins or current_user.balance or 0) %}
+  {% endif %}
+
+  {% if current_user.is_authenticated %}
+    <!-- Mobile hamburger -->
+    <button class="sd-mobile-toggle" aria-label="Open navigation" aria-controls="sdDrawer" aria-expanded="false">
+      <span class="sd-burger"></span>
+      <span class="sd-burger"></span>
+      <span class="sd-burger"></span>
+    </button>
+
+    <!-- Global mobile stats line (ALL pages, logged-in) -->
+    <div class="mobile-greet">
+      <span class="nav-stats">
+        <span class="stat"><span class="icon">🏆</span><span class="val">{{ rep }}</span></span>
+        <span class="sep">·</span>
+        <span class="stat"><span class="icon">💸</span><span class="val">{{ coins }}</span></span>
+      </span>
     </div>
+
+    <!-- Drawer overlay -->
+    <div id="sdDrawerOverlay" class="sd-drawer__overlay" hidden></div>
+
+    <!-- Left sliding drawer -->
+    <nav id="sdDrawer" class="sd-drawer" aria-hidden="true" aria-label="Mobile navigation">
+      <div class="sd-drawer__header">
+        <img class="sd-avatar" src="{{ avatar }}?v=2" alt="Profile picture"
+             onerror="this.onerror=null;this.src='{{ fallback_avatar_data }}'">
+        <div class="sd-user">
+          <div class="sd-user__name">{{ first_name }}</div>
+          <div class="sd-user__label">SIMDaddy</div>
+        </div>
+        <button class="sd-drawer__close" aria-label="Close navigation">×</button>
+      </div>
+      <div class="sd-drawer__nav">
+        <a href="{{ url_for('views.home') }}" class="sd-drawer__link {% if ep == 'views.home' %}active{% endif %}">Dashboard</a>
+        <a href="{{ url_for('views.account') }}" class="sd-drawer__link {% if ep == 'views.account' %}active{% endif %}">My Account</a>
+        <a href="{{ url_for('views.injuries') }}" class="sd-drawer__link {% if ep == 'views.injuries' %}active{% endif %}">Injuries</a>
+        <a href="{{ url_for('views.transactions') }}" class="sd-drawer__link {% if ep == 'views.transactions' %}active{% endif %}">Transactions</a>
+        <a href="{{ url_for('views.weather_insights') }}" class="sd-drawer__link {% if ep == 'views.weather_insights' %}active{% endif %}">Weather</a>
+        <a href="{{ url_for('auth.logout') }}" class="sd-drawer__link">Logout</a>
+      </div>
+    </nav>
+  {% endif %}
+
+  <!-- Site Navigation (desktop) -->
+  <nav class="site-nav">
+    <div class="nav-inner">
+      <a class="brand" href="{{ url_for('views.landing') }}" aria-label="SIMDaddy home">
+        <img
+          src="{{ url_for('static', filename='images/image-7.png') }}"
+          alt="SIMDaddy"
+          class="brand-logo"
+          loading="eager"
+          decoding="async"
+        />
+      </a>
+
+      {% if current_user.is_authenticated %}
+        <a class="nav-greeting desktop-only" href="{{ url_for('views.account') }}" title="My Account">
+          <img class="nav-avatar" src="{{ avatar }}?v=2" alt="Profile picture"
+               onerror="this.onerror=null;this.src='{{ fallback_avatar_data }}'">
+          <span class="nav-stats">
+            <span class="stat"><span class="icon">🏆</span><span class="val">{{ rep }}</span></span>
+            <span class="sep">·</span>
+            <span class="stat"><span class="icon">💸</span><span class="val">{{ coins }}</span></span>
+          </span>
+        </a>
+      {% endif %}
+
+      <div class="nav-links">
+        {% if auth_only %}
+          <a class="btn-nav {% if ep == 'auth.login' %}active{% endif %}"
+             href="{{ url_for('auth.login') }}">Log In</a>
+          <a class="btn-nav {% if ep == 'auth.signup' %}active{% endif %}"
+             href="{{ url_for('auth.signup') }}">Get Started</a>
+        {% else %}
+          {% if current_user.is_authenticated %}
+            <a class="btn-nav {% if is_dash or ep == 'views.week_view' %}active{% endif %}"
+               href="{{ url_for('views.home') }}">🏠 Dashboard</a>
+            <a class="btn-nav {% if ep == 'views.account' %}active{% endif %}"
+               href="{{ url_for('views.account') }}">👤 My Account</a>
+            <a class="btn-nav outline" href="{{ url_for('auth.logout') }}">↩ Logout</a>
+          {% else %}
+            <a class="btn-nav {% if ep == 'auth.login' %}active{% endif %}"
+               href="{{ url_for('auth.login') }}">Log In</a>
+            <a class="btn-nav {% if ep == 'auth.signup' %}active{% endif %}"
+               href="{{ url_for('auth.signup') }}">Get Started</a>
+          {% endif %}
+        {% endif %}
+      </div>
+    </div>
+  </nav>
+
+  {% if show_quickbar %}
+    <div class="quickbar">
+      <div class="quickbar-inner">
+        <div class="quick-links">
+          <a href="{{ url_for('views.injuries') }}" class="btn-nav {% if ep == 'views.injuries' %}active{% endif %}">Injuries</a>
+          <a href="{{ url_for('views.weather_insights') }}" class="btn-nav {% if ep == 'views.weather_insights' %}active{% endif %}">Weather</a>
+          <a href="{{ url_for('views.transactions') }}" class="btn-nav {% if ep == 'views.transactions' %}active{% endif %}">Transactions</a>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
+  {# Mobile-only welcome on HOME, just below the header #}
+  {% if current_user.is_authenticated and is_dash %}
+    <div class="mobile-welcome">
+      Welcome back, {{ first_name }}!
+    </div>
+  {% endif %}
+
+  <div class="container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <ul class="flashes">
+          {% for category, message in messages %}
+            <li class="{{ category }}">{{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+  </div>
+
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  {% block scripts %}{% endblock %}
 </body>
 </html>

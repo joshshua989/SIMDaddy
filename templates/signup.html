@@ -1,176 +1,250 @@
 {% extends "base.html" %}
+{% set page_class = 'auth signup' %}
 {% block title %}Sign Up{% endblock %}
 
 {% block content %}
 <style>
-    body {
-        background: url('https://images.unsplash.com/photo-1595996033963-d57a1a6b3d30?auto=format&fit=crop&w=1650&q=80') no-repeat center center fixed;
-        background-size: cover;
-        font-family: 'Segoe UI', sans-serif;
-        color: #f0f0f0;
-    }
+  /* Full-bleed like landing; no base card wrapper */
+  .auth.signup .container{
+    max-width:none;
+    margin:0;
+    background:transparent;
+    box-shadow:none;
+    padding:0;
 
-    .signup-container {
-        max-width: 400px;
-        margin: 60px auto;
-        background-color: rgba(18, 18, 18, 0.9);
-        padding: 30px 40px;
-        border-radius: 12px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.7);
-    }
+    /* Sticky footer layout without squeezing the form */
+    display:grid;
+    grid-template-rows: 1fr auto;
+    min-height:100dvh;
+    align-items:start;          /* don't stretch children vertically */
+  }
 
-    .signup-container h2 {
-        color: #00bfff;
-        text-align: center;
-        margin-bottom: 25px;
-        font-size: 1.8em;
-    }
+  /* SAME hero image as landing; strong selector beats globals */
+  body.theme-dark.auth.signup{
+    background:
+      linear-gradient(180deg, rgba(0,0,0,.25) 0%, rgba(0,0,0,.55) 100%),
+      url('{{ url_for("static", filename="images/image-2.jpg") }}?v=1')
+      center center / cover no-repeat fixed !important;
+    font-family:'Segoe UI', sans-serif;
+    color:#f0f0f0;
+  }
 
-    label {
-        display: block;
-        margin-top: 12px;
-        font-size: 0.95em;
-    }
+  /* Page header + tagline (match card width) */
+  .page-title{
+    margin:64px auto 8px; /* ↑ added more space above the header */
+    text-align:center;
+  }
+  .sub{
+    display:block;
+    margin:0 auto 12px;
+    text-align:center;
+    font-size:1.05em;
+    line-height:1.5;
+    color:#e8f7ff;
+    opacity:.95;
+  }
 
-    input[type="text"],
-    input[type="email"],
-    input[type="password"],
-    input[type="tel"] {
-        width: 100%;
-        padding: 10px 12px;
-        margin-top: 6px;
-        margin-bottom: 10px;
-        background-color: white;
-        color: black;
-        border: none;
-        border-radius: 6px;
-        font-size: 0.95em;
-        box-sizing: border-box;
-        height: 42px;
-    }
+  /* Signup card — match your login’s spacing */
+  .signup-container{
+    max-width:400px;           /* initial target */
+    margin:24px auto 60px;
+    background-color:rgba(18,18,18,.9);
+    padding:30px 40px;
+    border-radius:12px;
+    box-shadow:0 4px 12px rgba(0,0,0,.7);
+    justify-self:center;
+    align-self:start;
+  }
+  .signup-container h2{
+    color:#00bfff;
+    text-align:center;
+    margin-bottom:25px;
+    font-size:1.8em;
+    font-weight:800;
+  }
 
-    .sms-group {
-        display: flex;
-        gap: 10px;
-        align-items: center;
-        margin-top: 6px;
-        margin-bottom: 12px;
-    }
+  label{ display:block; margin-top:12px; font-size:.95em; }
 
-    .sms-group input[type="text"] {
-        flex: 1;
-        height: 42px;
-    }
+  /* Inputs (forced white like login) */
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="tel"]{
+    width:100%;
+    padding:10px 12px;
+    margin-top:6px;
+    margin-bottom:10px;
+    background-color:#fff !important;
+    color:#000 !important;
+    border:1px solid #ccc;
+    border-radius:6px;
+    font-size:.95em;
+    box-sizing:border-box;
+    height:42px;
+  }
 
-    .sms-group button {
-        flex-shrink: 0;
-        padding: 10px 14px;
-        font-size: 0.9em;
-        border-radius: 6px;
-        background-color: #00bfff;
-        color: white;
-        border: none;
-        cursor: pointer;
-    }
+  .sms-group{ display:flex; gap:10px; align-items:center; margin-top:6px; margin-bottom:12px; }
+  .sms-group input[type="text"]{ flex:1; height:42px; }
+  .sms-group button{
+    flex-shrink:0; padding:10px 14px; font-size:.9em; border-radius:6px;
+    background-color:#00bfff; color:#fff; border:none; cursor:pointer;
+  }
+  .sms-group button:hover{ background-color:#008fcc; }
 
-    .sms-group button:hover {
-        background-color: #008fcc;
-    }
+  .agreements{ margin:14px 0 6px; }
+  .agreements label{ display:block; margin:8px 0; }
+  .agreements a{ color:#00bfff; text-decoration:none; }
+  .agreements a:hover{ text-decoration:underline; }
 
-    .g-recaptcha {
-        margin: 20px 0;
-    }
+  button[type="submit"]{
+    width:100%;
+    background-color:#00bfff;
+    color:#fff;
+    padding:12px;
+    border:none;
+    border-radius:6px;
+    font-size:1em;
+    font-weight:800;
+    cursor:pointer;
+    margin-top:10px;
+  }
+  button[type="submit"]:hover{ background-color:#008fcc; }
 
-    button[type="submit"] {
-        width: 100%;
-        background-color: #00bfff;
-        color: white;
-        padding: 12px;
-        border: none;
-        border-radius: 6px;
-        font-size: 1em;
-        font-weight: bold;
-        cursor: pointer;
-        margin-top: 10px;
-    }
+  .signup-container p{ text-align:center; margin-top:16px; font-size:.9em; }
+  .signup-container a{ color:#00bfff; text-decoration:none; }
+  .signup-container a:hover{ text-decoration:underline; }
 
-    button[type="submit"]:hover {
-        background-color: #008fcc;
-    }
+  /* Footer style + push to bottom via grid row 2 */
+  footer{
+    background:#0b0b0f;
+    border-top:1px solid rgba(255,255,255,.08);
+    color:#e0e0e0;
+    text-align:center;
+    padding:20px;
+    font-size:.85em;
+  }
+  footer a{ color:#00bfff; text-decoration:none; }
+  footer a:hover{ text-decoration:underline; }
 
-    .signup-container p {
-        text-align: center;
-        margin-top: 16px;
-        font-size: 0.9em;
-    }
+  /* FORCE solid nav/footer on signup (wins over any transparency rules) */
+  html body.theme-dark.auth.signup .site-nav{
+    background:#0b0b0f !important;
+    border-bottom:1px solid rgba(255,255,255,.08) !important;
+    backdrop-filter:none !important;
+  }
+  html body.theme-dark.auth.signup footer{
+    background:#0b0b0f !important;
+    border-top:1px solid rgba(255,255,255,.08) !important;
+  }
 
-    .signup-container a {
-        color: #00bfff;
-        text-decoration: none;
+  /* === HARD WIDTH OVERRIDE: card + header + tagline (match login) === */
+  html body.theme-dark.auth.signup #signup-card,
+  html body.theme-dark.auth.signup .page-title,
+  html body.theme-dark.auth.signup .sub{
+    width: clamp(440px, 46vw, 400px) !important;  /* same clamp as working login */
+    max-width: none !important;
+  }
+  @media (max-width: 560px){
+    html body.theme-dark.auth.signup #signup-card,
+    html body.theme-dark.auth.signup .page-title,
+    html body.theme-dark.auth.signup .sub{
+      width: calc(100vw - 40px) !important;      /* small screens: nice margins */
     }
+  }
 
-    .signup-container a:hover {
-        text-decoration: underline;
+  /* Match landing footer text color */
+  html body.theme-dark.auth.signup footer{
+    color:#888 !important;
+  }
+
+  /* Black outline for signup header + tagline */
+  html body.theme-dark.auth.signup .page-title,
+  html body.theme-dark.auth.signup .sub {
+    -webkit-text-stroke: 0.35px rgba(0,0,0,0.9);
+    text-shadow:
+      -1px -1px 0 #000,
+       1px -1px 0 #000,
+      -1px  1px 0 #000,
+       1px  1px 0 #000,
+       0    2px 4px rgba(0,0,0,0.4);
+  }
+
+  /* Slightly lighter on very small screens */
+  @media (max-width: 480px) {
+    html body.theme-dark.auth.signup .page-title,
+    html body.theme-dark.auth.signup .sub {
+      -webkit-text-stroke-width: 0.25px;
+      text-shadow:
+        -1px -1px 0 #000, 1px -1px 0 #000,
+        -1px  1px 0 #000, 1px  1px 0 #000;
     }
+  }
+
 </style>
 
-<div class="signup-container">
-    <h2>Create Your SIMDaddy Account</h2>
+<h2 class="page-title">Welcome to SIMDaddy!</h2>
+<p class="sub"><strong>Sim-driven projections with game script, defensive coverages, weather predictions and more baked in!</strong></p>
 
-    <form method="POST" action="{{ url_for('auth.signup') }}">
-        {{ form.hidden_tag() }}
+<div id="signup-card" class="signup-container">
+  <h2>Create Your SIMDaddy Account</h2>
 
-        <label>First Name:</label>
-        {{ form.first_name(class_="form-control") }}
+  <form method="POST" action="{{ url_for('auth.signup') }}">
+    {{ form.hidden_tag() }}
 
-        <label>Last Name:</label>
-        {{ form.last_name(class_="form-control") }}
+    <label>First Name:</label>
+    {{ form.first_name(class_="form-control") }}
 
-        <label>Email:</label>
-        {{ form.email(class_="form-control") }}
+    <label>Last Name:</label>
+    {{ form.last_name(class_="form-control") }}
 
-        <label>Phone Number:</label>
-        {{ form.phone(class_="form-control", id="phone") }}
+    <label>Email:</label>
+    {{ form.email(class_="form-control") }}
 
-        <label>Password:</label>
-        {{ form.password(class_="form-control") }}
+    <label>Phone Number:</label>
+    {{ form.phone(class_="form-control", id="phone") }}
 
-        <label>Confirm Password:</label>
-        {{ form.confirm_password(class_="form-control") }}
+    <label>Password:</label>
+    {{ form.password(class_="form-control") }}
 
-        <label>Verification Code (SMS):</label>
-        <div class="sms-group">
-            <input type="text" name="sms_code" placeholder="123456" required>
-            <button type="button" onclick="sendCode()">Send Code</button>
-        </div>
+    <label>Confirm Password:</label>
+    {{ form.confirm_password(class_="form-control") }}
 
-        <label>{{ form.agree_terms() }} I agree to the <a href="/terms">Terms & Conditions</a></label>
-        <label>{{ form.agree_privacy() }} I agree to the <a href="/privacy">Privacy Policy</a></label>
+    <label>Verification Code (SMS):</label>
+    <div class="sms-group">
+      <input type="text" name="sms_code" placeholder="123456" required>
+      <button type="button" onclick="sendCode()">Send Code</button>
+    </div>
 
-        <div class="g-recaptcha" data-sitekey="YOUR_RECAPTCHA_SITE_KEY"></div>
+    <div class="agreements">
+      <label>{{ form.agree_terms() }} I agree to the <a href="/terms">Terms &amp; Conditions</a></label>
+      <label>{{ form.agree_privacy() }} I agree to the <a href="/privacy">Privacy Policy</a></label>
+    </div>
 
-        <button type="submit">Sign Up</button>
-    </form>
+    <div class="g-recaptcha" data-sitekey="YOUR_RECAPTCHA_SITE_KEY"></div>
+    <button type="submit">Sign Up</button>
+  </form>
 
-    <p>Already have an account? <a href="{{ url_for('auth.login') }}">Log in here</a></p>
+  <p>Already have an account? <a href="{{ url_for('auth.login') }}">Log in here</a></p>
 </div>
 
 <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 <script>
-    function sendCode() {
-        const phone = document.getElementById('phone').value;
-        const csrfToken = document.querySelector('input[name="csrf_token"]').value;
+  function sendCode() {
+    const phone = document.getElementById('phone').value;
+    const csrfToken = document.querySelector('input[name="csrf_token"]').value;
 
-        fetch("/send_code", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded"
-            },
-            body: `phone=${encodeURIComponent(phone)}&csrf_token=${encodeURIComponent(csrfToken)}`
-        })
-        .then(res => res.json())
-        .then(data => alert(data.status === "ok" ? "✅ Code sent!" : "❌ Error sending code"))
-        .catch(err => alert("❌ Network or server error"));
-    }
+    fetch("/send_code", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: `phone=${encodeURIComponent(phone)}&csrf_token=${encodeURIComponent(csrfToken)}`
+    })
+    .then(res => res.json())
+    .then(data => alert(data.status === "ok" ? "✅ Code sent!" : "❌ Error sending code"))
+    .catch(() => alert("❌ Network or server error"));
+  }
 </script>
+
+<footer>
+  <p>&copy; 2025 SIMDaddy • Built for Winners • <a href="/privacy">Privacy</a> • <a href="/terms">Terms</a></p>
+</footer>
 {% endblock %}

@@ -1,0 +1,22 @@
+<!-- static/img/avatar_default.svg -->
+<svg xmlns="http://www.w3.org/2000/svg" width="96" height="96" viewBox="0 0 96 96" role="img" aria-label="Default avatar">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1b1f27"/>
+      <stop offset="1" stop-color="#101521"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="30%" r="60%">
+      <stop offset="0" stop-color="#00bfff" stop-opacity=".28"/>
+      <stop offset="1" stop-color="#00bfff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <!-- background circle + subtle glow -->
+  <circle cx="48" cy="48" r="46" fill="url(#bg)"/>
+  <circle cx="48" cy="48" r="46" fill="url(#glow)"/>
+  <!-- ring -->
+  <circle cx="48" cy="48" r="45.5" fill="none" stroke="#2a2a2a" stroke-width="1"/>
+  <!-- head -->
+  <circle cx="48" cy="36" r="15" fill="#e9eef5"/>
+  <!-- shoulders/chest -->
+  <path d="M16 78c6-13 20-22 32-22s26 9 32 22" fill="#e9eef5"/>
+</svg>

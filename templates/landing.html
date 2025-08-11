@@ -1,15 +1,31 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF‑8">
-  <title>SIMDaddy | Dominate Every Down</title>
+{% extends "base.html" %}
+{% set page_class = 'landing' %}
+{% block title %}Fade the noise. Play the data.{% endblock %}
+
+{% block head %}
   <link rel="stylesheet" href="{{ url_for('static', filename='css/landing.css') }}">
-</head>
-<body>
+  <style>
+    /* optional tiny tweaks so the new copy pops */
+    .hero h1 { font-size: 3.2em; line-height: 1.05; }
+    .hero .lead { font-size: 1.35em; margin-top: .2em; color: #e8f7ff; }
+    .hero .sub { font-size: 1.05em; opacity: .95; }
+  </style>
+
+  <link rel="preload" as="image"
+      href="{{ url_for('static', filename='img/hero-wr-2400.webp') }}"
+      imagesrcset="
+        {{ url_for('static', filename='img/hero-wr-2400.webp') }} 2400w,
+        {{ url_for('static', filename='img/hero-wr-2880.webp') }} 2880w"
+      imagesizes="100vw">
+{% endblock %}
+
+{% block content %}
   <header class="hero">
     <div class="hero-inner">
       <h1>Dominate Every Down</h1>
-      <p>Projections. Props. WR matchups powered by context.</p>
+      <p class="lead"><strong>Fade the noise. Play the data. Turn matchups into money.<strong></p>
+      <p class="sub"><strong>Real-world context → clean projections → better slips.</strong></p>
+
       <div class="buttons">
         <a href="{{ url_for('auth.signup') }}" class="btn primary">Get Started Free</a>
         <a href="{{ url_for('auth.login') }}" class="btn secondary">Log In</a>
@@ -17,6 +33,7 @@
     </div>
   </header>
 
+  <!-- keep or remove these sections later; leaving them for now -->
   <section class="features">
     <div class="feature">
       <h2>📫 Visual WR Matchups</h2>
@@ -33,14 +50,11 @@
   </section>
 
   <section class="testimonial">
-    <blockquote>
-      “SIMDaddy is like having NFL analytics in your back pocket.”
-    </blockquote>
-    <div class="author">— A Featured Fantasy Analyst</div>
+    <blockquote>“It’s the first tool that explains <b>why</b> a prop is off, not just that it is.”</blockquote>
+    <div class="author">— Host, <i>The Sunday Sharp</i> podcast</div>
   </section>
 
   <footer>
-    <p>&copy; 2025 SIMDaddy • Built for Winners • <a href="/privacy">Privacy</a> • <a href="/terms">Terms</a></p>
+    <p>&copy; 2025 SIMDaddy • Built for Winners • <a href="/privacy">Privacy</a> • <a href="/terms">Terms</a></p>
   </footer>
-</body>
-</html>
+{% endblock %}

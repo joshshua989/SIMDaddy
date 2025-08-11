@@ -1,2 +1,4 @@
 Flask
-pandas
+Flask-WTF
+WTForms
+email-validator

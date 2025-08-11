@@ -1,28 +1,52 @@
 {% extends "base.html" %}
-{% block content %}
-<div class="container mt-5 text-white">
-  <h1 class="mb-4">📋 NFL Transactions</h1>
+{% block title %}Transactions{% endblock %}
 
-  <form method="get" class="mb-3">
-    <label for="month" class="form-label">Select Month:</label>
-    <select name="month" class="form-select w-auto d-inline" onchange="this.form.submit()">
-      {% for m in ['july', 'august', 'september'] %}
-        <option value="{{ m }}" {% if selected_month == m %}selected{% endif %}>{{ m|capitalize }}</option>
-      {% endfor %}
-    </select>
-  </form>
+{% block head %}
+<style>
+  /* wrapper alignment normalized by global CSS */
+  .tx-desc{background:#101521;border:1px solid #20283a;border-radius:12px;padding:14px;margin-bottom:16px;color:#9aa3af}
+  table.tx-table{width:100%;border-collapse:collapse;background:#141a26;border:1px solid #20283a;border-radius:12px;overflow:hidden}
+  .tx-table th,.tx-table td{padding:12px 10px;border-bottom:1px solid #20283a;text-align:left}
+  .tx-table th{color:#cfd6e6;font-weight:600;background:#171e2c}
+  .tx-table tr:last-child td{border-bottom:0}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="tx-container">
+  <h2 class="page-title">Transactions</h2>
+
+  {% if desc %}
+    <div class="tx-desc">{{ desc|safe }}</div>
+  {% endif %}
 
   {% if transactions %}
-    {% for t in transactions %}
-      <div class="card bg-dark text-light mb-2">
-        <div class="card-body">
-          <h6 class="card-subtitle mb-2 text-muted">{{ t.date }}</h6>
-          <p class="card-text">{{ t.text }}</p>
-        </div>
-      </div>
-    {% endfor %}
+    <table class="tx-table">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Player</th>
+          <th>Type</th>
+          <th>From</th>
+          <th>To</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for t in transactions %}
+        <tr>
+          <td>{{ t.date or t.timestamp or "—" }}</td>
+          <td>{{ t.player or t.name or "—" }}</td>
+          <td>{{ t.type or t.action or "—" }}</td>
+          <td>{{ t.frm or t.from_team or "—" }}</td>
+          <td>{{ t.to or t.to_team or "—" }}</td>
+          <td>{{ t.notes or t.note or "" }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
   {% else %}
-    <p class="text-warning">No transactions found.</p>
+    <div class="tx-desc">No transactions found.</div>
   {% endif %}
 </div>
 {% endblock %}

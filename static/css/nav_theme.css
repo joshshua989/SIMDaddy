@@ -1,0 +1,38 @@
+/* Namespaced so page-specific .nav styles can't override */
+.sd-nav {
+  width: 100%;
+  border-bottom: 1px solid #2a2a2a;
+  margin: 0 0 8px 0;
+}
+.sd-nav__inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 12px 0 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.sd-brand a {
+  color: #00bfff;
+  text-decoration: none;
+  font-weight: 700;
+  letter-spacing: 0.25px;
+}
+
+/* Brand-blue pill buttons (keep comfortable default sizing) */
+.sd-btn {
+  display: inline-block;
+  padding: 8px 12px;           /* comfortable, not tiny */
+  border-radius: 8px;
+  text-decoration: none;
+  color: #fff;
+  background: var(--brand-blue, #00bfff);
+  border: 1px solid #007fb7;
+  font-weight: 600;
+  /* no font-size override -> inherit your site’s normal size */
+  /* no min-height override -> keep your original size */
+}
+.sd-btn:hover {
+  filter: brightness(0.92);
+}

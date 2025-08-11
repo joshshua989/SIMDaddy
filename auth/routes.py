@@ -1,4 +1,3 @@
-
 # auth/routes.py
 
 from flask import Blueprint, render_template, redirect, url_for, request, flash, session
@@ -18,12 +17,18 @@ auth_bp = Blueprint('auth', __name__, url_prefix='')
 # -------------------------------
 @auth_bp.route('/login', methods=['GET', 'POST'])
 def login():
+    # IMPORTANT: The login page should render with no leftover flashes.
+    # (logout() already clears them, but this keeps the page pristine if
+    # anything else tried to flash before redirecting here)
+    if request.method == 'GET':
+        session.pop('_flashes', None)
+
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.username.data.lower()).first()
         if user and check_password_hash(user.password, form.password.data):
             login_user(user)
-            session['user'] = user.email
+            session['user'] = user.email  # your custom guard
             return redirect(url_for('views.home'))
         else:
             flash("Invalid email or password.", "danger")
@@ -32,12 +37,19 @@ def login():
 # -------------------------------
 # Logout
 # -------------------------------
-@auth_bp.route('/logout')
+@auth_bp.route("/logout")
 @login_required
 def logout():
+    # Fully log out the user
     logout_user()
+
+    # Clear your custom "logged in" flag used by require_login
     session.pop('user', None)
-    flash("You’ve been logged out.", "info")
+
+    # Nuke any queued flash messages so nothing appears on /login
+    session.pop('_flashes', None)
+
+    # Hard redirect to the login page (no render, no flash)
     return redirect(url_for("auth.login"))
 
 # -------------------------------
@@ -91,4 +103,3 @@ def send_code():
         if success:
             return {"status": "ok"}
     return {"status": "error"}, 400
-

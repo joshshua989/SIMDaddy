@@ -8,6 +8,34 @@ from weather_estimator import get_noaa_forecast
 
 forecast_cache = {}
 
+import re
+
+def _safe_float(x, default=None):
+    if x is None:
+        return default
+    if isinstance(x, (int, float)):
+        return float(x)
+    s = str(x).strip()
+    if not s:
+        return default
+    m = re.search(r"[-+]?\d*\.?\d+", s)
+    return float(m.group(0)) if m else default
+
+def parse_temperature(val):
+    return _safe_float(val, default=None)
+
+def parse_wind_speed(val):
+    v = _safe_float(val, default=0)
+    return int(round(v)) if v is not None else 0
+
+def parse_precip_percent(val):
+    v = _safe_float(val, default=0)
+    if v is None:
+        return 0
+    return max(0, min(100, v))
+
+
+
 def safe_float(val, default=0.0):
     try:
         if val is None or val == '' or str(val).lower() == 'none':
@@ -45,9 +73,8 @@ def compute_weather_boost(stadium_profile, week, climate_phase, date):
         boost = 1.0
         condition = "Unavailable"
         if forecast and not forecast.get("error"):
-            temp = safe_float(forecast.get("temperature"), 60)
-            wind_str = forecast.get("windSpeed", "10 mph")
-            wind = int(wind_str.split(" ")[0]) if wind_str else 10
+            temp = parse_temperature(forecast.get("temperature")) if forecast.get("temperature") is not None else 60
+            wind = parse_wind_speed(forecast.get("windSpeed"))
             short_forecast = forecast.get("shortForecast", "")
             condition = f"{temp}°F, {wind} wind, {short_forecast}"
             if temp < 35 or wind > 20:
@@ -84,11 +111,9 @@ def build_weather_boost_map(schedule_df):
                 game_date = date
                 forecast = get_noaa_forecast(lat, lon, game_date)
                 try:
-                    wind = int(str(forecast.get("windSpeed", "0 mph")).split()[0])
-                except Exception:
-                    wind = 0
-                precip = safe_float(forecast.get("precipitation"), 0)
-                temp = safe_float(forecast.get("temperature"), 60)
+                    wind = parse_wind_speed(forecast.get("windSpeed"))
+                precip = parse_precip_percent(forecast.get("precipitation"))
+                temp = parse_temperature(forecast.get("temperature")) or 60
 
                 # Apply route-type aware weather penalties
                 deep_penalty = 1.0

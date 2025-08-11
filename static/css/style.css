@@ -1,56 +1,668 @@
+/* ================= Base (yours, kept) ================= */
+:root{
+  --brand-blue:#00bfff;
+  --brand-blue-dark:#0098d6;   /* slightly darker Logout */
+  --paper:#fff;
+  --ink:#333;
+  --nav-bg:#171717;
+  --nav-border:#2a2a2a;
+
+  /* Lime theme */
+  --lime:#2a8f2a;           /* inactive button background */
+  --lime-border:#2c6f2c;    /* inactive button border */
+  --lime-light:#8EF08E;     /* lighter green for active text/border */
+  --active-bg:#0f0f0f;      /* active tab background */
+  --active-lime: var(--lime-light); /* active tab text + border */
+}
+
+/* Keep layout width consistent whether a vertical scrollbar is present or not */
+html { scrollbar-gutter: stable; }
+@supports not (scrollbar-gutter: stable) { html { overflow-y: scroll; } }
+
 body {
-    font-family: 'Segoe UI', sans-serif;
-    margin: 0;
-    background: #f4f4f4;
-    color: #333;
+  font-family: 'Segoe UI', sans-serif;
+  margin: 0;
+  background: #f4f4f4;
+  color: var(--ink);
 }
+
+/* Legacy <nav> styling (kept for any old templates using bare <nav>) */
 nav {
-    padding: 12px 30px;
-    background: #0076B6;
-    color: #fff;
-    font-size: 1.1em;
-    letter-spacing: 1px;
+  padding: 12px 30px;
+  background: #0076B6;
+  color: #fff;
+  font-size: 1.1em;
+  letter-spacing: 1px;
 }
+
 .container {
-    max-width: 1100px;
-    margin: 30px auto;
-    background: #fff;
-    border-radius: 14px;
-    padding: 35px 36px;
-    box-shadow: 0 6px 32px #0003;
+  max-width: 1100px;
+  margin: 30px auto;
+  background: var(--paper);
+  border-radius: 14px;
+  padding: 35px 36px;
+  box-shadow: 0 6px 32px #0003;
 }
+
 .login-container {
-    max-width: 350px;
-    margin: 60px auto;
-    padding: 28px 26px;
-    background: #eee;
-    border-radius: 12px;
-    box-shadow: 0 2px 12px #0001;
-    text-align: center;
+  max-width: 350px;
+  margin: 60px auto;
+  padding: 28px 26px;
+  background: #eee;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px #0001;
+  text-align: center;
 }
+
 input[type=text], input[type=password] {
-    width: 90%;
-    padding: 10px;
-    margin: 7px 0 15px 0;
-    border-radius: 7px;
-    border: 1px solid #aaa;
+  width: 90%;
+  padding: 10px;
+  margin: 7px 0 15px 0;
+  border-radius: 7px;
+  border: 1px solid #aaa;
 }
+
 button {
-    background: #0076B6;
-    color: #fff;
-    border: none;
-    padding: 12px 30px;
-    font-size: 1.1em;
-    border-radius: 7px;
-    cursor: pointer;
+  background: #0076B6;
+  color: #fff;
+  border: none;
+  padding: 12px 30px;
+  font-size: 1.1em;
+  border-radius: 7px;
+  cursor: pointer;
 }
-button:hover {
-    background: #005f8c;
-}
-.flashes {
-    list-style: none;
-    padding: 0;
-    margin-bottom: 18px;
-}
-.flashes li.danger { background: #f8d7da; color: #721c24; padding: 7px 13px; border-radius: 7px; }
+button:hover { background: #005f8c; }
+
+.flashes { list-style: none; padding: 0; margin-bottom: 18px; }
+.flashes li.danger  { background: #f8d7da; color: #721c24; padding: 7px 13px; border-radius: 7px; }
 .flashes li.warning { background: #fff3cd; color: #856404; padding: 7px 13px; border-radius: 7px; }
+
+/* ================= Global site nav ================= */
+.site-nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: var(--nav-bg);
+  border-bottom: 1px solid var(--nav-border);
+  padding: 20px 0;
+}
+
+.nav-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 36px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: nowrap;
+}
+
+/* Brand/logo */
+.brand { display: inline-flex; align-items: center; text-decoration: none; }
+.brand-logo { display: block; height: 28px; width: auto; }
+
+/* Desktop greeting in nav */
+.nav-greeting {
+  margin-left: 12px;
+  font-weight: 700;
+  color: #e9e9e9;
+  white-space: nowrap;
+  align-self: center;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+}
+.nav-avatar {
+  width: 36px; height: 36px; border-radius: 50%;
+  object-fit: cover; background: #1c1c1c; border: 1px solid #2a2a2a;
+}
+.nav-hello { line-height: 1; }
+
+.desktop-only { display: none; }
+@media (min-width: 769px) { .desktop-only { display: inline-flex; } }
+
+.nav-links {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+  flex: 0 0 auto;
+}
+
+/* Default nav button: green with white text */
+.btn-nav {
+  display: inline-block;
+  padding: 10px 14px;
+  border-radius: 10px;
+  text-decoration: none;
+  color: #ffffff;
+  background: var(--lime);
+  border: 1px solid var(--lime-border);
+  font-weight: 600;
+  line-height: 1;
+}
+.btn-nav:hover { filter: brightness(0.92); }
+.btn-nav.active {
+  background: var(--active-bg);
+  color: var(--active-lime) !important;
+  border-color: var(--lime-border) !important;
+}
+.btn-nav.active:hover { filter: none; }
+.btn-nav:visited { color: inherit; }
+.btn-nav.active:visited { color: var(--active-lime); }
+
+/* Logout button: darker light-blue bg, white text */
+.btn-nav.outline {
+  background: var(--brand-blue-dark);
+  color: #fff;
+  border-color: #007fb7;
+}
+.btn-nav.outline:hover { filter: brightness(0.96); }
+.btn-nav.outline.active {
+  background: var(--brand-blue-dark);
+  color: #fff !important;
+  border-color: #007fb7 !important;
+}
+.btn-nav.outline.active:hover { filter: none; }
+
+.btn-nav > .icon, .btn-nav > span { vertical-align: middle; }
+
+@media (max-width: 768px) {
+  .nav-inner { flex-wrap: wrap; justify-content: center; }
+  .brand { margin-bottom: 6px; }
+  .brand-logo { height: 24px; }  /* mobile base size */
+}
+
+/* ================= Optional dark-page container look ================= */
+body.dark .container { background: #111; color: #e8e8e8; box-shadow: none; }
+
+/* ================= Auth pages small tweaks ================= */
+.signup-container a { color: var(--brand-blue); }
+.signup-container a:hover { text-decoration: underline; }
+.signup-container input[type="text"],
+.signup-container input[type="email"],
+.signup-container input[type="password"],
+.signup-container input[type="tel"] {
+  background: #fff !important; color: #000 !important; border: 1px solid #ccc;
+}
+
+/* ================= Full-bleed pages ================= */
+body.no-container .container { max-width: 100%; margin: 0; padding: 0; background: transparent; border-radius: 0; box-shadow: none; }
+
+/* === SIMDaddy theme overrides === */
+body.dark { background: #0b0b0f; color: #e6e6eb; }
+body.dark .card { background: #1b1f27; color: #e6e6eb; border: 1px solid #272a33; border-radius: 14px; }
+.card { background: #ffffff; color: #222; border: 1px solid #e6e6e6; border-radius: 14px; padding: 16px; }
+
+body.theme-dark:not(.landing) { background: #0b0b0f; color: #e9e9e9; }
+body.theme-dark .container, body.theme-dark main { background: transparent !important; box-shadow: none !important; color: inherit; }
+
+body.tight-top .container { margin-top: 0; }
+.page-title { color: #fff; font-weight: 600; margin: 0 0 10px 0; }
+
+/* Align specialty wrappers to container grid */
+.injury-container, .wx-container, .tx-container, .account-wrap { max-width: 100% !important; margin: 0 !important; padding: 0 !important; }
+
+/* ===== Injuries styling (kept) ===== */
+.injury-muted { color: #9aa3af; }
+.injury-pager { display:flex; align-items:center; justify-content:space-between; gap:10px; margin:6px 0 12px; }
+.injury-pager-center { display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-left:auto; margin-right:auto; }
+.injury-btn-pager, .injury-btn-pager.disabled { display:inline-block; padding:8px 12px; border-radius:8px; text-decoration:none; font-weight:600; line-height:1; }
+.injury-btn-pager { color:#00111a; background: var(--brand-blue, #00bfff); border: 1px solid #0096cc; }
+.injury-btn-pager:hover { filter: brightness(0.96); }
+.injury-btn-pager.disabled { color:#9aa3af; background:#1e1e1e; border:1px solid #2a2a2a; cursor:not-allowed; }
+.injury-card { background:#141a26; border:1px solid #20283a; color:#e8eaf0; border-radius:14px; padding:14px; margin:12px 0; }
+.team-logo { width:28px; height:28px; object-fit:contain; }
+.team-logo.placeholder{ width:28px; height:28px; display:flex; align-items:center; justify-content:center; background:#101521; border:1px solid #20283a; border-radius:6px; font-size:14px; }
+.player-name { margin:0; font-size:1.1rem; color:inherit; }
+.badge { margin-left:8px; background:#0f2331; color:#a1d4ff; border:1px solid #1b4861; padding:2px 6px; border-radius:999px; font-size:.85em; }
+.injury-description { color:#d1d5db; }
+.injury-comment { color:#9aa3af; }
+.injury-btn-pager.disabled { background:#141a26; border:1px solid #20283a; color:#9aa3af; cursor:not-allowed; }
+
+/* ================= NAV / FOOTER VISIBILITY ================= */
+body.landing .site-nav {
+  background: rgba(11,11,15,0.35);
+  border-bottom: 1px solid rgba(255,255,255,0.12);
+  backdrop-filter: blur(8px);
+}
+body.landing footer {
+  background: rgba(11,11,15,0.25);
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
+body.theme-dark:not(.landing) .site-nav {
+  background: #0b0b0f;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+body.auth.login .site-nav,
+body.auth.signup .site-nav {
+  background: #0b0b0f;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  backdrop-filter: none;
+}
+body.auth.login footer,
+body.auth.signup footer {
+  background: #0b0b0f;
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
+
+/* ===== Quickbar ===== */
+.quickbar { margin: 0; padding: 24px 0 2px; background: #0b0b0f; }
+.quickbar-inner {
+  max-width: 1100px; margin: 0 auto; padding: 0 36px;
+  display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+}
+.qb-avatar {
+  width: 36px; height: 36px; display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 50%; background: #141414; border: 1px solid rgba(255,255,255,0.08); font-size: 20px;
+}
+.quick-links { display: flex; gap: 10px; flex-wrap: wrap; }
+.quick-links .btn-nav {
+  font-weight: 500; padding: 10px 14px; line-height: 1;
+  background: var(--brand-blue-dark, #0098d6); border: 1px solid #007fb7; color: #fff;
+}
+.quick-links .btn-nav:hover { filter: brightness(0.96); }
+.quick-links .btn-nav.active {
+  background: var(--active-bg, #0f0f0f); color: var(--brand-blue, #00bfff) !important; border-color: #007fb7 !important;
+}
+body.has-quickbar .container { margin-top: 8px; }
+
+@media (max-width: 520px){
+  .quickbar-inner { flex-direction: column; align-items: stretch; gap: 8px; }
+  .quick-links { justify-content: center; }
+}
+
+/* ================= SIMDaddy Mobile additions (layout-only; no size changes) ================ */
+.week-card, .week, .week-tile, .card.week, .weeks .card {
+  border-color: transparent !important; box-shadow: 0 1px 4px rgba(0,0,0,0.35);
+}
+@media (max-width: 640px) {
+  .container { padding: 12px; }
+  .site-nav .nav-inner { display: flex; flex-direction: column; align-items: stretch; gap: 8px; padding: 8px 12px; }
+  .site-nav .nav-links { display: flex; flex-wrap: wrap; gap: 8px; }
+  .quickbar { padding: 8px 12px; }
+  .quickbar-inner { display: flex; flex-direction: column; align-items: stretch; gap: 10px; }
+  .quick-links, .userbox { width: 100%; }
+  .cards-grid, .grid, .card-grid, .content-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
+  .toolbar { display: flex; flex-direction: column; gap: 10px; align-items: stretch; }
+  .weeks, .week-cards { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 8px; }
+}
+@media (max-width: 380px) { .weeks, .week-cards { grid-template-columns: 1fr; } }
+/* ================= END SIMDaddy Mobile additions ===================== */
+
+/* ==================== PATCHES: Mobile stability & auth form fit ==================== */
+*, *::before, *::after { box-sizing: border-box; }
+
+@media (max-width: 768px) {
+  html, body { width: 100%; overflow-x: hidden; }
+  body { overscroll-behavior-y: none; }
+
+  .container { max-width: 100%; margin: 0; border-radius: 0; padding: 16px; }
+  .card { border-radius: 12px; }
+
+  .login-container,
+  .signup-container {
+    width: 100%; max-width: 420px; margin: 16px auto; padding: 16px;
+    border-radius: 12px; box-shadow: 0 2px 12px #0001; background: #eee;
+  }
+  .login-container input[type=text],
+  .login-container input[type=password],
+  .signup-container input[type=text],
+  .signup-container input[type=email],
+  .signup-container input[type=password],
+  .signup-container input[type=tel] { width: 100%; }
+
+  img, video, canvas { max-width: 100%; height: auto; display: block; }
+
+  /* Hide quickbar buttons on ALL pages (mobile) */
+  .quickbar .quick-links { display: none !important; }
+
+  /* Hide green auth buttons on mobile landing page only */
+  body.landing .nav-links .btn-nav { display: none !important; }
+}
+
+/* Prevent content jump when drawer opens */
+body.drawer-open { position: fixed; width: 100%; }
+
+/* ==================== PATCHES: Weather table responsive ==================== */
+.table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; }
+.wx-table { width: 100%; border-collapse: separate; border-spacing: 0; min-width: 640px; }
+.wx-table th, .wx-table td { padding: 10px 12px; white-space: nowrap; border-bottom: 1px solid rgba(255,255,255,0.06); }
+.wx-table thead th { position: sticky; top: 0; z-index: 2; background: #0b0b0f; }
+.wx-table td.sticky, .wx-table th.sticky { position: sticky; left: 0; z-index: 1; background: #0b0b0f; box-shadow: 2px 0 0 rgba(255,255,255,0.06); }
+
+@media (max-width: 600px) {
+  .wx-table { display: block; }
+  .wx-table thead { display: none; }
+  .wx-table tbody { display: block; }
+  .wx-table tr {
+    display: block; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; margin: 10px 0; padding: 8px 10px; background: #121212;
+  }
+  .wx-table td {
+    display: grid; grid-template-columns: 1fr auto; gap: 10px; padding: 8px 4px; white-space: normal; border: none;
+  }
+  .wx-table td::before { content: attr(data-label); color: #9aa3af; font-weight: 500; }
+}
+
+/* === SIMDaddy logo slightly smaller (from earlier) === */
+.brand-logo {
+  height: 144px !important;
+  width: auto;
+  display: block;
+  max-width: 80vw;
+}
+@media (max-width: 768px) {
+  .brand-logo { height: 122px !important; max-width: 75vw; }
+}
+
+/* === Make the logo a true circle (crop) === */
+.brand-logo {
+  border-radius: 9999px;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+}
+@media (max-width: 768px) {
+  .brand-logo { border-radius: 9999px; aspect-ratio: 1 / 1; object-fit: cover; }
+}
+
+/* === Mobile dashboard greeting visibility === */
+.mobile-only { display: none; }
+@media (max-width: 768px) {
+  .mobile-only { display: flex; align-items: center; gap: 10px; }
+  .mobile-greet .nav-avatar { width: 32px; height: 32px; }
+}
+
+/* === Kill overscroll white and align background on mobile === */
+html, body { background: #0b0b0f; }
+@media (max-width: 768px) {
+  html, body {
+    overscroll-behavior: none;
+    min-height: 100dvh;
+  }
+}
+
+/* === Rune Simulation Week: larger scrollbar on mobile === */
+@media (max-width: 768px) {
+  .weeks,
+  .week-cards,
+  .rune-sim-week,
+  #rune-sim-week,
+  [data-week-scroll] {
+    scrollbar-width: thick;                 /* Firefox */
+    scrollbar-color: #2c6f2c rgba(255,255,255,0.15);
+  }
+  .weeks::-webkit-scrollbar,
+  .week-cards::-webkit-scrollbar,
+  .rune-sim-week::-webkit-scrollbar,
+  #rune-sim-week::-webkit-scrollbar,
+  [data-week-scroll]::-webkit-scrollbar {
+    height: 16px;
+    width: 16px;
+  }
+  .weeks::-webkit-scrollbar-thumb,
+  .week-cards::-webkit-scrollbar-thumb,
+  .rune-sim-week::-webkit-scrollbar-thumb,
+  #rune-sim-week::-webkit-scrollbar-thumb,
+  [data-week-scroll]::-webkit-scrollbar-thumb {
+    background: #2c6f2c;
+    border-radius: 999px;
+    border: 4px solid transparent;
+    background-clip: content-box;
+  }
+  .weeks::-webkit-scrollbar-track,
+  .week-cards::-webkit-scrollbar-track,
+  .rune-sim-week::-webkit-scrollbar-track,
+  #rune-sim-week::-webkit-scrollbar-track,
+  [data-week-scroll]::-webkit-scrollbar-track {
+    background: rgba(255,255,255,0.12);
+    border-radius: 999px;
+  }
+}
+
+/* Optional: trim header padding a touch */
+.site-nav { padding: 9px 0; }
+@media (max-width: 768px) { .site-nav { padding: 7px 0; } }
+
+/* === Avatar images used in nav/drawer/quickbar (Option A centralization) === */
+.nav-avatar, .sd-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #1c1c1c;
+  border: 1px solid #2a2a2a;
+}
+@media (max-width: 768px){
+  .mobile-greet .nav-avatar {
+    width: 32px;
+    height: 32px;
+  }
+}
+
+/* === Account stats in nav / mobile greet === */
+.nav-stats {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  color: #e9e9e9;
+}
+.nav-stats .stat {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.nav-stats .icon { line-height: 1; }
+.nav-stats .val { line-height: 1; }
+.nav-stats .sep { opacity: 0.5; }
+
+@media (max-width: 768px){
+  .mobile-greet .nav-stats { font-weight: 600; }
+}
+
+/* ===================== Account page polish ===================== */
+
+/* Slight padding under the main header */
+.account-wrap .page-title {
+  padding-bottom: 8px;           /* requested */
+  margin-bottom: 8px;
+}
+
+/* Summary stat cards */
+.account-stat-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.stat-card { padding: 14px; }
+.stat-body {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.stat-icon {
+  font-size: 1.6rem;
+  line-height: 1;
+}
+.stat-text .stat-title {
+  font-weight: 700;
+  color: #e6e6eb;
+}
+.stat-text .stat-sub {
+  color: #9aa3af;
+  font-size: .92rem;
+}
+.stat-value {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #e6e6eb;
+}
+
+/* Sections */
+.section-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+.section-title {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #e6e6eb;
+}
+.section-sub {
+  margin: 0;
+  color: #9aa3af;
+  font-size: .92rem;
+}
+
+/* Milestones */
+.milestones-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 10px;
+}
+.milestone-card {
+  background: #141a26;
+  border: 1px solid #20283a;
+  border-radius: 12px;
+  padding: 12px;
+}
+.milestone-title {
+  font-weight: 700;
+  color: #e6e6eb;
+  margin-bottom: 4px;
+}
+.milestone-desc {
+  color: #9aa3af;
+  font-size: .95rem;
+  margin-bottom: 8px;
+}
+.milestone-rewards {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: .92rem;
+  border: 1px solid rgba(255,255,255,0.08);
+}
+.pill-rep {
+  background: #0f2331;
+  color: #a1d4ff;
+  border-color: #1b4861;
+}
+.pill-coins {
+  background: #1c2a18;
+  color: #b2f59b;
+  border-color: #2c6f2c;
+}
+
+/* Ledgers & tables (dark, low contrast — no harsh white on black) */
+.table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-radius: 12px;
+}
+.table-dark {
+  width: 100%;
+  border-collapse: collapse;
+  background: #141a26;
+  border: 1px solid #20283a;
+  border-radius: 12px;
+  overflow: hidden;
+}
+.table-dark th,
+.table-dark td {
+  padding: 10px 12px;
+  border-bottom: 1px solid #20283a;
+  color: #e6e6eb;
+}
+.table-dark thead th {
+  background: #171e2c;
+  color: #cfd6e6;
+  font-weight: 600;
+}
+.table-dark tr:last-child td { border-bottom: 0; }
+.table-dark tbody tr:hover {
+  background: rgba(255,255,255,0.03);
+}
+
+.muted { color: #9aa3af; }
+
+/* Mobile tweaks */
+@media (max-width: 640px) {
+  .milestones-grid { grid-template-columns: 1fr; }
+}
+
+/* ===== Account page: unify card backgrounds with Injuries, soften contrast ===== */
+body.theme-dark .card {
+  background: #141a26;          /* same as .injury-card */
+  border: 1px solid #20283a;
+  color: #e8eaf0;
+}
+
+/* Milestones: just a touch lighter so they stand out from other cards */
+body.theme-dark .milestone-card {
+  background: #182033;          /* slightly lighter than #141a26 */
+  border: 1px solid #263049;
+}
+
+/* Extra: table header/body already styled, but ensure consistent look */
+body.theme-dark .table-dark {
+  background: #141a26;
+  border: 1px solid #20283a;
+}
+body.theme-dark .table-dark thead th {
+  background: #171e2c;
+  color: #cfd6e6;
+}
+
+/* Small breathing room under the Account header (requested earlier) */
+.account-wrap .page-title { padding-bottom: 10px; margin-bottom: 10px; }
+
+/* =================== Mobile header spacing + stats on ALL pages =================== */
+@media (max-width: 768px) {
+  /* Add enough top padding to clear the fixed burger + stats row */
+  body.is-auth {
+    padding-top: 96px; /* was 72/128 */
+  }
+
+  /* Fixed, centered stats row on every page (logged in) */
+  body.is-auth .mobile-greet {
+    position: fixed;
+    top: 12px;           /* lines up with hamburger button */
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1080;       /* below overlay (1090) and burger (1100) */
+    pointer-events: none;/* never block taps */
+  }
+
+  /* Trophy/coins line: HALF of 2.75rem => 1.375rem */
+  body.is-auth .mobile-greet .nav-stats {
+    font-size: 1.8rem;
+    line-height: 1;
+    gap: 10px;
+    font-weight: 800;
+    text-align: center;
+  }
+
+  /* Keep center alignment clean */
+  body.is-auth .mobile-greet .nav-avatar {
+    display: none;
+  }
+}

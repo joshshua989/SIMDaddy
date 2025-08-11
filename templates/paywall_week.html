@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Unlock Week {{ week }}{% endblock %}
+
+{% block content %}
+<div class="tx-container">
+  <h2 class="page-title">Unlock Week {{ week }}</h2>
+
+  <div class="card" style="margin:12px 0;">
+    <p style="margin:0 0 10px 0;">
+      Unlock access to the full simulation results for <strong>Week {{ week }}</strong>.
+    </p>
+    <ul style="margin:0 0 12px 18px; line-height:1.7;">
+      <li>Unlock with 💸 <strong>{{ coin_price }}</strong> coins (discounted).</li>
+      <li>Or purchase for <strong>${{ '%.2f'|format(usd_price) }}</strong> (coming soon).</li>
+    </ul>
+
+    <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+      <form method="POST" action="{{ url_for('views.unlock_week', week=week) }}">
+        <button class="btn-nav" type="submit">Unlock with 💸 {{ coin_price }}</button>
+      </form>
+
+      <button class="btn-nav outline" type="button" disabled title="Checkout not available yet">
+        Pay ${{ '%.2f'|format(usd_price) }} (coming soon)
+      </button>
+
+      <a class="btn-nav" href="{{ url_for('views.home') }}">Back to Dashboard</a>
+    </div>
+
+    <p style="margin-top:12px; color:#9aa3af;">
+      Your balance: 💸 <strong>{{ balance }}</strong>
+    </p>
+  </div>
+</div>
+{% endblock %}
+pyth

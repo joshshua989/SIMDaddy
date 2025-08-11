@@ -1,0 +1,169 @@
+{% extends "base.html" %}
+{% block title %}My Account{% endblock %}
+
+{% block content %}
+<div class="account-wrap">
+  <h2 class="page-title">My Account</h2>
+
+  <!-- Summary cards -->
+  <section class="account-stat-cards">
+    <!-- Profile -->
+    <div class="card stat-card">
+      <div class="stat-body">
+        <img class="nav-avatar" src="{{ user.avatar_url }}" alt="Profile picture">
+        <div class="stat-text">
+          <div class="stat-title">{{ user.display_name or user.email }}</div>
+          <div class="stat-sub">
+            Joined {{ user.created_at.strftime('%Y-%m-%d') if user.created_at else '—' }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Coins -->
+    <div class="card stat-card">
+      <div class="stat-body">
+        <div class="stat-icon">💸</div>
+        <div class="stat-text">
+          <div class="stat-title">Coins</div>
+          <div class="stat-value">{{ wallet.coins_balance }}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reputation -->
+    <div class="card stat-card">
+      <div class="stat-body">
+        <div class="stat-icon">🏆</div>
+        <div class="stat-text">
+          <div class="stat-title">Reputation</div>
+          <div class="stat-value">{{ wallet.rep_total }}</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Milestones -->
+  <section class="card">
+    <div class="section-header">
+      <h3 class="section-title">Milestones</h3>
+      <p class="section-sub">Earn 🏆 reputation and 💸 coins by completing milestones across SIMDaddy.</p>
+    </div>
+
+    <div class="milestones-grid">
+      {% for m in milestones %}
+      <div class="milestone-card">
+        <div class="milestone-title">{{ m.title }}</div>
+        <div class="milestone-desc">{{ m.desc }}</div>
+        <div class="milestone-rewards">
+          <span class="pill pill-rep">🏆 +{{ m.rep }}</span>
+          <span class="pill pill-coins">💸 +{{ m.coins }}</span>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <!-- Ledgers -->
+  <section class="account-ledgers">
+    <div class="card">
+      <div class="section-header">
+        <h3 class="section-title">Coin Activity</h3>
+      </div>
+      {% if coin_txns %}
+        <div class="table-wrap">
+          <table class="table-dark">
+            <thead>
+              <tr>
+                <th style="text-align:left;">When</th>
+                <th>Δ</th>
+                <th>Kind</th>
+                <th style="text-align:left;">Reason</th>
+                <th>Balance</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for t in coin_txns %}
+              <tr>
+                <td>{{ t.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                <td>{{ t.delta }}</td>
+                <td>{{ t.kind }}</td>
+                <td style="text-align:left;">{{ t.reason or '—' }}</td>
+                <td>{{ t.balance_after }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        <p class="muted">No coin transactions yet.</p>
+      {% endif %}
+    </div>
+
+    <div class="card">
+      <div class="section-header">
+        <h3 class="section-title">Reputation Events</h3>
+      </div>
+      {% if rep_events %}
+        <div class="table-wrap">
+          <table class="table-dark">
+            <thead>
+              <tr>
+                <th style="text-align:left;">When</th>
+                <th>+Pts</th>
+                <th style="text-align:left;">Reason</th>
+                <th>Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for e in rep_events %}
+              <tr>
+                <td>{{ e.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                <td>+{{ e.points }}</td>
+                <td style="text-align:left;">{{ e.reason or '—' }}</td>
+                <td>{{ e.total_after }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        <p class="muted">No reputation yet. Complete milestones to earn 🏆.</p>
+      {% endif %}
+    </div>
+  </section>
+
+  <!-- Entitlements -->
+  <section class="card">
+    <div class="section-header">
+      <h3 class="section-title">Your Unlocks</h3>
+    </div>
+    {% if entitlements %}
+      <div class="table-wrap">
+        <table class="table-dark">
+          <thead>
+            <tr>
+              <th style="text-align:left;">When</th>
+              <th>Scope</th>
+              <th style="text-align:left;">Key</th>
+              <th>Source</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for e in entitlements %}
+            <tr>
+              <td>{{ e.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+              <td>{{ e.scope }}</td>
+              <td style="text-align:left;">{{ e.key }}</td>
+              <td>{{ e.source }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <p class="muted">No unlocks yet.</p>
+    {% endif %}
+  </section>
+</div>
+{% endblock %}

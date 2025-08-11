@@ -1,0 +1,24 @@
+<nav class="sd-nav">
+  <div class="sd-nav__inner">
+    <div class="sd-brand">
+      <a href="{{ url_for('views.home') }}">SIMDaddy</a>
+    </div>
+
+    <div class="sd-right">
+      <a class="sd-btn" href="{{ url_for('views.injuries') }}">Injuries</a>
+      <a class="sd-btn" href="{{ url_for('views.weather_insights') }}">Weather</a>
+      <a class="sd-btn" href="{{ url_for('views.transactions') }}">Transactions</a>
+      <a class="sd-btn" href="{{ url_for('views.account') }}">👤 My Account</a>
+
+      {# If logout is GET in your app, keep the link below. If POST-only, use the form version. #}
+      <a class="sd-btn" href="{{ url_for('auth.logout') }}">↩ Logout</a>
+
+      {# POST-only version (uncomment if needed)
+      <form method="post" action="{{ url_for('auth.logout') }}" style="display:inline;">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+        <button class="sd-btn" type="submit" style="border:none; cursor:pointer;">↩ Logout</button>
+      </form>
+      #}
+    </div>
+  </div>
+</nav>

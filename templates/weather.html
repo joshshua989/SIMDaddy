@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% block title %}Weather Insights{% endblock %}
+
+{% block head %}
+<style>
+  /* wrapper alignment normalized by global CSS */
+  .wx-desc{background:#101521;border:1px solid #20283a;border-radius:12px;padding:14px;margin-bottom:16px;color:#9aa3af}
+  .wx-toolbar{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+  .wx-toolbar select{background:#101521;color:#fff;border:1px solid #20283a;border-radius:8px;padding:8px 10px}
+
+  /* keep your table look; global CSS handles responsiveness */
+  table.wx-table{
+    width:100%;
+    border-collapse:collapse;
+    background:#141a26;
+    border:1px solid #20283a;
+    border-radius:12px;
+    overflow:hidden;
+    min-width:780px; /* wider so columns breathe on phones */
+  }
+  .wx-table th,.wx-table td{padding:12px 10px;border-bottom:1px solid #20283a;text-align:left;white-space:nowrap}
+  .wx-table th{color:#cfd6e6;font-weight:600;background:#171e2c}
+  .wx-table tr:last-child td{border-bottom:0}
+  .chip{padding:4px 8px;border-radius:999px;border:1px solid #20283a;background:#101521;color:#e8eaf0}
+  .logo{width:22px;height:22px;object-fit:contain;vertical-align:middle;border-radius:4px}
+
+  /* make first column sticky when horizontally scrolling */
+  .wx-table th.sticky,
+  .wx-table td.sticky{
+    position:sticky; left:0; z-index:1; background:#171e2c;
+  }
+  .wx-table td.sticky{ background:#141a26; box-shadow:2px 0 0 rgba(255,255,255,0.06); }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="wx-container">
+  <h2 class="page-title">Weather Insights</h2>
+  <div class="wx-desc">
+    Home games only for the selected week (from your 2025 schedule). Forecast and <code>weather_boost</code> appear when present in your weather log.
+    “Dome/Indoor” usually reduces weather penalties; “Open Air” may introduce wind/cold/precipitation risks.
+  </div>
+
+  <div class="wx-toolbar">
+    <form method="GET" action="{{ url_for('views.weather_insights') }}">
+      <label for="week">Week:&nbsp;</label>
+      <select id="week" name="week" onchange="this.form.submit()">
+        {% for w in weeks %}
+          <option value="{{ w }}" {% if w == week %}selected{% endif %}>{{ w }}</option>
+        {% endfor %}
+      </select>
+    </form>
+  </div>
+
+  {% if not rows %}
+    <p class="wx-desc">No games found for this week.</p>
+  {% else %}
+    <!-- NEW: wrap in scroll container so it behaves on mobile -->
+    <div class="table-wrap">
+      <table class="wx-table">
+        <thead>
+          <tr>
+            <th class="sticky">Logo</th>
+            <th>Home</th>
+            <th>Away</th>
+            <th>Stadium</th>
+            <th>Env</th>
+            <th>Date</th>
+            <th>Forecast</th>
+            <th>Temp</th>
+            <th>Wind</th>
+            <th>Precip</th>
+            <th>Impact</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for r in rows %}
+          <tr>
+            <td class="sticky" data-label="Logo">
+              {% if r.logo %}<img class="logo" src="{{ r.logo }}" alt="logo"/>{% endif %}
+            </td>
+            <td data-label="Home">{{ r.home }}</td>
+            <td data-label="Away">{{ r.away }}</td>
+            <td data-label="Stadium">{{ r.stadium }}</td>
+            <td data-label="Env">{{ r.env }}</td>
+            <td data-label="Date">{{ r.game_date }}</td>
+            <td data-label="Forecast">{{ r.forecast }}</td>
+            <td data-label="Temp">{{ r.temperature }}</td>
+            <td data-label="Wind">{{ r.windSpeed }}</td>
+            <td data-label="Precip">{{ r.precipitation }}</td>
+            <td data-label="Impact"><span class="chip">{{ r.weather_boost if r.weather_boost is not none else "—" }}</span></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

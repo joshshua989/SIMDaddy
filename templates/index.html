@@ -1,93 +1,128 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>SIMDaddy - WR Matchup Visualizer Index</title>
-    <style>
-        body {
-            margin: 0;
-            padding: 40px 20px;
-            background-color: #121212;
-            font-family: 'Segoe UI', sans-serif;
-            color: #f0f0f0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        h1 {
-            color: #00bfff;
-            margin-bottom: 30px;
-            font-size: 2.5em;
-        }
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 25px;
-            width: 100%;
-            max-width: 1200px;
-        }
-        .card {
-            background-color: #1e1e1e;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-            text-align: center;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        .card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 6px 16px rgba(0,0,0,0.6);
-        }
-        .card h2 {
-            color: #ffffff;
-            font-size: 1.5em;
-            margin-bottom: 10px;
-        }
-        .summary {
-            font-size: 0.95em;
-            color: #cccccc;
-            margin-bottom: 16px;
-        }
-        .btn {
-            display: inline-block;
-            padding: 10px 16px;
-            background-color: #00bfff;
-            color: white;
-            text-decoration: none;
-            border-radius: 6px;
-            font-weight: bold;
-        }
-        .btn:hover {
-            background-color: #008fcc;
-        }
-        @media (max-width: 600px) {
-            h1 { font-size: 1.8em; }
-            .card h2 { font-size: 1.3em; }
-        }
-    </style>
-</head>
-<body>
-    <h1>🏈 SIMDaddy</h1>
+{% extends "base.html" %}
+{% set page_class = 'home' %}
+{% block title %}SIMDaddy - WR Matchup Visualizer Index{% endblock %}
 
-    <!-- Injury Reports Button -->
-    <div style="margin-bottom: 30px;">
-        <a href="{{ url_for('views.injuries') }}" class="btn">📋 Injury Reports</a>
+{% block head %}
+<style>
+  /* Keep the dashboard dark */
+  body {
+    margin: 0;
+    background-color: #121212;
+    font-family: 'Segoe UI', sans-serif;
+    color: #f0f0f0;
+  }
+
+  /* === Dashboard-only: swap quickbar panes (buttons LEFT, greeting RIGHT) === */
+  body.home .quickbar-inner .quick-links { order: 0; margin-right: auto; }
+  body.home .quickbar-inner .quick-greet  { order: 1; margin-left: auto; }
+
+  /* Slightly smaller top padding since quickbar sits above */
+  .dashboard-shell {
+    padding: 24px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 25px;
+    width: 100%;
+    max-width: 1200px;
+  }
+  .card {
+    background-color: #1e1e1e;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    text-align: center;
+    transition: transform 0.2s, box-shadow 0.2s;
+    border: none;                 /* remove white border */
+  }
+  .card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.6);
+  }
+  .card h2 {
+    color: #ffffff;
+    font-size: 1.5em;
+    margin-bottom: 10px;
+  }
+  .summary {
+    font-size: 0.95em;
+    color: #cccccc;
+    margin-bottom: 16px;
+  }
+
+  /* Week card CTA button — dark logout blue, not bold */
+  .btn {
+    display: inline-block;
+    padding: 10px 16px;
+    background-color: var(--brand-blue-dark, #0098d6);
+    color: #fff;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: 500;     /* not bold */
+    border: none;
+  }
+  .btn:hover { filter: brightness(0.96); }
+
+  /* Toolbar (right side) */
+  .toolbar {
+    width:100%;
+    max-width:1200px;
+    display:flex;
+    align-items:center;
+    justify-content:flex-end;
+    gap:12px;
+    margin: 8px 0 20px;
+  }
+  .toolbar .tip { color:#bbb; white-space: nowrap; }
+  .select {
+    background:#1a1a1a; color:#fff; border:1px solid #2a2a2a; border-radius:8px; padding:8px 10px;
+  }
+
+  /* Run Simulation button — dark logout blue, not bold */
+  .btn-sim {
+    display:inline-block; padding:8px 12px; border-radius:8px; text-decoration:none; color:#fff;
+    background: var(--brand-blue-dark, #0098d6);
+    font-weight: 500;     /* not bold */
+    border: none; cursor: pointer;
+  }
+  .btn-sim:hover { filter: brightness(0.96); }
+
+  @media (max-width: 600px) {
+    .card h2 { font-size: 1.3em; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+  <div class="dashboard-shell">
+    <!-- Toolbar: tip on the left, sim form to the right -->
+    <div class="toolbar">
+      <form method="POST" action="{{ url_for('views.simulate') }}" style="display:flex; gap:10px; align-items:center; margin-left:6px;">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+        <label for="week" style="color:#bbb;">Run simulation for week:</label>
+        <select id="week" name="week" class="select">
+          {% for w in range(1,19) %}
+            <option value="{{ w }}">{{ w }}</option>
+          {% endfor %}
+        </select>
+        <button type="submit" class="btn-sim">Run Simulation</button>
+      </form>
     </div>
 
     <!-- Weekly Matchup Grid -->
     <div class="grid">
-        {% for week in range(1, 19) %}
-        <div class="card">
-            <h2>Week {{ week }}</h2>
-            <p class="summary">Top WR projections, matchup insights, and weather/game script context.</p>
-            <a href="{{ url_for('views.week_view', week=week) }}" class="btn">View Matchups</a>
-        </div>
-        {% endfor %}
+      {% for week in range(1, 19) %}
+      <div class="card">
+        <h2>Week {{ week }}</h2>
+        <p class="summary">Top WR projections, matchup insights, and weather/game script context.</p>
+        <a href="{{ url_for('views.week_view', week=week) }}" class="btn">View Matchups</a>
+      </div>
+      {% endfor %}
     </div>
-
-    <div style="margin-top:32px;">
-        <a href="{{ url_for('auth.logout') }}" style="color:#aaa;text-decoration:none;">Logout</a>
-    </div>
-</body>
-
-</html>
+  </div>
+{% endblock %}
