@@ -1,17 +1,14 @@
 {% extends "dv/layout.html" %}
 {% block content %}
   <div class="flex">
-    <h2 class="dv-title">Season Schedules — {{ year }}</h2>
-    <div class="chip">Rows: {{ table|length }}</div>
+    <h2 class="dv-title">Schedules / Strength of Schedule</h2>
   </div>
 
   {% if columns and table %}
     <table class="dv">
       <thead>
         <tr>
-          {% for col in columns %}
-            <th>{{ col }}</th>
-          {% endfor %}
+          {% for col in columns %}<th>{{ col }}</th>{% endfor %}
         </tr>
       </thead>
       <tbody>

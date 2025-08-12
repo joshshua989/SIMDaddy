@@ -8,8 +8,8 @@ import pandas as pd
 
 from utils.injury_reports import get_injury_reports
 from config import NFL_SCHEDULE_2025_FILE, STADIUM_ENV_FILE
-from utils.team_lookup import infer_team_code
-from utils.team_logo import team_logo_url  # <-- uses infer_team_code under the hood
+from utils.team_logo import logo_url_for_code, team_logo_url
+from utils.player_team import team_for_player
 
 # Wallet/entitlement helpers
 from services.wallet import (
@@ -31,55 +31,6 @@ TEAM_COLORS = {
     # ...add all as needed
 }
 
-# ----- Logo helpers -----
-NFL_LOGO_CDN = "https://a.espncdn.com/i/teamlogos/nfl/500/{}"  # expects like "det.png"
-TEAM_NAME_TO_ABBR = {
-    "49ers":"sf","San Francisco":"sf",
-    "Bears":"chi","Chicago":"chi",
-    "Bengals":"cin","Cincinnati":"cin",
-    "Bills":"buf","Buffalo":"buf",
-    "Broncos":"den","Denver":"den",
-    "Browns":"cle","Cleveland":"cle",
-    "Buccaneers":"tb","Tampa Bay":"tb","Tampa":"tb",
-    "Cardinals":"ari","Arizona":"ari",
-    "Chargers":"lac","Los Angeles Chargers":"lac","LA Chargers":"lac",
-    "Chiefs":"kc","Kansas City":"kc",
-    "Colts":"ind","Indianapolis":"ind",
-    "Commanders":"wsh","Washington":"wsh",
-    "Cowboys":"dal","Dallas":"dal",
-    "Dolphins":"mia","Miami":"mia",
-    "Eagles":"phi","Philadelphia":"phi",
-    "Falcons":"atl","Atlanta":"atl",
-    "Giants":"nyg","New York Giants":"nyg",
-    "Jaguars":"jac","Jacksonville":"jac",
-    "Jets":"nyj","New York Jets":"nyj",
-    "Lions":"det","Detroit":"det",
-    "Packers":"gb","Green Bay":"gb",
-    "Panthers":"car","Carolina":"car",
-    "Patriots":"ne","New England":"ne",
-    "Raiders":"lv","Las Vegas":"lv",
-    "Rams":"lar","Los Angeles Rams":"lar","LA Rams":"lar",
-    "Ravens":"bal","Baltimore":"bal",
-    "Saints":"no","New Orleans":"no",
-    "Seahawks":"sea","Seattle":"sea",
-    "Steelers":"pit","Pittsburgh":"pit",
-    "Texans":"hou","Houston":"hou",
-    "Titans":"ten","Tennessee":"ten",
-    "Vikings":"min","Minnesota":"min",
-}
-def infer_team_abbr(text: str | None) -> str | None:
-    if not text:
-        return None
-    low = text.lower()
-    for k, abbr in TEAM_NAME_TO_ABBR.items():
-        if k.lower() in low:
-            return abbr
-    return None
-
-def team_logo_url(text: str | None) -> str | None:
-    abbr = infer_team_abbr(text)
-    return NFL_LOGO_CDN.format(f"{abbr}.png") if abbr else None
-
 # ----- Common helpers -----
 def matchup_bg_color(adj_pts):
     try:
@@ -93,6 +44,14 @@ def matchup_bg_color(adj_pts):
 # =========================
 #          ROUTES
 # =========================
+
+@views_bp.route("/privacy")
+def privacy():
+    return render_template("privacy.html")
+
+@views_bp.route("/terms")
+def terms():
+    return render_template("terms.html")
 
 # Landing page
 @views_bp.route("/")
@@ -219,9 +178,23 @@ def dev_grant_coins():
 @views_bp.route("/injuries", methods=["GET"])
 def injuries():
     """
-    Load injury reports, attach local logo URLs when possible, and paginate 20/pg.
+    Load injury reports, attach logo URLs via player->team or text inference,
+    and paginate results at 10 per page while keeping a stable total_count.
+    Use ?refresh=1 to bypass the 5-min scrape cache once.
     """
-    df = get_injury_reports()
+    PAGE_SIZE = 10
+    page = request.args.get("page", 1, type=int) or 1
+    max_pages = request.args.get("pages", default=8, type=int)
+    refresh = request.args.get("refresh", type=int) == 1  # <— NEW
+
+    # Pull the full dataset so total_count is stable
+    df = get_injury_reports(
+        max_pages=max_pages,
+        target_items=None,   # do not early-stop; get full set
+        concurrency=3,
+        use_cache=not refresh,   # <— NEW: bypass cache when refresh=1
+        verbose=False,
+    )
 
     if df is None or df.empty:
         flash("No injury data available right now.", "warning")
@@ -231,45 +204,42 @@ def injuries():
             total_count=0,
             page=1,
             total_pages=1,
-            page_size=20,
+            page_size=PAGE_SIZE,
             showing_start=0,
             showing_end=0,
         )
 
+    # Convert to records
     items = df.to_dict(orient="records")
-    for it in items:
-        text = " ".join(
-            s for s in [
-                str(it.get("headline", "") or ""),
-                str(it.get("description", "") or "")
-            ] if s
-        )
-        try:
-            it["logo_url"] = team_logo_url(text)
-        except Exception:
-            it["logo_url"] = None
 
-    PAGE_SIZE = 20
-    page = request.args.get("page", 1, type=int) or 1
+    # Attach logo URLs — prefer player->team via roster, then text inference
+    for it in items:
+        player = (it.get("player_name") or it.get("player") or "").strip()
+        logo = None
+
+        # 1) Try roster map
+        if player:
+            code = team_for_player(player)
+            if code:
+                logo = logo_url_for_code(code)
+
+        # 2) Fallback: infer from headline + description
+        if not logo:
+            text = " ".join(filter(None, [it.get("headline", ""), it.get("description", "")]))
+            logo = team_logo_url(text)
+
+        it["logo_url"] = logo
+
     total_count = len(items)
     total_pages = max(1, (total_count + PAGE_SIZE - 1) // PAGE_SIZE)
     page = max(1, min(page, total_pages))
     start = (page - 1) * PAGE_SIZE
     end = start + PAGE_SIZE
-    items_page = items[start:end]
-
-    try:
-        current_app.logger.info(
-            "Injuries: total=%d, page=%d/%d, showing=%d-%d",
-            total_count, page, total_pages,
-            0 if total_count == 0 else start + 1, min(end, total_count)
-        )
-    except Exception:
-        pass
+    injuries_page = items[start:end]
 
     return render_template(
         "injuries.html",
-        injuries=items_page,
+        injuries=injuries_page,
         total_count=total_count,
         page=page,
         total_pages=total_pages,
@@ -377,11 +347,15 @@ def _load_stadium_env_by_team():
         out[team_val] = {"stadium": stadium, "is_dome": is_dome}
     return out
 
+
 @views_bp.route("/weather")
 def weather_insights():
     import csv
+    from utils.team_logo import team_logo_url  # global resolver (local /static first, ESPN fallback)
+
     data_path = os.getenv("DATA_DIR", "DATA")
 
+    # ---- Load schedule (unchanged) ----
     sched_path = os.path.join(data_path, "nfl_schedules", "NFL_SCHEDULE_2025.csv")
     schedule = []
     if os.path.exists(sched_path):
@@ -409,6 +383,7 @@ def weather_insights():
     week_sel = request.args.get("week", type=int) or (weeks_all[0] if weeks_all else 1)
     games = [g for g in schedule if g["week"] == week_sel]
 
+    # Dedup by home team to avoid duplicates
     seen_home = set()
     games_dedup = []
     for g in games:
@@ -417,6 +392,7 @@ def weather_insights():
             seen_home.add(h)
             games_dedup.append(g)
 
+    # ---- Load recorded weather log (unchanged) ----
     wx_candidates = [
         os.path.join(os.getcwd(), "weather_log.csv"),
         os.path.join(data_path, "weather_log.csv"),
@@ -440,6 +416,7 @@ def weather_insights():
         except Exception:
             pass
 
+    # ---- Load stadium environment profile (unchanged) ----
     env_map = {}
     env_candidates = [
         os.path.join(os.getcwd(), "STADIUM_ENVIRONMENT_PROFILES.csv"),
@@ -460,25 +437,7 @@ def weather_insights():
         except Exception:
             env_map = {}
 
-    TEAM_ABBR = {
-        "49ers":"sf","san francisco 49ers":"sf","san francisco":"sf",
-        "bears":"chi","chicago bears":"chi","chicago":"chi",
-        "bengals":"cin","bills":"buf","broncos":"den","browns":"cle","buccaneers":"tb","tampa bay":"tb",
-        "cardinals":"ari","chargers":"lac","chiefs":"kc","colts":"ind","commanders":"wsh",
-        "cowboys":"dal","dolphins":"mia","eagles":"phi","falcons":"atl","giants":"nyg","jaguars":"jac",
-        "jets":"nyj","lions":"det","packers":"gb","panthers":"car","patriots":"ne","raiders":"lv",
-        "rams":"lar","ravens":"bal","saints":"no","seahawks":"sea","steelers":"pit","texans":"hou",
-        "titans":"ten","vikings":"min",
-    }
-    def logo_url(team_name):
-        if not team_name: return None
-        t = team_name.strip().lower()
-        abbr = TEAM_ABBR.get(t) or TEAM_ABBR.get(t.replace(" ", ""))
-        if not abbr:
-            last = t.split()[-1]
-            abbr = TEAM_ABBR.get(last)
-        return f"https://a.espncdn.com/i/teamlogos/nfl/500/{abbr}.png" if abbr else None
-
+    # ---- Small formatters (unchanged) ----
     def fmt_temp(v):
         try: return f"{int(float(str(v).split()[0]))}°F"
         except: return "—"
@@ -490,6 +449,7 @@ def weather_insights():
         try: return f"{int(round(float(str(v).replace('%','').strip())))}%"
         except: return "—"
 
+    # ---- Build rows (logo via global helper) ----
     rows = []
     for g in games_dedup:
         st = (g["stadium"] or "").strip()
@@ -508,16 +468,20 @@ def weather_insights():
             "windSpeed": fmt_wind(wx.get("windSpeed")),
             "precipitation": fmt_precip(wx.get("precipitation")),
             "weather_boost": wx.get("weather_boost"),
-            "logo": logo_url(g["home"]),
+            "logo": team_logo_url(g["home"]),  # <— global logo resolver
         })
 
     return render_template("weather.html", rows=rows, weeks=weeks_all, week=week_sel)
 
+
 # ===== Transactions (unchanged logic, just rendering) =====
 @views_bp.route("/transactions")
 def transactions():
+    from utils.team_logo import team_logo_url  # global resolver (local /static first, ESPN fallback)
+
     items = []
 
+    # Primary source via utils.transactions (if present)
     try:
         from utils.transactions import get_transactions
         df = get_transactions()
@@ -526,6 +490,7 @@ def transactions():
     except Exception:
         pass
 
+    # Fallback CSV if utils.transactions isn't available or returns nothing
     if not items:
         data_dir = os.getenv("DATA_DIR", "DATA")
         csv_path = os.path.join(data_dir, "transactions.csv")
@@ -536,6 +501,7 @@ def transactions():
             except Exception:
                 items = []
 
+    # Decorate with a logo inferred from any team-like field (global helper handles it)
     decorated = []
     for row in items:
         r = dict(row)
@@ -548,6 +514,7 @@ def transactions():
         decorated.append(r)
 
     return render_template("transactions.html", items=decorated)
+
 
 # Trigger a simulation (Week X)
 @views_bp.route('/simulate', methods=['POST'])

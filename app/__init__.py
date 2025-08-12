@@ -39,8 +39,4 @@ def create_app():
     def load_user(user_id):
         return User.query.get(int(user_id))
 
-    # NOTE: Do NOT call db.create_all() when using Flask-Migrate/Alembic
-    # with app.app_context():
-    #     db.create_all()
-
     return app

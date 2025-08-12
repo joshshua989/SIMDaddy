@@ -1,11 +1,19 @@
+# app/dv/routes.py
+
 from flask import render_template, current_app, request, flash
 from . import dv_bp
 from .dv_data import (
-    load_schedule, load_top_players, load_player_stats, load_rookie_rankings,
-    apply_age_curve, compute_spike_week, get_data_dir
+    load_schedule,
+    load_top_players,
+    load_player_stats,
+    load_rookie_rankings,
+    apply_age_curve,
+    compute_spike_week,
+    get_data_dir,
 )
 import pandas as pd
 from pathlib import Path
+from utils.sos import load_sos  # SoS helper
 
 @dv_bp.context_processor
 def inject_dv_defaults():
@@ -16,10 +24,26 @@ def schedules():
     year = int(request.args.get("year", 2025))
     try:
         df = load_schedule(year)
+        table = df.to_dict(orient="records")
+        cols = list(df.columns) if not df.empty else []
+        return render_template("dv/schedules.html", year=year, table=table, columns=cols)
     except Exception as e:
-        flash(str(e), "error")
-        df = pd.DataFrame()
-    return render_template("dv/schedules.html", year=year, table=df.to_dict(orient="records"), columns=list(df.columns) if not df.empty else [])
+        # If schedule isn't found, show SoS instead of an empty page
+        try:
+            sos_df = load_sos(Path(get_data_dir()), position="WR")
+        except Exception:
+            sos_df = None
+        if sos_df is None or sos_df.empty:
+            flash(str(e), "error")
+            return render_template("dv/schedules.html", year=year, table=[], columns=[])
+        else:
+            flash("Schedule CSV not found — showing Strength of Schedule (WR) instead.", "info")
+            return render_template(
+                "dv/schedules.html",
+                year=year,
+                table=sos_df.to_dict(orient="records"),
+                columns=list(sos_df.columns),
+            )
 
 @dv_bp.route("/rookies")
 def rookies():
@@ -30,18 +54,66 @@ def rookies():
 
 @dv_bp.route("/projections")
 def projections():
-    # Offline fallback: show top_320_players.csv as pseudo projections
-    try:
-        df = load_top_players()
-    except Exception as e:
-        flash(str(e), "error")
-        df = pd.DataFrame()
-    return render_template("dv/projections.html", table=df.to_dict(orient="records"), columns=list(df.columns) if not df.empty else [])
+    # Try latest player stats; fall back to top_320 if stats not found
+    df = pd.DataFrame()
+    for year in (2024, 2023, 2022):
+        try:
+            df = load_player_stats(year)
+            break
+        except Exception:
+            continue
+
+    if df.empty:
+        try:
+            df = load_top_players()
+        except Exception as e:
+            flash(str(e), "error")
+            return render_template("dv/projections.html", table=[], columns=[])
+
+    # ---- Age curve (adds age_curve_multiplier, age_risk_tag) ----
+    df = apply_age_curve(df)
+
+    # ---- Strength of Schedule (merge on opponent_team if present) ----
+    if "opponent_team" in df.columns:
+        try:
+            sos_df = load_sos(Path(get_data_dir()), position="WR")
+        except Exception:
+            sos_df = None
+        if sos_df is not None and not sos_df.empty:
+            df = df.merge(sos_df, on="opponent_team", how="left")
+            df["sos_multiplier"] = (df["sos_index"].fillna(100.0) / 100.0) ** 0.5
+        else:
+            df["sos_multiplier"] = 1.0
+    else:
+        df["sos_multiplier"] = 1.0
+
+    # Optional adjusted projection if a base projection column exists
+    if "proj_points" in df.columns:
+        df["proj_points_adj"] = (
+            pd.to_numeric(df["proj_points"], errors="coerce").fillna(0.0)
+            * df["age_curve_multiplier"].fillna(1.0)
+            * df["sos_multiplier"].fillna(1.0)
+        )
+
+    # Choose columns that actually exist
+    display_cols = [
+        c for c in [
+            "player", "team", "pos", "age", "opponent_team",
+            "proj_points", "age_curve_multiplier", "age_risk_tag",
+            "sos_index", "sos_multiplier", "proj_points_adj"
+        ]
+        if c in df.columns
+    ]
+
+    return render_template(
+        "dv/projections.html",
+        table=df[display_cols].to_dict(orient="records"),
+        columns=display_cols,
+    )
 
 @dv_bp.route("/transactions")
 def transactions():
     # This route expects a local CSV 'transactions_YYYYMM.csv' if scraping isn't available.
-    # If you have live scraping, wire it in your main app's background job and drop CSVs here.
     month = request.args.get("month")  # format YYYYMM
     df = pd.DataFrame()
     if month:
@@ -88,7 +160,6 @@ def spike_week():
     candidates = []
     if weekly_param:
         candidates.append(Path(weekly_param))
-    # fallback names
     candidates += [Path(get_data_dir()) / n for n in ("wr_weekly_summary_01.csv", "weekly_ppr.csv")]
 
     for p in candidates:

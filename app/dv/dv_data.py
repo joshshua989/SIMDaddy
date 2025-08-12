@@ -1,18 +1,19 @@
-
 # app/dv/dv_data.py
 
 import os
 from pathlib import Path
 import pandas as pd
 
+# ------------------------------------------------------------
 # Candidate locations for DraftVader data_files directory
+# ------------------------------------------------------------
 def _candidate_data_dirs():
     here = Path(__file__).resolve()
     app_root = here.parents[2]  # SIMDaddy/
     return [
         Path(os.getenv("DV_DATA_DIR")) if os.getenv("DV_DATA_DIR") else None,
         Path(os.getenv("SIMDADDY_DATA_DIR")) if os.getenv("SIMDADDY_DATA_DIR") else None,
-        app_root / "DATA",                              # ✅ your new default
+        app_root / "DATA",                              # ✅ default (your setup)
         here.parents[2] / "data_files",                 # legacy local
         here.parents[3] / "DraftVader" / "data_files",  # legacy clones
         here.parents[3] / "DraftVader-master" / "data_files",
@@ -21,20 +22,32 @@ def _candidate_data_dirs():
     ]
 
 def get_data_dir() -> Path:
+    tried = []
     for p in _candidate_data_dirs():
-        return p
+        if p is None:
+            continue
+        tried.append(str(p))
+        if p.exists():
+            return p
     raise FileNotFoundError(
         "Could not locate DraftVader data_files directory. "
-        "Set DV_DATA_DIR env var or place data_files/ in a known location."
+        "Set DV_DATA_DIR or SIMDADDY_DATA_DIR, or put CSVs under SIMDaddy/DATA. "
+        f"Tried: {', '.join(tried)}"
     )
 
 def _read_csv(name: str) -> pd.DataFrame:
     data_dir = get_data_dir()
     path = data_dir / name
     if not path.exists():
-        raise FileNotFoundError(f"Missing required CSV: {path}")
+        raise FileNotFoundError(
+            f"Missing required CSV: {path}\n"
+            f"(Resolved data dir: {data_dir})"
+        )
     return pd.read_csv(path)
 
+# ------------------------------------------------------------
+# Data loaders
+# ------------------------------------------------------------
 def load_schedule(year: int = 2025) -> pd.DataFrame:
     return _read_csv(f"nfl_schedule_{year}.csv")
 
@@ -51,11 +64,35 @@ def load_rookie_rankings() -> pd.DataFrame:
     except FileNotFoundError:
         return pd.DataFrame()
 
-# ---- Age curve logic (ported from DraftVader age_curve.py, sans Streamlit) ----
+# ------------------------------------------------------------
+# Age curve logic (multi-pos curve; preserves original columns)
+# ------------------------------------------------------------
 def apply_age_curve(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Adds:
+      - age_curve_multiplier (float)
+      - age_risk_tag (str)
+
+    Robust to column variants:
+      - position column: 'pos' or 'position'
+      - age column: 'age' or 'player_age'
+    """
+    if df is None or len(df) == 0:
+        return df
+
+    pos_col = "pos" if "pos" in df.columns else ("position" if "position" in df.columns else None)
+    age_col = "age" if "age" in df.columns else ("player_age" if "player_age" in df.columns else None)
+
+    if pos_col is None or age_col is None:
+        return df
+
     def get_age_curve_multiplier(pos, age):
-        if pd.isna(age): return 1.0
-        age = int(age)
+        if pd.isna(age):
+            return 1.0
+        try:
+            age = int(age)
+        except Exception:
+            return 1.0
         pos = (pos or "").upper()
         if pos in ("RB", "FB"):
             if age <= 22: return 1.10
@@ -90,8 +127,12 @@ def apply_age_curve(df: pd.DataFrame) -> pd.DataFrame:
             return 1.0
 
     def get_age_tag(pos, age):
-        if pd.isna(age): return "Unknown"
-        age = int(age)
+        if pd.isna(age):
+            return "Unknown"
+        try:
+            age = int(age)
+        except Exception:
+            return "Unknown"
         pos = (pos or "").upper()
         if pos in ("RB", "FB"):
             if age <= 22: return "Breakout Window"
@@ -114,11 +155,13 @@ def apply_age_curve(df: pd.DataFrame) -> pd.DataFrame:
         return "Unknown"
 
     out = df.copy()
-    out["age_curve_multiplier"] = out.apply(lambda r: get_age_curve_multiplier(r.get("pos"), r.get("age")), axis=1)
-    out["age_risk_tag"] = out.apply(lambda r: get_age_tag(r.get("pos"), r.get("age")), axis=1)
-    return out[["player", "team", "pos", "age", "age_curve_multiplier", "age_risk_tag"]]
+    out["age_curve_multiplier"] = out[[pos_col, age_col]].apply(lambda r: get_age_curve_multiplier(r.iloc[0], r.iloc[1]), axis=1)
+    out["age_risk_tag"] = out[[pos_col, age_col]].apply(lambda r: get_age_tag(r.iloc[0], r.iloc[1]), axis=1)
+    return out
 
-# ---- Spike week from weekly data (expects per-game PPR) ----
+# ------------------------------------------------------------
+# Spike week from weekly data (expects per-game PPR)
+# ------------------------------------------------------------
 def compute_spike_week(weekly_df: pd.DataFrame) -> pd.DataFrame:
     """
     Expects columns:
@@ -144,6 +187,5 @@ def compute_spike_week(weekly_df: pd.DataFrame) -> pd.DataFrame:
     merged["bust_score"] = merged["under_5_ppr_count"]*2 + merged["under_10_ppr_count"]*1.5 + merged["under_15_ppr_count"]*1
     merged["spike_week_score"] = merged["boom_score"] - merged["bust_score"]
 
-    # sort and return
     merged = merged.sort_values("spike_week_score", ascending=False)
     return merged

@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Terms of Use{% endblock %}
+{% block content %}
+<div class="container">
+  <h2 class="page-title">Terms of Use</h2>
+  <p>Last updated: {{ (now() if now else '') }}</p>
+  <p>Provide acceptable use rules, disclaimers, limitations of liability, and governing law here.</p>
+</div>
+{% endblock %}

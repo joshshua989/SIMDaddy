@@ -180,6 +180,12 @@
     }
   }
 
+  /* Mobile: hide the long tagline on the signup page only */
+  @media (max-width: 640px) {
+    html body.auth.signup .sub {
+      display: none !important;
+    }
+  }
 </style>
 
 <h2 class="page-title">Welcome to SIMDaddy!</h2>

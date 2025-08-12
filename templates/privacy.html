@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Privacy Policy{% endblock %}
+{% block content %}
+<div class="container">
+  <h2 class="page-title">Privacy Policy</h2>
+  <p>Last updated: {{ (now() if now else '') }}</p>
+  <p>Describe how you collect, use, and store data. Include contact info and jurisdictional notes here.</p>
+</div>
+{% endblock %}

@@ -2,33 +2,208 @@
 {% block title %}Injury Report{% endblock %}
 
 {% block content %}
+<style>
+  /* Card + layout */
+  .injury-card { padding: 12px 14px; }
+  .injury-top { display: flex; align-items: center; gap: 12px; }
+  .team-logo { width: 48px; height: 48px; object-fit: contain; }
+  .team-logo.placeholder { display:flex; align-items:center; justify-content:center; width:48px; height:48px; font-size:24px; background:#1f2937; border-radius:8px; }
+  .player-meta { flex: 1; min-width: 0; }
+
+  /* A little breathing room under the "Injury Reports (##)" header */
+  .page-title {
+    padding-bottom: 6px;   /* subtle pad inside the header */
+    margin-bottom: 16px;   /* space before the pager/cards */
+  }
+
+  .player-name {
+    margin: 0;
+    line-height: 1.2;
+    margin-bottom: 10px;
+    font-size: 1.1rem;
+    font-weight: 700;
+  }
+
+  .reported-line {
+    margin-top: 2px;
+    margin-bottom: 12px;
+    color: #a3a3a3;
+    font-size: 0.9rem;
+  }
+
+  .injury-description { margin: 6px 0; }
+  .injury-comment { margin: 6px 0; }
+  .position { margin-left: 8px; font-weight: 600; opacity: 0.9; }
+  .badge { margin-left: 8px; padding: 2px 6px; border-radius: 6px; background: #374151; font-size: 0.8rem; }
+
+  /* Pager container */
+  .injury-pager { display:flex; align-items:center; justify-content:space-between; gap:10px; margin: 12px 0 18px; flex-wrap: wrap; }
+  .injury-pager-center { display:flex; align-items:center; gap:8px; }
+  .injury-muted { color:#9ca3af; }
+
+  /* Pager buttons: fixed blue, no hover change, uniform sizing */
+  .injury-btn-pager {
+    background-color: #0098d6;
+    color: #fff;
+    padding: 8px 14px;      /* desktop base */
+    border-radius: 6px;
+    text-decoration: none;
+    display: inline-flex;   /* flex for consistent height */
+    align-items: center;
+    justify-content: center;
+    line-height: 1;         /* tight line-height for consistent button height */
+    transition: none;
+    min-height: 40px;       /* equalize height across all buttons */
+  }
+  .injury-btn-pager:hover { background-color: #0098d6; } /* no hover change */
+  .injury-btn-pager.disabled {
+    background-color: #6c757d;
+    color: #e2e3e5;
+    pointer-events: none;
+  }
+
+  /* Icon-only buttons (First/Last) */
+  .btn-icon {
+    font-weight: 700;
+    min-width: 44px;        /* keep a decent tap target even with just « or » */
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  /* Mobile-only layout: First | Prev | center | Next | Last */
+  @media (max-width: 640px) {
+    .injury-pager {
+      display: grid;
+      grid-template-columns: auto auto 1fr auto auto;
+      align-items: center;
+      gap: 10px;
+    }
+    .injury-pager .btn-first { justify-self: start; }
+    .injury-pager .btn-prev  { justify-self: start; }
+    .injury-pager .btn-next  { justify-self: end; }
+    .injury-pager .btn-last  { justify-self: end; }
+
+    /* Hide the arrow glyphs that accompany Previous/Next labels on mobile */
+    .injury-btn-pager .arrow { display: none; }
+
+    /* Slightly taller ALL pager buttons on mobile (applies to a + span, enabled + disabled) */
+    .injury-btn-pager,
+    .injury-btn-pager.disabled {
+      padding: 12px 16px;
+      min-height: 46px;    /* ensures Previous/First match Next/Last */
+    }
+    .btn-icon {
+      min-width: 48px;     /* icon-only buttons don’t collapse */
+      padding-left: 12px;
+      padding-right: 12px;
+    }
+
+    /* Center status stacked into two lines */
+    .injury-pager-center {
+      grid-column: 3 / 4;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      text-align: center;
+    }
+  }
+</style>
+
 <div class="injury-container">
   <h2 class="page-title">Injury Reports ({{ total_count }})</h2>
 
   {% if total_count > 0 and total_pages > 1 %}
   <div class="injury-pager">
+    {# First (icon-only: «) #}
     {% if page > 1 %}
-      <a class="injury-btn-pager" href="{{ url_for('views.injuries', page=page-1) }}">&larr; Previous</a>
+      <a class="injury-btn-pager btn-icon btn-first" href="{{ url_for('views.injuries', page=1) }}" aria-label="First page">
+        &laquo;
+      </a>
     {% else %}
-      <span class="injury-btn-pager disabled">&larr; Previous</span>
+      <span class="injury-btn-pager btn-icon disabled btn-first" aria-hidden="true">
+        &laquo;
+      </span>
+    {% endif %}
+
+    {# Previous #}
+    {% if page > 1 %}
+      <a class="injury-btn-pager btn-prev" href="{{ url_for('views.injuries', page=page-1) }}">
+        <span class="arrow">&larr;</span> Previous
+      </a>
+    {% else %}
+      <span class="injury-btn-pager disabled btn-prev">
+        <span class="arrow">&larr;</span> Previous
+      </span>
     {% endif %}
 
     <div class="injury-pager-center">
-      <span class="injury-muted">Page {{ page }} of {{ total_pages }}</span>
-      <span class="injury-muted">•</span>
-      <span class="injury-muted">Showing {{ showing_start }}–{{ showing_end }}</span>
+      <div class="pager-line1">
+        <span class="injury-muted pager-page">Page {{ page }} of {{ total_pages }}</span>
+        <span class="injury-muted">•</span>
+      </div>
+      <div class="pager-line2">
+        <span class="injury-muted pager-showing">Showing {{ showing_start }}–{{ showing_end }}</span>
+      </div>
     </div>
 
+    {# Next #}
     {% if page < total_pages %}
-      <a class="injury-btn-pager" href="{{ url_for('views.injuries', page=page+1) }}">Next &rarr;</a>
+      <a class="injury-btn-pager btn-next" href="{{ url_for('views.injuries', page=page+1) }}">
+        Next <span class="arrow">&rarr;</span>
+      </a>
     {% else %}
-      <span class="injury-btn-pager disabled">Next &rarr;</span>
+      <span class="injury-btn-pager disabled btn-next">
+        Next <span class="arrow">&rarr;</span>
+      </span>
+    {% endif %}
+
+    {# Last (icon-only: ») #}
+    {% if page < total_pages %}
+      <a class="injury-btn-pager btn-icon btn-last" href="{{ url_for('views.injuries', page=total_pages) }}" aria-label="Last page">
+        &raquo;
+      </a>
+    {% else %}
+      <span class="injury-btn-pager btn-icon disabled btn-last" aria-hidden="true">
+        &raquo;
+      </span>
     {% endif %}
   </div>
   {% endif %}
 
   {% if injuries %}
     {% for item in injuries %}
+      {# Build a clean display name with fallback when player_name is missing #}
+      {% set display_name = item.player_name or item.name or item.player %}
+      {% if not display_name and item.headline %}
+        {% set stopwords = [
+          'does','do','did','is','was','were','has','have','had','will','won\'t','not','expected',
+          'likely','questionable','doubtful','out','limited','ruled','placed','activated','designated',
+          'return','returns','sign','signs','agrees','agreed','lands','suffers','diagnosed','undergoes',
+          'practice','practices','practicing','miss','misses','to','with','after','from','for',
+          'vs','vs.','versus','and','at','in','on','leaves','dealing','waived','sitting','believed','sidelined'
+        ] %}
+        {% set parts = item.headline.split() %}
+        {% set filtered = [] %}
+        {% for tok in parts %}
+          {% set lowtok = tok|lower
+                            |replace('.', '')
+                            |replace(',', '')
+                            |replace(':', '')
+                            |replace(';', '')
+                            |replace('!', '')
+                            |replace('?', '')
+                            |replace('"', '')
+                            |replace("'", '')
+                            |replace('(', '')
+                            |replace(')', '') %}
+          {% if lowtok not in stopwords and filtered|length < 4 %}
+            {% set filtered = filtered + [tok] %}
+          {% endif %}
+        {% endfor %}
+        {% set display_name = filtered|join(' ') %}
+      {% endif %}
+
       <div class="injury-card">
         <div class="injury-top">
           {% if item.logo_url %}
@@ -38,7 +213,7 @@
           {% endif %}
           <div class="player-meta">
             <h2 class="player-name">
-              {{ item.player_name or item.name or item.player }}
+              {{ display_name if display_name else "—" }}
               {% if item.position %}<span class="position">{{ item.position }}</span>{% endif %}
               {% if item.status %}<span class="badge">{{ item.status }}</span>{% endif %}
             </h2>
@@ -46,7 +221,7 @@
         </div>
 
         {% if item.date %}
-          <div class="injury-description"><strong>Reported:</strong> {{ item.date }}</div>
+          <div class="reported-line"><strong>Reported:</strong> {{ item.date }}</div>
         {% endif %}
         {% if item.headline %}
           <div class="injury-description"><strong>{{ item.headline }}</strong></div>
@@ -71,19 +246,53 @@
   {% if total_count > 0 and total_pages > 1 %}
   <div class="injury-pager">
     {% if page > 1 %}
-      <a class="injury-btn-pager" href="{{ url_for('views.injuries', page=page-1) }}">&larr; Previous</a>
+      <a class="injury-btn-pager btn-icon btn-first" href="{{ url_for('views.injuries', page=1) }}" aria-label="First page">
+        &laquo;
+      </a>
     {% else %}
-      <span class="injury-btn-pager disabled">&larr; Previous</span>
+      <span class="injury-btn-pager btn-icon disabled btn-first" aria-hidden="true">
+        &laquo;
+      </span>
     {% endif %}
-    <div class="injury-pager-center">
-      <span class="injury-muted">Page {{ page }} of {{ total_pages }}</span>
-      <span class="injury-muted">•</span>
-      <span class="injury-muted">Showing {{ showing_start }}–{{ showing_end }}</span>
-    </div>
-    {% if page < total_pages %}
-      <a class="injury-btn-pager" href="{{ url_for('views.injuries', page=page+1) }}">Next &rarr;</a>
+
+    {% if page > 1 %}
+      <a class="injury-btn-pager btn-prev" href="{{ url_for('views.injuries', page=page-1) }}">
+        <span class="arrow">&larr;</span> Previous
+      </a>
     {% else %}
-      <span class="injury-btn-pager disabled">Next &rarr;</span>
+      <span class="injury-btn-pager disabled btn-prev">
+        <span class="arrow">&larr;</span> Previous
+      </span>
+    {% endif %}
+
+    <div class="injury-pager-center">
+      <div class="pager-line1">
+        <span class="injury-muted pager-page">Page {{ page }} of {{ total_pages }}</span>
+        <span class="injury-muted">•</span>
+      </div>
+      <div class="pager-line2">
+        <span class="injury-muted pager-showing">Showing {{ showing_start }}–{{ showing_end }}</span>
+      </div>
+    </div>
+
+    {% if page < total_pages %}
+      <a class="injury-btn-pager btn-next" href="{{ url_for('views.injuries', page=page+1) }}">
+        Next <span class="arrow">&rarr;</span>
+      </a>
+    {% else %}
+      <span class="injury-btn-pager disabled btn-next">
+        Next <span class="arrow">&rarr;</span>
+      </span>
+    {% endif %}
+
+    {% if page < total_pages %}
+      <a class="injury-btn-pager btn-icon btn-last" href="{{ url_for('views.injuries', page=total_pages) }}" aria-label="Last page">
+        &raquo;
+      </a>
+    {% else %}
+      <span class="injury-btn-pager btn-icon disabled btn-last" aria-hidden="true">
+        &raquo;
+      </span>
     {% endif %}
   </div>
   {% endif %}

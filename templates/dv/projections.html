@@ -1,14 +1,15 @@
 {% extends "dv/layout.html" %}
 {% block content %}
   <div class="flex">
-    <h2 class="dv-title">Season Projections (offline fallback)</h2>
+    <h2 class="dv-title">Season Projections</h2>
     <div class="chip">Data dir: {{ dv_data_dir }}</div>
   </div>
+
   {% if columns and table %}
     <table class="dv">
       <thead>
         <tr>
-          {% for col in columns %}<th>{{ col }}</th>{'% endfor %'}
+          {% for col in columns %}<th>{{ col }}</th>{% endfor %}
         </tr>
       </thead>
       <tbody>
@@ -16,9 +17,9 @@
           <tr>
             {% for col in columns %}
               <td>{{ row[col] }}</td>
-            {'% endfor %'}
+            {% endfor %}
           </tr>
-        {'% endfor %'}
+        {% endfor %}
       </tbody>
     </table>
   {% else %}

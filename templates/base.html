@@ -1,160 +1,558 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>SIMDaddy - {% block title %}{% endblock %}</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/nav_overrides.css') }}">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/nav_overrides.css') }}" />
   {% block head %}{% endblock %}
 
   <!-- Inline MOBILE drawer + mobile stats/welcome styles (layout-only) -->
   <style>
-    /* Hamburger (drawer trigger) */
-    .sd-mobile-toggle{
-      position: fixed;
-      top: 12px; left: 12px;
-      z-index: 1100;
-      background: #161616;
-      border: 1px solid #2a2a2a;
-      border-radius: 10px;
-      padding: 8px 10px;
-      display: none;                 /* shown via media query below */
-      flex-direction: column;        /* stacked bars */
-      align-items: center;
-      justify-content: center;
-      gap: 4px;
-      width: 64px;
-      height: 52px;                  /* slightly taller */
+    :root {
+      --consentH: 60px;   /* measured in JS */
+      --navH: 56px;       /* measured in JS */
+      --navPadTopM: 6px;  /* mobile nav-inner top padding */
     }
-    .sd-mobile-toggle .sd-burger{
+
+    /* =======================
+       Consent Bar (GLOBAL)
+       ======================= */
+    .consent-bar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1200;
+      display: flex; align-items: center; justify-content: center;
+      padding: 10px 16px;
+      background: #1e5db0; color: #e5e7eb;
+      font-size: 0.95rem; line-height: 1.35;
+      box-shadow: 0 2px 8px rgba(0,0,0,.2);
+    }
+    .consent-bar .consent-inner {
+      display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap;
+      max-width: 1100px; width: 100%;
+      text-align: center;
+    }
+    .consent-bar a { color: #7dd3fc; text-decoration: underline; }
+    .consent-accept {
+      margin: 0; padding: 8px 14px;
+      background: #0098d6; color: #fff;
+      border: 0; border-radius: 6px;
+      cursor: pointer; font-weight: 600; white-space: nowrap;
+    }
+
+    /* Desktop consent + nav behavior (unchanged) */
+    @media (min-width: 1024px) {
+      body.has-consentbar .site-nav {
+        position: fixed !important;
+        top: var(--consentH);
+        left: 0; right: 0;
+        z-index: 1190;
+      }
+      body.has-consentbar {
+        padding-top: calc(var(--consentH) + var(--navH));
+      }
+    }
+
+    /* =======================
+       Base styles (shared)
+       ======================= */
+
+    /* Hamburger (drawer trigger) — base */
+    .sd-mobile-toggle {
+      display: none; /* shown on mobile/auth only */
+      width: 56px; height: 42px; /* match logo height */
+      padding: 8px 10px;
+      background: #161616; color: #eaeaea;
+      border: 1px solid #2a2a2a; border-radius: 10px;
+      display: none;
+      flex-direction: column; align-items: center; justify-content: center; gap: 4px;
+    }
+    .sd-mobile-toggle .sd-burger {
       display: block;
-      width: 22px;                   /* wider */
-      height: 3px;                   /* thicker so it won’t disappear */
-      margin: 4px 0;
-      border-radius: 2px;
-      background: #eaeaea;
+      width: 22px; height: 3px; margin: 4px 0;
+      border-radius: 2px; background: #eaeaea;
     }
 
     /* Drawer overlay/panel */
-    .sd-drawer__overlay{
-      position: fixed; inset: 0; z-index: 1090;
-      background: rgba(0,0,0,0.45);
+    .sd-drawer__overlay {
+      position: fixed; left: 0; right: 0;
+      z-index: 1180; /* under fixed nav (1190), over content */
       display: none;
+      background: rgba(0,0,0,0.45);
     }
-    .sd-drawer__overlay.show{ display:block; }
+    .sd-drawer__overlay.show { display: block; }
 
-    .sd-drawer{
-      position: fixed; left: 0; top: 0; bottom: 0;
+    .sd-drawer {
+      position: fixed; left: 0; right: 0; bottom: 0;
+      z-index: 1185; /* under fixed nav (1190), above overlay (1180) so its border is crisp */
       width: 80vw; max-width: 320px;
-      background: #121212;
-      border-right: 1px solid #2a2a2a;
-      transform: translateX(-100%);
-      transition: transform 200ms ease;
-      z-index: 1110;
       display: flex; flex-direction: column;
+      background: #121212; border-right: 1px solid #2a2a2a;
+      transform: translateX(-100%); transition: transform 200ms ease;
     }
-    .sd-drawer.open{ transform: translateX(0); }
+    .sd-drawer.open { transform: translateX(0); }
 
-    .sd-drawer__header{
-      display:flex; align-items:center; gap:12px;
-      padding:14px; border-bottom:1px solid #2a2a2a;
+    .sd-drawer__header {
+      display: flex; align-items: center; gap: 12px;
+      padding: 14px; border-bottom: 1px solid #2a2a2a;
     }
-    .sd-avatar{
-      width:40px; height:40px; border-radius:50%;
-      object-fit:cover; background:#1c1c1c; border:1px solid #2a2a2a;
-    }
-    .sd-user__name{ color:#fff; font-weight:600; font-size:15px; line-height:1.2; }
-    .sd-user__label{ color:#9aa0a6; font-size:12px; }
-    .sd-drawer__close{
-      margin-left:auto; background:transparent; border:0;
-      color:#e0e0e0; font-size:22px; line-height:1; padding:4px 8px; border-radius:8px;
-    }
-    .sd-drawer__nav{ display:flex; flex-direction:column; padding:8px 0; }
-    .sd-drawer__link{
-      display:block; padding:12px 16px; color:#fff; text-decoration:none;
-      border-left:3px solid transparent; border-bottom:1px solid rgba(255,255,255,0.06);
-    }
-    .sd-drawer__link:hover{ background: rgba(255,255,255,0.04); }
-    .sd-drawer__link.active{ background:#0f0f0f; color:#00bfff; border-left-color:#007fb7; }
+    .sd-drawer__spacer { height: 30px; }
+    .sd-drawer__spacer-large { height: 30px; }
 
-    /* MOBILE ONLY (≤768px) */
-    @media (max-width: 768px){
-      /* Show lime burger on all pages when logged in; hide desktop nav */
-      body.is-auth .sd-mobile-toggle{
+    .sd-avatar {
+      width: 40px; height: 40px; border-radius: 50%;
+      object-fit: cover; background: #1c1c1c; border: 1px solid #2a2a2a;
+    }
+    .sd-user__name { color: #fff; font-weight: 600; font-size: 15px; line-height: 1.2; }
+    .sd-user__label { color: #9aa0a6; font-size: 12px; }
+    .sd-drawer__close {
+      margin-left: auto; padding: 4px 8px;
+      background: transparent; border: 0; color: #e0e0e0;
+      font-size: 22px; line-height: 1; border-radius: 8px;
+    }
+    .sd-drawer__nav { display: flex; flex-direction: column; padding: 8px 0; }
+    .sd-drawer__link {
+      display: block; padding: 12px 16px; color: #fff; text-decoration: none;
+      border-left: 3px solid transparent; border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .sd-drawer__link:hover { background: rgba(255,255,255,0.04); }
+    .sd-drawer__link.active { background: #0f0f0f; color: #00bfff; border-left-color: #007fb7; }
+
+    /* ===== MOBILE ONLY (≤768px) ===== */
+    @media (max-width: 768px) {
+      /* Logged-in only: show site nav; hide desktop links */
+      body.is-auth .site-nav { display: block !important; }
+      body.is-auth .site-nav .nav-links { display: none !important; }
+
+      /* FIXED nav at absolute top (never disappears) */
+      body.is-auth .site-nav {
+        position: fixed; top: 0; left: 0; right: 0;
+        z-index: 1190; /* above drawer & overlay */
+        backdrop-filter: saturate(140%) blur(2px);
+      }
+
+      /* Push page content below the fixed nav so it doesn't hide content */
+      body.is-auth { padding-top: var(--navH); }
+
+      /* Nav content layout: logo, trophy line centered; hamburger inside bar */
+      .site-nav .nav-inner {
+        position: relative;
+        display: flex; flex-direction: column; align-items: center; gap: 6px;
+        padding: var(--navPadTopM, 6px) 12px 6px;
+      }
+      .site-nav .brand { line-height: 0; display: flex; align-items: center; }
+      .site-nav .brand-logo { height: 42px; width: auto; display: block; }
+
+      /* Trophy/Coin line inside nav under logo — 1.25rem */
+      .mobile-stats-inline {
+        display: flex !important; align-items: center; justify-content: center;
+        padding: 0 8px 2px;
+      }
+      .mobile-stats-inline .nav-stats {
+        display: inline-flex; align-items: center; gap: 10px;
+        font-weight: 600; font-size: 1.25rem; line-height: 1.1; color: #eaeaea;
+      }
+      .mobile-stats-inline .nav-stats .sep { opacity: 0.75; }
+
+      /* Hamburger INSIDE the fixed nav bar (top-right aligned to logo top) */
+      body.is-auth .sd-mobile-toggle {
         display: inline-flex;
-        background:#2c6f2c; border:1px solid #2c6f2c;
+        position: absolute; top: var(--navPadTopM, 6px); right: 12px;
+        width: 56px; height: 42px; /* match logo height */
+        background: #2c6f2c; border: 1px solid #2c6f2c;
+        z-index: 1191; /* just above nav contents */
       }
-      .sd-mobile-toggle .sd-burger{ background:#fff; }
-
-      body.is-auth .site-nav{ display:none; }
-
-      /* Drawer DOM allowed; overlay toggled by JS */
-      #sdDrawer{ display:block; }
-      #sdDrawerOverlay{
-        display:none !important; pointer-events:none; opacity:0; transition:opacity 150ms ease;
-      }
-      #sdDrawerOverlay.show{
-        display:block !important; pointer-events:auto; opacity:1;
+      /* Force the three burger bars visible */
+      body.is-auth .sd-mobile-toggle .sd-burger {
+        width: 22px !important; height: 3px !important; margin: 4px 0 !important;
+        border-radius: 2px !important; background: #ffffff !important; opacity: 1 !important;
       }
 
-      /* Clear the fixed header elements (burger + stats) */
-      body.is-auth{ padding-top: 84px; }
+      /* Remove the old floating stats above the logo (not used now) */
+      .mobile-greet { display: none !important; }
 
-      /* RIGHT-pinned mobile stats, vertically centered with burger */
-      .mobile-greet{
-        position: fixed;
-        top: 12px;  /* same as burger top */
-        right: calc(env(safe-area-inset-right, 0px) + 16px); /* comfy edge padding */
-        left: auto;
-        height: 52px;             /* match burger height for perfect vertical alignment */
-        display: flex;
-        align-items: center;       /* vertical center */
-        justify-content: flex-end; /* right align content */
-        z-index: 1080;             /* below overlay(1090) and burger(1100) */
-        pointer-events: none;      /* don't block taps */
-        transform: none;
-        text-align: right;
+      /* Welcome line outside the fixed nav bar, centered */
+      .mobile-welcome-outside {
+        display: block; text-align: center; color: #eaeaea; font-weight: 600;
+        padding: 8px 16px 6px; /* sits just below fixed nav */
       }
-      .mobile-greet .nav-stats{
-        display:inline-flex; align-items:center;
-        font-size:0.85rem; line-height:1; font-weight:600; color:#eaeaea;
-      }
-      .mobile-greet .nav-stats .stat{ display:inline-flex; align-items:center; gap:4px; }
-      .mobile-greet .nav-stats .sep{ margin:0 4px; }
 
-      /* Mobile “Welcome back” line that appears on HOME only */
-      .mobile-welcome{
-        display:block;
-        margin: 6px 16px 0 16px;
-        color:#eaeaea;
-        font-weight:600;
-      }
+      /* Drawer + overlay start BELOW the fixed nav; no overlap with nav */
+      #sdDrawer { top: var(--navH); left: 0; right: auto; }
+      #sdDrawerOverlay { position: fixed; top: var(--navH); bottom: 0; left: 0; right: 0; }
     }
 
-    /* DESKTOP ONLY */
-    @media (min-width: 769px){
-      .sd-drawer, .sd-drawer__overlay{ display:none; }
-      .mobile-greet{ display:none !important; } /* no mobile stats on desktop */
-      .mobile-welcome{ display:none; }         /* desktop uses quickbar/greeting */
+    /* ===== DESKTOP ONLY ===== */
+    @media (min-width: 769px) {
+      .sd-drawer, .sd-drawer__overlay { display: none; }
+      .mobile-greet { display: none !important; }
+      .mobile-welcome { display: none; }
+      .mobile-stats-inline { display: none !important; }
+      .mobile-welcome-outside { display: none !important; }
     }
 
+    /* Drawer should be scrollable on mobile */
     @media (max-width: 768px){
-    .mobile-greet{
-      left: auto !important;
-      right: calc(env(safe-area-inset-right, 0px) + 4px) !important; /* ~4px from edge */
-      justify-content: flex-end !important;
-      text-align: right !important;
-      width: auto;
-      transform: none !important;
+      #sdDrawer{
+        height: calc(100vh - var(--navH));
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+      }
     }
-    .mobile-greet .nav-stats{
-      display: inline-flex;
-      align-items: center;
-      justify-content: flex-end;
+
+    /* Drawer button: 20% bigger, dark gray with orange outline, and flow with nav content (older rule kept) */
+    @media (max-width: 768px){
+      body.is-auth .sd-mobile-toggle{
+        /* size: 56x42 -> +20% ≈ 67x50 */
+        width: 67px;
+        height: 50px;
+        background: #222;                /* dark gray background */
+        border-color: #ff7a00;           /* orange outline */
+        /* make it scroll with the nav content instead of pinning */
+        position: static;                /* remove absolute positioning */
+        align-self: flex-end;            /* push to right within .nav-inner (column layout) */
+        margin-right: 12px;
+        margin-top: var(--navPadTopM, 6px);
+        z-index: auto;
+        color: inherit;                  /* keep bar color rules you already have */
+      }
     }
+
+    /* MOBILE: place hamburger top-right + set colors to match your theme (older rule kept) */
+    @media (max-width: 768px){
+      body.is-auth .sd-mobile-toggle{
+        display: inline-flex !important;
+        position: absolute !important;
+        top: var(--navPadTopM, 6px) !important;
+        right: 12px !important;
+
+        width: 56px;
+        height: 42px;
+
+        background: var(--weekCardBg, #0f3a3a) !important;
+        border-color: var(--lime, #32d74b) !important;
+        color: var(--lime, #32d74b) !important;
+        z-index: 1191;
+      }
+      body.is-auth .sd-mobile-toggle .sd-burger{
+        display: block !important;
+        width: 22px !important;
+        height: 3px !important;
+        margin: 4px 0 !important;
+        border-radius: 2px !important;
+        background: currentColor !important;
+        opacity: 1 !important;
+      }
+    }
+
+    /* MOBILE ONLY (with fallback bars & sizing kept from your prior patch) */
+    @media (max-width: 768px){
+      /* Ensure nav is positioning context */
+      body.is-auth .site-nav .nav-inner{ position: relative; }
+
+      /* Drawer button (20% bigger) */
+      body.is-auth .site-nav .nav-inner > .sd-mobile-toggle{
+        position: absolute !important;
+        top: var(--navPadTopM, 6px) !important;
+        right: 12px !important;
+
+        width: 67px !important;  /* 56 * 1.2 */
+        height: 50px !important; /* 42 * 1.2 */
+        background: #121c2b !important;
+        border: 1px solid var(--lime, #32d74b) !important;
+        color: var(--lime, #32d74b) !important;
+        display: inline-flex !important;
+        align-items: center; justify-content: center; gap: 4px;
+
+        /* Fallback bars drawn on the button itself */
+        --burgerW: 28px;
+        --burgerH: 3px;
+        --burgerGap: 6px;
+        background-image:
+          repeating-linear-gradient(
+            to bottom,
+            currentColor 0 calc(var(--burgerH)),
+            transparent calc(var(--burgerH)) calc(var(--burgerH) + var(--burgerGap))
+          );
+        background-size: var(--burgerW) calc(var(--burgerH) * 3 + var(--burgerGap) * 2);
+        background-position: center;
+        background-repeat: no-repeat;
+      }
+
+      body.is-auth .site-nav .nav-inner > .sd-mobile-toggle .sd-burger{
+        display: block !important;
+        width: 28px !important;
+        height: 3px !important;
+        margin: 4px 0 !important;
+        border-radius: 2px !important;
+        background: currentColor !important;
+        opacity: 1 !important;
+      }
+    }
+
+    /* MOBILE: background color update kept */
+    @media (max-width: 768px){
+      body.is-auth .site-nav .nav-inner > .sd-mobile-toggle{
+        background: #06101f !important;
+      }
+    }
+
+    /* MOBILE: outline + bars green update kept */
+    @media (max-width: 768px){
+      body.is-auth nav.site-nav .nav-inner > button.sd-mobile-toggle{
+        border: 2px solid #2a8f2a !important;
+        color: #2a8f2a !important;
+      }
+      body.is-auth nav.site-nav .nav-inner > button.sd-mobile-toggle .sd-burger{
+        background: currentColor !important;
+      }
+      body.is-auth nav.site-nav .nav-inner > button.sd-mobile-toggle::before{
+        color: currentColor !important;
+      }
+    }
+  </style>
+
+  <!-- CSS: Full-screen drawer on mobile -->
+  <style>
+  @media (max-width: 768px){
+    /* Drawer becomes full-screen and above the nav */
+    #sdDrawer{
+      position: fixed !important;
+      top: 0 !important; right: 0 !important; bottom: 0 !important; left: 0 !important;
+      width: 100vw !important;
+      max-width: none !important;
+      height: 100dvh !important;              /* include dynamic viewport (URL bar) */
+      transform: translateX(-100%);           /* closed state still slides from left */
+      z-index: 2005 !important;               /* above nav (1190) */
+      border-right: 0 !important;
+      overflow-y: auto !important;
+      -webkit-overflow-scrolling: touch;
+      /* give extra space so “Logout” clears the phone UI chrome */
+      padding-bottom: max(48px, env(safe-area-inset-bottom, 0px) + 36px) !important;
+    }
+    #sdDrawer.open{ transform: translateX(0) !important; }
+
+    /* Overlay also covers full screen */
+    #sdDrawerOverlay{
+      position: fixed !important;
+      top: 0 !important; right: 0 !important; bottom: 0 !important; left: 0 !important;
+      z-index: 2000 !important;
+    }
+
+    /* Prevent background page from scrolling when drawer is open */
+    body.drawer-open{ overflow: hidden !important; }
   }
   </style>
+
+  <!-- PATCH: MOBILE-ONLY — ensure hamburger button is always clickable and above nav content -->
+  <style>
+  @media (max-width: 768px){
+    .sd-mobile-toggle{
+      display: inline-flex !important;
+      pointer-events: auto !important;
+      z-index: 2006 !important;
+    }
+    .sd-mobile-toggle::before{ pointer-events: none !important; }
+  }
+  </style>
+
+  <style>
+/* MOBILE—force hamburger lines to show and keep it top-right & clickable */
+@media (max-width:768px){
+  body.is-auth .site-nav .nav-inner{ position:relative !important; }
+
+  body.is-auth .site-nav .nav-inner > .sd-mobile-toggle{
+    position:absolute !important;
+    top: var(--navPadTopM, 6px) !important;
+    right: 12px !important;
+    z-index: 3000 !important;
+
+    /* keep your look; remove anything that could hide the bars */
+    background-image: none !important;
+    border: 2px solid #2a8f2a !important;
+    color: #2a8f2a !important;
+  }
+
+  /* KILL any glyph/pseudo that might sit on top of the bars */
+  .sd-mobile-toggle::before{ content:none !important; }
+
+  /* Make sure the three span bars are visible */
+  .sd-mobile-toggle .sd-burger{
+    display:block !important;
+    width:28px !important;
+    height:3px !important;
+    margin:4px 0 !important;
+    border-radius:2px !important;
+    background: currentColor !important; /* uses the green above */
+    opacity:1 !important;
+  }
+
+  /* Keep button definitely clickable above other nav bits */
+  .sd-mobile-toggle{ pointer-events:auto !important; z-index:3000 !important; }
+}
+</style>
+
+  <!-- PATCH: mobile hamburger color + hyphen lines -->
+<style>
+@media (max-width:768px){
+  /* Ensure the nav provides a positioning context */
+  body.is-auth nav.site-nav .nav-inner{ position: relative !important; }
+
+  /* Button: cyan outline + text color, don't mask lines with bg images */
+  body.is-auth nav.site-nav .nav-inner > button.sd-mobile-toggle{
+    border: 2px solid #0098d6 !important;
+    color: #0098d6 !important;         /* this is the "text" color used by the hyphens */
+    background-image: none !important;  /* kill any prior stripe hack */
+    position: absolute !important;
+    top: var(--navPadTopM, 6px) !important;
+    right: 12px !important;
+    display: inline-flex !important;
+    align-items: center; justify-content: center;
+    z-index: 3000 !important;
+  }
+
+  /* Use textual hyphens inside the button, stacked like: -, -, - */
+  body.is-auth nav.site-nav .nav-inner > button.sd-mobile-toggle::after{
+    content: "-\A-\A-";
+    white-space: pre;                   /* respect the line breaks */
+    line-height: 1.1;
+    font-weight: 700;
+    font-size: 16px;
+    color: currentColor;                /* inherits #0098d6 */
+    pointer-events: none;               /* clicks still hit the button */
+  }
+
+  /* Hide span bars to avoid double-lines since we’re using textual hyphens */
+  body.is-auth nav.site-nav .nav-inner > button.sd-mobile-toggle .sd-burger{
+    display: none !important;
+  }
+}
+</style>
+
+  <!-- PATCH: mobile hamburger uses span bars + cyan color -->
+<style>
+@media (max-width:768px){
+  /* Ensure the nav is the positioning context */
+  body.is-auth nav.site-nav .nav-inner{ position: relative !important; }
+
+  /* Button: keep top-right, show bars, cyan outline + text */
+  body.is-auth nav.site-nav .nav-inner > button.sd-mobile-toggle{
+    position: absolute !important;
+    top: var(--navPadTopM, 6px) !important;
+    right: 12px !important;
+    width: 67px !important;          /* keep your +20% size */
+    height: 50px !important;
+
+    border: 2px solid #0098d6 !important;
+    color: #0098d6 !important;        /* bars inherit this */
+    background-image: none !important; /* kill any stripe fallback that hides bars */
+
+    display: inline-flex !important;
+    align-items: center; justify-content: center; gap: 4px;
+    z-index: 3000 !important;
+  }
+
+  /* Remove any glyph fallback that might overlay the bars */
+  body.is-auth nav.site-nav .nav-inner > button.sd-mobile-toggle::before,
+  body.is-auth nav.site-nav .nav-inner > button.sd-mobile-toggle::after{
+    content: none !important;
+  }
+
+  /* The actual bar spans */
+  body.is-auth nav.site-nav .nav-inner > button.sd-mobile-toggle .sd-burger{
+    display: block !important;
+    width: 28px !important;
+    height: 3px !important;
+    margin: 4px 0 !important;
+    border-radius: 2px !important;
+    background: currentColor !important; /* = #0098d6 */
+    opacity: 1 !important;
+  }
+}
+</style>
+
+  <style>
+/* FINAL OVERRIDE: mobile hamburger uses SPAN bars, cyan outline/text */
+@media (max-width:768px){
+  body.is-auth nav.site-nav .nav-inner{ position:relative !important; }
+
+  body.is-auth nav.site-nav .nav-inner > button.sd-mobile-toggle{
+    position:absolute !important;
+    top:var(--navPadTopM,6px) !important;
+    right:12px !important;
+
+    width:67px !important;        /* keep +20% size */
+    height:50px !important;
+
+    display:inline-flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    flex-direction:column !important;
+    gap:4px !important;
+
+    border:2px solid #0098d6 !important;
+    color:#0098d6 !important;              /* span bars inherit this */
+    background-image:none !important;       /* kill any stripe/pseudo hacks */
+    font-size:0 !important; line-height:0 !important; /* hide any stray text */
+    z-index:4000 !important;
+  }
+
+  /* Nuke any pseudo that might cover the spans */
+  body.is-auth nav.site-nav .nav-inner > button.sd-mobile-toggle::before,
+  body.is-auth nav.site-nav .nav-inner > button.sd-mobile-toggle::after{
+    content:none !important;
+  }
+
+  /* The actual SPAN bars */
+  body.is-auth nav.site-nav .nav-inner > button.sd-mobile-toggle .sd-burger{
+    display:block !important;
+    width:28px !important;
+    height:3px !important;
+    margin:0 !important;
+    border-radius:2px !important;
+    background:currentColor !important;     /* #0098d6 */
+    opacity:1 !important;
+  }
+}
+</style>
+
+  <style>
+@media (max-width: 768px){
+
+  /* (Optional) bump the trophy/coins line a touch */
+  .mobile-stats-inline .nav-stats{
+    font-size: 1.35rem !important; /* was 1.25rem */
+  }
+
+  /* Welcome back: a little larger, more top padding, no bottom padding */
+  .mobile-welcome-outside{
+    font-size: 1.15rem !important;   /* slightly larger */
+    padding-top: 12px !important;     /* add space above */
+    padding-bottom: 0 !important;     /* remove space below */
+    /* keep existing side padding unless you want to change it too */
+  }
+}
+</style>
+
+<style>
+@media (max-width: 768px){
+  .mobile-welcome-outside{
+    margin-top: 12px !important;   /* space from nav bar */
+    margin-bottom: 4px !important; /* small gap to buttons */
+    padding-bottom: 0 !important;  /* remove extra padding */
+    font-size: 1.15rem !important;
+    font-weight: 700 !important;
+  }
+
+  /* Optional: tighten the button row spacing too */
+  .dashboard-buttons{
+    margin-top: 0 !important;
+  }
+}
+</style>
+
 </head>
 
 {% set ep = request.endpoint or '' %}
@@ -163,6 +561,56 @@
 {% set show_quickbar = (current_user.is_authenticated and not auth_only and ep != 'views.account') %}
 
 <body class="theme-dark {{ page_class|default('') }} {% if show_quickbar %}has-quickbar{% endif %}{% if current_user.is_authenticated %} is-auth{% endif %}{% if is_dash %} is-dash{% endif %}">
+
+  {# --- Consent Bar (shows until accepted; cookie: site_consent=1) --- #}
+  {% if request.cookies.get('site_consent') != '1' %}
+    <div id="consent-bar" class="consent-bar" role="region" aria-label="Site policy notice">
+      <div class="consent-inner">
+        <span>
+          By accessing this site you agree to our
+          <a href="{{ url_for('views.privacy') }}" target="_blank" rel="noopener">Privacy Policy</a>
+          and
+          <a href="{{ url_for('views.terms') }}" target="_blank" rel="noopener">Terms of Use</a>.
+        </span>
+        <button id="consent-accept" class="consent-accept" type="button">Accept</button>
+      </div>
+    </div>
+    <script>
+      (function () {
+        var bar = document.getElementById('consent-bar');
+        if (!bar) return;
+        document.body.classList.add('has-consentbar');
+
+        function setCookie(name, value, days) {
+          var maxAge = days * 24 * 60 * 60;
+          document.cookie = name + "=" + encodeURIComponent(value)
+            + "; Max-Age=" + maxAge + "; Path=/; SameSite=Lax";
+        }
+
+        function setHeights() {
+          try {
+            var ch = bar.offsetHeight || 60;
+            document.documentElement.style.setProperty('--consentH', ch + 'px');
+            var nav = document.querySelector('.site-nav');
+            if (nav) {
+              var nh = nav.offsetHeight || 56;
+              document.documentElement.style.setProperty('--navH', nh + 'px');
+            }
+          } catch(e) {}
+        }
+        setHeights();
+        window.addEventListener('resize', setHeights);
+
+        document.getElementById('consent-accept').addEventListener('click', function () {
+          setCookie('site_consent', '1', 730);
+          bar.style.display = 'none';
+          document.body.classList.remove('has-consentbar');
+          document.documentElement.style.setProperty('--consentH', '0px');
+          setTimeout(setHeights, 0);
+        }, { passive: true });
+      })();
+    </script>
+  {% endif %}
 
   {# Shared values (avatar + stats) #}
   {% if current_user.is_authenticated %}
@@ -175,14 +623,14 @@
   {% endif %}
 
   {% if current_user.is_authenticated %}
-    <!-- Mobile hamburger -->
+    <!-- Hamburger INSIDE fixed nav bar (positioned by CSS) -->
     <button class="sd-mobile-toggle" aria-label="Open navigation" aria-controls="sdDrawer" aria-expanded="false">
       <span class="sd-burger"></span>
       <span class="sd-burger"></span>
       <span class="sd-burger"></span>
     </button>
 
-    <!-- Global mobile stats line (ALL pages, logged-in) -->
+    <!-- Old floating stats kept for desktop only; hidden on mobile -->
     <div class="mobile-greet">
       <span class="nav-stats">
         <span class="stat"><span class="icon">🏆</span><span class="val">{{ rep }}</span></span>
@@ -205,26 +653,28 @@
         </div>
         <button class="sd-drawer__close" aria-label="Close navigation">×</button>
       </div>
-     <div class="sd-drawer__nav">
+      <div class="sd-drawer__nav">
         <a href="{{ url_for('views.home') }}" class="sd-drawer__link {% if ep == 'views.home' %}active{% endif %}">Dashboard</a>
         <a href="{{ url_for('views.account') }}" class="sd-drawer__link {% if ep == 'views.account' %}active{% endif %}">My Account</a>
+
+        <div class="sd-drawer__spacer"></div>
+
         <a href="{{ url_for('views.injuries') }}" class="sd-drawer__link {% if ep == 'views.injuries' %}active{% endif %}">Injuries</a>
         <a href="{{ url_for('views.transactions') }}" class="sd-drawer__link {% if ep == 'views.transactions' %}active{% endif %}">Transactions</a>
         <a href="{{ url_for('views.weather_insights') }}" class="sd-drawer__link {% if ep == 'views.weather_insights' %}active{% endif %}">Weather</a>
+        <a href="{{ url_for('dv.projections') }}" class="sd-drawer__link {% if ep == 'dv.projections' %}active{% endif %}">Projections</a>
+        <a href="{{ url_for('dv.age_curve') }}" class="sd-drawer__link {% if ep == 'dv.age_curve' %}active{% endif %}">Age Curve</a>
+        <a href="{{ url_for('dv.schedules') }}" class="sd-drawer__link {% if ep == 'dv.schedules' %}active{% endif %}">Strength of Schedule</a>
+        <a href="{{ url_for('dv.rookies') }}" class="sd-drawer__link {% if ep == 'dv.rookies' %}active{% endif %}">Rookies</a>
+        <a href="{{ url_for('dv.spike_week') }}" class="sd-drawer__link {% if ep == 'dv.spike_week' %}active{% endif %}">Spike Week</a>
 
-        <div class="sd-drawer__section">DraftVader</div>
-        <a href="{{ url_for('dv.projections') }}" class="sd-drawer__link {% if ep == 'dv.projections' %}active{% endif %}">DV: Projections</a>
-        <a href="{{ url_for('dv.age_curve') }}" class="sd-drawer__link {% if ep == 'dv.age_curve' %}active{% endif %}">DV: Age Curve</a>
-        <a href="{{ url_for('dv.schedules') }}" class="sd-drawer__link {% if ep == 'dv.schedules' %}active{% endif %}">DV: SoS</a>
-        <a href="{{ url_for('dv.rookies') }}" class="sd-drawer__link {% if ep == 'dv.rookies' %}active{% endif %}">DV: Rookies</a>
-        <a href="{{ url_for('dv.spike_week') }}" class="sd-drawer__link {% if ep == 'dv.spike_week' %}active{% endif %}">DV: Spike Week</a>
-
+        <div class="sd-drawer__spacer-large"></div>
         <a href="{{ url_for('auth.logout') }}" class="sd-drawer__link">Logout</a>
       </div>
     </nav>
   {% endif %}
 
-  <!-- Site Navigation (desktop) -->
+  <!-- Site Navigation (desktop + mobile) -->
   <nav class="site-nav">
     <div class="nav-inner">
       <a class="brand" href="{{ url_for('views.landing') }}" aria-label="SIMDaddy home">
@@ -236,6 +686,17 @@
           decoding="async"
         />
       </a>
+
+      {# MOBILE (logged-in): stats inside the nav under the logo #}
+      {% if current_user.is_authenticated and not auth_only %}
+        <div class="mobile-stats-inline">
+          <span class="nav-stats">
+            <span class="stat"><span class="icon">🏆</span><span class="val">{{ rep }}</span></span>
+            <span class="sep">·</span>
+            <span class="stat"><span class="icon">💸</span><span class="val">{{ coins }}</span></span>
+          </span>
+        </div>
+      {% endif %}
 
       {% if current_user.is_authenticated %}
         <a class="nav-greeting desktop-only" href="{{ url_for('views.account') }}" title="My Account">
@@ -251,27 +712,28 @@
 
       <div class="nav-links">
         {% if auth_only %}
-          <a class="btn-nav {% if ep == 'auth.login' %}active{% endif %}"
-             href="{{ url_for('auth.login') }}">Log In</a>
-          <a class="btn-nav {% if ep == 'auth.signup' %}active{% endif %}"
-             href="{{ url_for('auth.signup') }}">Get Started</a>
+          <a class="btn-nav {% if ep == 'auth.login' %}active{% endif %}" href="{{ url_for('auth.login') }}">Log In</a>
+          <a class="btn-nav {% if ep == 'auth.signup' %}active{% endif %}" href="{{ url_for('auth.signup') }}">Get Started</a>
         {% else %}
           {% if current_user.is_authenticated %}
-            <a class="btn-nav {% if is_dash or ep == 'views.week_view' %}active{% endif %}"
-               href="{{ url_for('views.home') }}">🏠 Dashboard</a>
-            <a class="btn-nav {% if ep == 'views.account' %}active{% endif %}"
-               href="{{ url_for('views.account') }}">👤 My Account</a>
+            <a class="btn-nav {% if is_dash or ep == 'views.week_view' %}active{% endif %}" href="{{ url_for('views.home') }}">🏠 Dashboard</a>
+            <a class="btn-nav {% if ep == 'views.account' %}active{% endif %}" href="{{ url_for('views.account') }}">👤 My Account</a>
             <a class="btn-nav outline" href="{{ url_for('auth.logout') }}">↩ Logout</a>
           {% else %}
-            <a class="btn-nav {% if ep == 'auth.login' %}active{% endif %}"
-               href="{{ url_for('auth.login') }}">Log In</a>
-            <a class="btn-nav {% if ep == 'auth.signup' %}active{% endif %}"
-               href="{{ url_for('auth.signup') }}">Get Started</a>
+            <a class="btn-nav {% if ep == 'auth.login' %}active{% endif %}" href="{{ url_for('auth.login') }}">Log In</a>
+            <a class="btn-nav {% if ep == 'auth.signup' %}active{% endif %}" href="{{ url_for('auth.signup') }}">Get Started</a>
           {% endif %}
         {% endif %}
       </div>
     </div>
   </nav>
+
+  {# MOBILE (logged-in): Welcome line OUTSIDE fixed nav bar, centered #}
+  {% if current_user.is_authenticated and is_dash and not auth_only %}
+    <div class="mobile-welcome-outside">
+      Welcome back, {{ first_name }}!
+    </div>
+  {% endif %}
 
   {% if show_quickbar %}
     <div class="quickbar">
@@ -280,23 +742,13 @@
           <a href="{{ url_for('views.injuries') }}" class="btn-nav {% if ep == 'views.injuries' %}active{% endif %}">Injuries</a>
           <a href="{{ url_for('views.weather_insights') }}" class="btn-nav {% if ep == 'views.weather_insights' %}active{% endif %}">Weather</a>
           <a href="{{ url_for('views.transactions') }}" class="btn-nav {% if ep == 'views.transactions' %}active{% endif %}">Transactions</a>
-
-          <span class="sep">·</span>
-
-          <a href="{{ url_for('dv.projections') }}" class="btn-nav {% if ep == 'dv.projections' %}active{% endif %}">DV: Projections</a>
-          <a href="{{ url_for('dv.age_curve') }}" class="btn-nav {% if ep == 'dv.age_curve' %}active{% endif %}">DV: Age Curve</a>
-          <a href="{{ url_for('dv.schedules') }}" class="btn-nav {% if ep == 'dv.schedules' %}active{% endif %}">DV: SoS</a>
-          <a href="{{ url_for('dv.rookies') }}" class="btn-nav {% if ep == 'dv.rookies' %}active{% endif %}">DV: Rookies</a>
-          <a href="{{ url_for('dv.spike_week') }}" class="btn-nav {% if ep == 'dv.spike_week' %}active{% endif %}">DV: Spike Week</a>
+          <a href="{{ url_for('dv.projections') }}" class="btn-nav {% if ep == 'dv.projections' %}active{% endif %}">Projections</a>
+          <a href="{{ url_for('dv.age_curve') }}" class="btn-nav {% if ep == 'dv.age_curve' %}active{% endif %}">Age Curve</a>
+          <a href="{{ url_for('dv.schedules') }}" class="btn-nav {% if ep == 'dv.schedules' %}active{% endif %}">Strength of Schedule</a>
+          <a href="{{ url_for('dv.rookies') }}" class="btn-nav {% if ep == 'dv.rookies' %}active{% endif %}">Rookies</a>
+          <a href="{{ url_for('dv.spike_week') }}" class="btn-nav {% if ep == 'dv.spike_week' %}active{% endif %}">Spike Week</a>
         </div>
       </div>
-    </div>
-  {% endif %}
-
-  {# Mobile-only welcome on HOME, just below the header #}
-  {% if current_user.is_authenticated and is_dash %}
-    <div class="mobile-welcome">
-      Welcome back, {{ first_name }}!
     </div>
   {% endif %}
 
@@ -314,7 +766,126 @@
     {% block content %}{% endblock %}
   </div>
 
+  <script>
+    // Ensure CSS vars reflect actual heights on first paint + resize
+    (function () {
+      function setVars() {
+        var bar = document.getElementById('consent-bar');
+        var ch = (bar && bar.offsetHeight) ? bar.offsetHeight : 0;
+        document.documentElement.style.setProperty('--consentH', ch + 'px');
+        var nav = document.querySelector('.site-nav');
+        var nh = nav ? nav.offsetHeight : 0;
+        document.documentElement.style.setProperty('--navH', nh + 'px');
+      }
+      window.addEventListener('load', setVars);
+      window.addEventListener('resize', setVars);
+    })();
+  </script>
+
   <script src="{{ url_for('static', filename='js/main.js') }}"></script>
   {% block scripts %}{% endblock %}
+
+  <!-- Keep the hamburger inside nav so it scrolls with logo/stats -->
+  <script>
+    (function(){
+      var btn = document.querySelector('.sd-mobile-toggle');
+      var navInner = document.querySelector('.site-nav .nav-inner');
+      if (btn && navInner && !navInner.contains(btn)) {
+        navInner.appendChild(btn);
+      }
+    })();
+  </script>
+
+  <!-- NEW: Reliable drawer toggle (direct binding after DOM is ready) -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function(){
+      var btn     = document.querySelector('.sd-mobile-toggle');
+      var drawer  = document.getElementById('sdDrawer');
+      var overlay = document.getElementById('sdDrawerOverlay');
+
+      if (!btn || !drawer) return;
+
+      if (!btn.hasAttribute('type')) btn.setAttribute('type','button');
+
+      function openDrawer(){
+        drawer.classList.add('open');
+        drawer.setAttribute('aria-hidden','false');
+        if (overlay){ overlay.hidden = false; overlay.classList.add('show'); }
+        document.body.classList.add('drawer-open');
+        btn.setAttribute('aria-expanded','true');
+      }
+      function closeDrawer(){
+        drawer.classList.remove('open');
+        drawer.setAttribute('aria-hidden','true');
+        if (overlay){ overlay.classList.remove('show'); overlay.hidden = true; }
+        document.body.classList.remove('drawer-open');
+        btn.setAttribute('aria-expanded','false');
+      }
+      function toggleDrawer(e){
+        if (e){ e.preventDefault(); e.stopPropagation(); }
+        drawer.classList.contains('open') ? closeDrawer() : openDrawer();
+      }
+
+      // direct click binding (no delegation)
+      btn.addEventListener('click', toggleDrawer);
+
+      // close via overlay / X button
+      var closeBtn = document.querySelector('.sd-drawer__close');
+      if (overlay) overlay.addEventListener('click', closeDrawer, {passive:true});
+      if (closeBtn) closeBtn.addEventListener('click', closeDrawer, {passive:true});
+    });
+  </script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+  var btn     = document.querySelector('.sd-mobile-toggle');
+  var drawer  = document.getElementById('sdDrawer');
+  var overlay = document.getElementById('sdDrawerOverlay');
+
+  if (!btn || !drawer) return;
+
+  // Ensure button behaves like a plain button
+  if (!btn.hasAttribute('type')) btn.setAttribute('type','button');
+
+  // Make sure overlay exists
+  if (!overlay){
+    overlay = document.createElement('div');
+    overlay.id = 'sdDrawerOverlay';
+    overlay.className = 'sd-drawer__overlay';
+    overlay.hidden = true;
+    document.body.appendChild(overlay);
+  }
+
+  function openDrawer(){
+    drawer.classList.add('open');
+    drawer.setAttribute('aria-hidden','false');
+    overlay.hidden = false;
+    overlay.classList.add('show');
+    document.body.classList.add('drawer-open');
+    btn.setAttribute('aria-expanded','true');
+  }
+  function closeDrawer(){
+    drawer.classList.remove('open');
+    drawer.setAttribute('aria-hidden','true');
+    overlay.classList.remove('show');
+    overlay.hidden = true;
+    document.body.classList.remove('drawer-open');
+    btn.setAttribute('aria-expanded','false');
+  }
+  function toggleDrawer(e){
+    if (e){ e.preventDefault(); e.stopPropagation(); }
+    if (drawer.classList.contains('open')) closeDrawer(); else openDrawer();
+  }
+
+  // Bind directly to the button (most reliable)
+  btn.addEventListener('click', toggleDrawer);
+
+  // Close via overlay and the X button
+  overlay.addEventListener('click', closeDrawer, {passive:true});
+  var closeBtn = document.querySelector('.sd-drawer__close');
+  if (closeBtn) closeBtn.addEventListener('click', closeDrawer, {passive:true});
+});
+</script>
+
 </body>
 </html>

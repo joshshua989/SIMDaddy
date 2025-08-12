@@ -3,8 +3,7 @@
 
 from flask import Blueprint
 
-# Blueprint configured to use the unified SIMDaddy template/static roots
-# dv package is SIMDaddy/app/dv; go up to SIMDaddy/ then into templates/static
+# DV blueprint uses the unified SIMDaddy template/static roots
 dv_bp = Blueprint(
     "dv",
     __name__,
@@ -12,5 +11,4 @@ dv_bp = Blueprint(
     static_folder="../../static"
 )
 
-from . import routes  # noqa: E402,F401
-a
+from . import routes  # keep at bottom
