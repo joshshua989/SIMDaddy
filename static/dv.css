@@ -1,0 +1,11 @@
+/* Minimal dark theme table styling for DV pages */
+.dv-container { padding: 24px; color: #e6e6e6; background: #0f1115; min-height: 100vh; }
+.dv-title { font-size: 1.6rem; margin: 0 0 16px; color: #80d4ff; }
+.dv-subtle { color: #9aa4af; }
+table.dv { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
+table.dv th, table.dv td { border-bottom: 1px solid #232833; padding: 10px 12px; text-align: left; }
+table.dv tr:hover { background: #141925; }
+.chip { display: inline-block; padding: 2px 8px; border-radius: 999px; background: #1a2130; border: 1px solid #263043; }
+.flex { display: flex; gap: 12px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+a.dv-link { color: #8ecaff; text-decoration: none; }
+a.dv-link:hover { text-decoration: underline; }
