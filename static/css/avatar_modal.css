@@ -1,0 +1,95 @@
+/* ===========================
+   Avatar Picker Modal + DK Import
+   =========================== */
+
+/* Edit link */
+.edit-avatar-link{
+  background: none; border: none; padding: 2px 6px;
+  color: #0098d6; font-weight: 600; cursor: pointer; text-decoration: underline;
+  font-size: .95rem;
+}
+
+/* Modal shell (generic) */
+.sd-modal[hidden]{ display:none; }
+.sd-modal{
+  position: fixed; inset:0; z-index: 5000;
+  display:flex; align-items:center; justify-content:center;
+  background: rgba(0,0,0,0.65);
+  animation: sd-fade-in .15s ease-in;
+}
+@keyframes sd-fade-in{ from{opacity:0} to{opacity:1} }
+
+.sd-modal__dialog{
+  width: min(720px, 92vw);
+  background: #141414; border: 1px solid #2a2a2a; border-radius: 14px;
+  box-shadow: 0 12px 32px rgba(0,0,0,.4);
+}
+.sd-modal__header{
+  display:flex; align-items:center; justify-content:space-between;
+  padding: 12px 16px; border-bottom: 1px solid #2a2a2a;
+}
+.sd-modal__header h3{ margin:0; color:#eaeaea; font-size:1rem; }
+.sd-modal__close{
+  background:none; border:none; color:#aaa; font-size:1.6rem; cursor:pointer;
+}
+.sd-modal__close:hover{ color:#fff; }
+.sd-modal__body{ padding: 14px 16px; }
+
+/* Preset grid */
+.avatar-grid{
+  display:grid; grid-template-columns: repeat(4, minmax(88px, 1fr));
+  gap: 12px;
+}
+@media (max-width: 480px){
+  .avatar-grid{ grid-template-columns: repeat(3, minmax(88px, 1fr)); }
+}
+.avatar-option{
+  display:flex; flex-direction:column; align-items:center; gap:8px;
+  padding: 10px; border:1px solid #2a2a2a; border-radius: 12px;
+  background: #0f0f0f;
+  transition: border-color .15s ease, transform .1s ease;
+}
+.avatar-option:hover{ border-color:#3a3a3a; transform: translateY(-1px); }
+.avatar-option img{
+  width: 76px; height: 76px; border-radius: 50%; object-fit: cover; background:#111;
+  display:block;
+}
+.avatar-option input{ display:none; }
+.avatar-option.selected{
+  border-color: #0098d6;
+  box-shadow: 0 0 0 2px rgba(0,152,214,0.25);
+}
+
+/* Upload + buttons */
+.avatar-upload{ margin-top: 14px; }
+.upload-label{ display:block; margin-bottom:6px; color:#eaeaea; font-weight:600; }
+.modal-actions{ margin-top: 16px; display:flex; gap:10px; justify-content:flex-end; }
+.btn{ background:#222; color:#eaeaea; border:1px solid #2a2a2a; border-radius:10px; padding:8px 12px; cursor:pointer; text-decoration:none; }
+.btn:hover{ border-color:#3a3a3a; }
+.btn-primary{ background:#0098d6; border-color:#0098d6; color:#fff; }
+.btn-primary:hover{ filter: brightness(1.05); }
+
+/* ===========================
+   DK CSV Import box
+   =========================== */
+.dk-import-box{
+  background:#0f0f0f;
+  border:1px solid #1f2937;
+  border-radius:12px;
+  padding:14px;
+  margin-bottom:16px;
+}
+.dk-import-box h3{
+  margin:0 0 10px;
+  color:#00bfff;
+  font-size:1.05rem;
+}
+.dk-import-box .dk-row{
+  display:flex; gap:12px; align-items:center; flex-wrap:wrap;
+}
+.dk-import-box input[type="file"]{
+  background:#111827; color:#e5e7eb; border:1px solid #374151; border-radius:8px; padding:8px;
+}
+.dk-import-box .help{
+  margin-top:6px; font-size:0.9rem; color:#94a3b8;
+}

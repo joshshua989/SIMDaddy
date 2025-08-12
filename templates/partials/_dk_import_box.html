@@ -1,0 +1,15 @@
+<!-- DraftKings CSV Import (top of My Account) -->
+<div class="dk-import-box">
+  <h3>Import DraftKings CSV</h3>
+  <form action="{{ url_for('views.dk_import') }}" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="dk-row">
+      <input type="file" name="file" accept=".csv" required>
+      <button type="submit" class="btn btn-primary">Import .csv File</button>
+      <a class="btn" href="{{ url_for('views.dk_summary') }}">View Report</a>
+    </div>
+    <div class="help">
+      Export from DraftKings: <em>My Contests → History → Export CSV</em>. Max 5MB; duplicates are skipped automatically.
+    </div>
+  </form>
+</div>

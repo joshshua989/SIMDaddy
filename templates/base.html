@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
   <link rel="stylesheet" href="{{ url_for('static', filename='css/nav_overrides.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/avatar_modal.css') }}">
   {% block head %}{% endblock %}
 
   <!-- Inline MOBILE drawer + mobile stats/welcome styles (layout-only) -->
@@ -553,12 +554,44 @@
 }
 </style>
 
+  <!-- === ADDED: helper visibility + modal/editor styles === -->
+  <style>
+    /* If not already defined elsewhere */
+    .mobile-only { display: none; }
+    .desktop-only { display: inline-block; }
+    @media (max-width: 768px) {
+      .mobile-only { display: inline-block; }
+      .desktop-only { display: none; }
+    }
+
+    .edit-avatar-link{
+      background: none; border: none; padding: 2px 6px;
+      color: #0098d6; font-weight: 600; cursor: pointer; text-decoration: underline;
+      font-size: .95rem;
+    }
+
+    .sd-modal[hidden]{ display:none; }
+    .sd-modal{ position: fixed; inset:0; background: rgba(0,0,0,0.6); display:flex; align-items:center; justify-content:center; z-index:5000; }
+    .sd-modal__dialog{ background:#161616; border:1px solid #2a2a2a; border-radius:14px; width: min(700px, 92vw); }
+    .sd-modal__header{ display:flex; align-items:center; justify-content:space-between; padding:12px 16px; border-bottom:1px solid #2a2a2a; }
+    .sd-modal__header h3{ margin:0; color:#eaeaea; font-size:1rem; }
+    .sd-modal__close{ background:none; border:none; color:#aaa; font-size:1.6rem; cursor:pointer; }
+    .sd-modal__body{ padding:14px 16px; }
+    .avatar-grid{ display:grid; grid-template-columns: repeat(4, minmax(80px, 1fr)); gap:12px; }
+    .avatar-option{ display:flex; flex-direction:column; align-items:center; gap:6px; border:1px solid #2a2a2a; border-radius:12px; padding:10px; }
+    .avatar-option img{ width:72px; height:72px; border-radius:50%; object-fit:cover; background:#111; }
+    .avatar-option input{ margin-top:6px; }
+    .avatar-upload{ margin-top:12px; }
+    .upload-label{ display:block; margin-bottom:6px; color:#eaeaea; }
+    .modal-actions{ display:flex; gap:10px; justify-content:flex-end; margin-top:16px; }
+  </style>
 </head>
 
 {% set ep = request.endpoint or '' %}
 {% set auth_only = ep in ['views.landing','auth.login','auth.signup'] %}
 {% set is_dash = (ep == 'views.home') %}
 {% set show_quickbar = (current_user.is_authenticated and not auth_only and ep != 'views.account') %}
+{% include "partials/_avatar_modal.html" %}
 
 <body class="theme-dark {{ page_class|default('') }} {% if show_quickbar %}has-quickbar{% endif %}{% if current_user.is_authenticated %} is-auth{% endif %}{% if is_dash %} is-dash{% endif %}">
 
@@ -678,14 +711,40 @@
   <nav class="site-nav">
     <div class="nav-inner">
       <a class="brand" href="{{ url_for('views.landing') }}" aria-label="SIMDaddy home">
-        <img
-          src="{{ url_for('static', filename='images/image-7.png') }}"
-          alt="SIMDaddy"
-          class="brand-logo"
-          loading="eager"
-          decoding="async"
-        />
+        {% if current_user.is_authenticated %}
+          <!-- On mobile, replace logo with avatar; on desktop keep logo -->
+          <img
+            src="{{ avatar }}?v=2"
+            alt="Profile"
+            class="brand-logo brand-avatar-mobile mobile-only"
+            loading="eager"
+            decoding="async"
+            onerror="this.onerror=null;this.src='{{ fallback_avatar_data }}'"
+          />
+          <img
+            src="{{ url_for('static', filename='images/image-7.png') }}"
+            alt="SIMDaddy"
+            class="brand-logo desktop-only"
+            loading="eager"
+            decoding="async"
+          />
+        {% else %}
+          <img
+            src="{{ url_for('static', filename='images/image-7.png') }}"
+            alt="SIMDaddy"
+            class="brand-logo"
+            loading="eager"
+            decoding="async"
+          />
+        {% endif %}
       </a>
+
+      {# MOBILE (logged-in): account-only "edit profile pic" link between logo and trophy line #}
+      {% if current_user.is_authenticated and not auth_only and ep == 'views.account' %}
+        <button id="editAvatarBtnMobile" class="edit-avatar-link mobile-only" type="button" aria-haspopup="dialog" aria-controls="avatarModal">
+          edit profile pic
+        </button>
+      {% endif %}
 
       {# MOBILE (logged-in): stats inside the nav under the logo #}
       {% if current_user.is_authenticated and not auth_only %}
@@ -708,6 +767,15 @@
             <span class="stat"><span class="icon">💸</span><span class="val">{{ coins }}</span></span>
           </span>
         </a>
+
+        {# DESKTOP (account only): "edit profile pic" under the avatar/trophy line #}
+        {% if ep == 'views.account' %}
+          <div class="desktop-only" style="width:100%; display:flex; justify-content:center; margin-top:4px;">
+            <button id="editAvatarBtnDesktop" class="edit-avatar-link" type="button" aria-haspopup="dialog" aria-controls="avatarModal">
+              edit profile pic
+            </button>
+          </div>
+        {% endif %}
       {% endif %}
 
       <div class="nav-links">
@@ -764,6 +832,37 @@
     {% endwith %}
 
     {% block content %}{% endblock %}
+  </div>
+
+  <!-- === ADDED: Avatar Picker Modal (presets + upload) === -->
+  <div id="avatarModal" class="sd-modal" role="dialog" aria-modal="true" aria-labelledby="avatarModalTitle" hidden>
+    <div class="sd-modal__dialog">
+      <div class="sd-modal__header">
+        <h3 id="avatarModalTitle">Choose your profile picture</h3>
+        <button type="button" class="sd-modal__close" data-close>&times;</button>
+      </div>
+      <div class="sd-modal__body">
+        <form id="avatarForm" action="{{ url_for('views.update_avatar') }}" method="post" enctype="multipart/form-data">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+          <div class="avatar-grid">
+            {% for fn in ['preset_1.svg','preset_2.svg','preset_3.svg','preset_4.svg'] %}
+              <label class="avatar-option">
+                <input type="radio" name="preset" value="{{ fn }}" />
+                <img src="{{ url_for('static', filename='images/avatars/' ~ fn) }}" alt="Preset {{ loop.index }}"/>
+              </label>
+            {% endfor %}
+          </div>
+          <div class="avatar-upload">
+            <label for="avatarFile" class="upload-label">Or upload a picture</label>
+            <input id="avatarFile" name="file" type="file" accept=".png,.jpg,.jpeg,.webp,.gif,.svg" />
+          </div>
+          <div class="modal-actions">
+            <button type="submit" class="btn btn-primary">Save</button>
+            <button type="button" class="btn" data-close>Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
 
   <script>
@@ -884,8 +983,43 @@ document.addEventListener('DOMContentLoaded', function(){
   overlay.addEventListener('click', closeDrawer, {passive:true});
   var closeBtn = document.querySelector('.sd-drawer__close');
   if (closeBtn) closeBtn.addEventListener('click', closeDrawer, {passive:true});
+
+  // === ADDED: open/close avatar modal ===
+  function qs(sel){ return document.querySelector(sel); }
+  var modal = qs('#avatarModal');
+  function openM(){ if(modal){ modal.hidden=false; } }
+  function closeM(){ if(modal){ modal.hidden=true; } }
+
+  document.addEventListener('click', function(e){
+    if(e.target && (e.target.id === 'editAvatarBtnMobile' || e.target.id === 'editAvatarBtnDesktop')){
+      openM();
+    }
+    if(e.target && e.target.hasAttribute('data-close')){
+      closeM();
+    }
+    if(e.target === modal){
+      closeM();
+    }
+  });
+
+  // Clear other radio when file chosen
+  var file = qs('#avatarFile');
+  if(file){
+    file.addEventListener('change', function(){
+      document.querySelectorAll('input[name=preset]').forEach(r=> r.checked=false);
+    });
+  }
+  // Clear file if preset picked
+  document.addEventListener('change', function(e){
+    if(e.target && e.target.name === 'preset'){
+      var f = qs('#avatarFile'); if(f){ f.value = ''; }
+    }
+  });
 });
 </script>
+
+
+<script src="{{ url_for('static', filename='js/avatar_modal.js') }}"></script>
 
 </body>
 </html>

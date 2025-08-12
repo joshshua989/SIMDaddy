@@ -2,11 +2,24 @@
 {% block title %}My Account{% endblock %}
 
 {% block content %}
+
+<h2 class="page-title">My Account</h2>
 <div class="account-wrap">
-  <h2 class="page-title">My Account</h2>
 
   <!-- Summary cards -->
   <section class="account-stat-cards">
+
+    <!-- Reputation -->
+    <div class="card stat-card">
+      <div class="stat-body">
+        <div class="stat-icon">🏆</div>
+        <div class="stat-text">
+          <div class="stat-title">Reputation</div>
+          <div class="stat-value">{{ wallet.rep_total }}</div>
+        </div>
+      </div>
+    </div>
+
     <!-- Profile -->
     <div class="card stat-card">
       <div class="stat-body">
@@ -25,23 +38,14 @@
       <div class="stat-body">
         <div class="stat-icon">💸</div>
         <div class="stat-text">
-          <div class="stat-title">Coins</div>
+          <div class="stat-title">SIMDaddy Dollars</div>
           <div class="stat-value">{{ wallet.coins_balance }}</div>
         </div>
       </div>
     </div>
-
-    <!-- Reputation -->
-    <div class="card stat-card">
-      <div class="stat-body">
-        <div class="stat-icon">🏆</div>
-        <div class="stat-text">
-          <div class="stat-title">Reputation</div>
-          <div class="stat-value">{{ wallet.rep_total }}</div>
-        </div>
-      </div>
-    </div>
   </section>
+
+{% include "partials/_dk_import_box.html" %}
 
   <!-- Milestones -->
   <section class="card">

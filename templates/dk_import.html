@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+{% set ep = request.endpoint or '' %}
+{% block title %}Import DraftKings CSV{% endblock %}
+
+{% block content %}
+<div class="page dk-import">
+  <h1 style="margin: 0 0 12px;">Import DraftKings CSV</h1>
+  <p style="color:#cbd5e1; margin:0 0 18px;">
+    Upload your DraftKings <strong>Contest History/Results</strong> CSV. We’ll parse it, soft-dedupe, and add it to your account.
+  </p>
+
+  <!-- Upload & (optional) wipe-first -->
+  <form action="{{ url_for('views.dk_import', q=q, page=page) }}" method="post" enctype="multipart/form-data"
+        style="padding:16px; background:#0f0f0f; border:1px solid #1f2937; border-radius:12px;">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div style="display:flex; gap:14px; align-items:center; flex-wrap:wrap;">
+      <input type="file" name="file" accept=".csv" required
+             style="background:#111827; color:#e5e7eb; border:1px solid #374151; border-radius:8px; padding:8px;">
+      <button type="submit" class="btn btn-primary">Import .csv File</button>
+    </div>
+    <div style="margin-top:8px; font-size:0.9rem; color:#94a3b8;">
+      Max 5MB. If you edited it in Excel, re-save as CSV (UTF-8).
+    </div>
+  </form>
+
+  <!-- Hard reset (separate POST form; no file input) -->
+  <div style="margin-top:10px;">
+    <form action="{{ url_for('views.dk_reset_self') }}" method="post" onsubmit="return confirm('This will delete ALL DraftKings rows and uploaded raw files for your account. Continue?');">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <button type="submit" class="btn" style="background:#7f1d1d; border-color:#991b1b; color:#fff;">Reset My Imports</button>
+    </form>
+  </div>
+
+  {% if lifetime %}
+    <div style="display:flex; gap:12px; flex-wrap:wrap; margin:16px 0;">
+      <div class="kpi"><div class="kpi-label">Lifetime Entries</div><div class="kpi-val">{{ lifetime.count }}</div></div>
+      <div class="kpi"><div class="kpi-label">Lifetime Buy-ins</div><div class="kpi-val">${{ "%.2f"|format(lifetime.buyins) }}</div></div>
+      <div class="kpi"><div class="kpi-label">Lifetime Payouts</div><div class="kpi-val">${{ "%.2f"|format(lifetime.payouts) }}</div></div>
+      <div class="kpi">
+        <div class="kpi-label">Lifetime ROI</div>
+        {% set roi = (lifetime.payouts - lifetime.buyins) / lifetime.buyins * 100 if lifetime.buyins > 0 else None %}
+        <div class="kpi-val">{% if roi is not none %}{{ "%.1f"|format(roi) }}%{% else %}—{% endif %}</div>
+      </div>
+    </div>
+  {% endif %}
+
+  {% if preview is not none and not preview.empty %}
+    {% if import_stats %}
+      <div style="margin-top:12px; color:#a7f3d0;">
+        Found {{ import_stats.total }} rows. Duplicates will be updated or skipped automatically.
+      </div>
+    {% endif %}
+  {% endif %}
+
+  {% if summary %}
+    <div style="margin-top:20px; padding:16px; border:1px solid #1f2937; border-radius:8px; background:#0b1220;">
+      <h2 style="margin:0 0 10px;">Import complete</h2>
+      <div style="color:#e2e8f0;">
+        {% if request.form.get('wipe_first') == '1' %}<strong>Replaced existing.</strong> {% endif %}
+        Imported <strong>{{ summary.imported }}</strong> new.
+        Updated <strong>{{ summary.updated }}</strong>.
+        Skipped <strong>{{ summary.skipped }}</strong>.
+      </div>
+      <div style="margin-top:10px; color:#cbd5e1;">
+        This upload — Buy-ins: ${{ "%.2f"|format(summary.buyins) }} · Payouts: ${{ "%.2f"|format(summary.payouts) }}
+      </div>
+    </div>
+  {% endif %}
+
+  <!-- Search + table -->
+  <div style="display:flex; align-items:center; justify-content:space-between; margin-top:22px;">
+    <h2 style="margin:0;">Your Entries</h2>
+    <form method="get" action="{{ url_for('views.dk_import') }}" style="display:flex; gap:8px; align-items:center;">
+      <input type="text" name="q" value="{{ q or '' }}" placeholder="Search contest or ID"
+             style="background:#111827; color:#e5e7eb; border:1px solid #374151; border-radius:8px; padding:8px; min-width:240px;">
+      <input type="hidden" name="page" value="1">
+      <button class="btn" type="submit">Search</button>
+      {% if q %}
+        <a class="btn" href="{{ url_for('views.dk_import') }}">Clear</a>
+      {% endif %}
+    </form>
+  </div>
+
+  <div style="overflow:auto; border:1px solid #1f2937; border-radius:8px; margin-top:10px;">
+    <table class="sd-table">
+      <thead>
+        <tr>
+          <th style="width:120px;">Date</th>
+          <th>Contest</th>
+          <th style="width:110px; text-align:right;">Buy-in</th>
+          <th style="width:110px; text-align:right;">Payout</th>
+          <th style="width:100px; text-align:right;">Profit</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in entries %}
+          {% set profit = (r.payout or 0) - (r.buy_in or 0) %}
+          <tr>
+            <td>{{ r.contest_date.strftime("%Y-%m-%d") if r.contest_date else "—" }}</td>
+            <td title="{{ r.entry_id }}">{{ r.contest_name or r.entry_id }}</td>
+            <td style="text-align:right;">${{ "%.2f"|format(r.buy_in or 0) }}</td>
+            <td style="text-align:right;">${{ "%.2f"|format(r.payout or 0) }}</td>
+            <td style="text-align:right; {{ 'color:#22c55e' if profit>0 else ('color:#ef4444' if profit<0 else '') }}">
+              {{ "+" if profit>0 else "" }}${{ "%.2f"|format(profit) }}
+            </td>
+          </tr>
+        {% endfor %}
+        {% if entries|length == 0 %}
+          <tr><td colspan="5" style="text-align:center; color:#94a3b8; padding:12px;">No entries yet.</td></tr>
+        {% endif %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination -->
+  <div class="pager">
+    {% set first_url = url_for('views.dk_import', q=q, page=1) %}
+    {% set prev_url = url_for('views.dk_import', q=q, page=(page-1 if page>1 else 1)) %}
+    {% set next_url = url_for('views.dk_import', q=q, page=(page+1 if page<total_pages else total_pages)) %}
+    {% set last_url = url_for('views.dk_import', q=q, page=total_pages) %}
+
+    <a class="btn" href="{{ first_url }}" aria-label="First page">&laquo; First</a>
+    <a class="btn" href="{{ prev_url }}" aria-label="Previous page">&lsaquo; Prev</a>
+    <span class="pager-info">
+      Page {{ page }} of {{ total_pages }}
+      <span style="color:#94a3b8;">·</span>
+      Showing {{ showing_start }}–{{ showing_end }} of {{ total }}
+    </span>
+    <a class="btn" href="{{ next_url }}" aria-label="Next page">Next &rsaquo;</a>
+    <a class="btn" href="{{ last_url }}" aria-label="Last page">Last &raquo;</a>
+  </div>
+
+</div>
+
+<style>
+.btn{ background:#222; color:#eaeaea; border:1px solid #2a2a2a; border-radius:10px; padding:8px 12px; cursor:pointer; text-decoration:none; }
+.btn:hover{ border-color:#3a3a3a; }
+.btn-primary{ background:#0098d6; border-color:#0098d6; color:#fff; }
+.btn-primary:hover{ filter: brightness(1.05); }
+.kpi{ flex:1; min-width:220px; background:#0f0f0f; border:1px solid #1f2937; border-radius:12px; padding:14px; }
+.kpi-label{ color:#94a3b8; font-size:.85rem; }
+.kpi-val{ font-size:1.4rem; font-weight:700; color:#e2e8f0; }
+.sd-table{ width:100%; border-collapse:collapse; font-size:0.95rem; }
+.sd-table th{ text-align:left; padding:10px; background:#0b1220; border-bottom:1px solid #1f2937; color:#e2e8f0; position:sticky; top:0; }
+.sd-table td{ padding:10px; border-bottom:1px solid #111827; color:#cbd5e1; }
+.pager{ display:flex; align-items:center; gap:8px; margin:12px 0 30px; flex-wrap:wrap; }
+.pager-info{ color:#cbd5e1; padding:0 6px; }
+</style>
+{% endblock %}

@@ -135,8 +135,14 @@ class Config:
 # Uploads
 UPLOAD_FOLDER = os.path.join(BASE_DIR, "static", "avatars")
 ALLOWED_IMAGE_EXTENSIONS = {"png","jpg","jpeg","webp"}
-MAX_CONTENT_LENGTH = 2 * 1024 * 1024  # 2MB
+MAX_CONTENT_LENGTH = 2 * 1024 * 1024  # 2MB (Flask request cap)
 
+# ---- Avatar uploads (used by /account/avatar) ----
+# Relative to the app root; files are served as /static/uploads/avatars/...
+AVATAR_UPLOAD_DIR = Path("static/uploads/avatars")
+ALLOWED_AVATAR_EXTS = {'.png', '.jpg', '.jpeg', '.webp', '.gif', '.svg'}
+# Per-file cap enforced in the route; override via env AVATAR_MAX_MB if desired.
+MAX_AVATAR_SIZE_MB = int(os.getenv("AVATAR_MAX_MB", "2"))
 
 # ---- SIMDaddy product pricing (coins & USD) ----
 PRODUCTS = {

@@ -1,0 +1,35 @@
+<!-- Avatar Picker Modal -->
+<div id="avatarModal" class="sd-modal" role="dialog" aria-modal="true" aria-labelledby="avatarModalTitle" hidden>
+  <div class="sd-modal__dialog">
+    <div class="sd-modal__header">
+      <h3 id="avatarModalTitle">Choose your profile picture</h3>
+      <button type="button" class="sd-modal__close" data-close aria-label="Close">&times;</button>
+    </div>
+    <div class="sd-modal__body">
+      <form id="avatarForm" action="{{ url_for('views.update_avatar') }}" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+
+        <div class="avatar-grid">
+          {% for file in os.listdir(os.path.join('static', 'images', 'avatars')) %}
+            {% if file.lower().endswith(('.png', '.jpg', '.jpeg', '.svg', '.webp')) %}
+              <label class="avatar-option">
+                <input type="radio" name="preset" value="{{ file }}" />
+                <img src="{{ url_for('static', filename='images/avatars/' ~ file) }}" alt="Preset {{ loop.index }}"/>
+              </label>
+            {% endif %}
+          {% endfor %}
+        </div>
+
+        <div class="avatar-upload">
+          <label for="avatarFile" class="upload-label">Or upload a picture</label>
+          <input id="avatarFile" name="file" type="file" accept=".png,.jpg,.jpeg,.webp,.gif,.svg" />
+        </div>
+
+        <div class="modal-actions">
+          <button type="submit" class="btn btn-primary">Save</button>
+          <button type="button" class="btn" data-close>Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

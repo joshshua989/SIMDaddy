@@ -7,6 +7,8 @@ from auth.routes import auth_bp
 from views.routes import views_bp
 from flask_migrate import Migrate
 from app.dv import dv_bp  # DV blueprint lives in app/dv
+from models import user, wallet  # existing models you already import
+from models import dk            # <-- ensure this import is present
 
 migrate = Migrate()
 
